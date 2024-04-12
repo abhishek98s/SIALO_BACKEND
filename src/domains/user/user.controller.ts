@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import asyncWrapper from '../../middleware/async.ts';
+import asyncWrapper from '../../utils/async.ts';
 import * as user_service from './user.service.ts';
 import { userExceptionMessage } from './constant/userExceptionMessage.ts';
 

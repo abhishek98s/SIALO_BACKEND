@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
 export const config = {
     app: {
         name: process.env.NAME || 'SIALO_BACKEND',

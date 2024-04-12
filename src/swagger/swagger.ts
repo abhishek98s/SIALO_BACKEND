@@ -22,4 +22,4 @@ export const swaggerSpec = swaggerJSDoc(options);
 
 export const swagger = function (app: express.Application) {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-}
+};

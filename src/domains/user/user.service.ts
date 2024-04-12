@@ -1,23 +1,18 @@
-import { User } from './user.model';
+import { userExceptionMessage } from './constant/userExceptionMessage';
+import * as UserDAO from './user.repository';
 
-export const getUser = async (id: number) => {
-    const user = await User.findOne({ _id: id });
+export const getUser = async (id: string) => {
+    const user = await UserDAO.getUserById(id);
 
-    if (!user) throw Error('User doen\'t exist');
-    user.password = null;
+    if (!user) throw Error(userExceptionMessage.USER_NOT_FOUND);
 
     return user;
 };
 
 export const getAllUser = async () => {
-    const data = await User.find();
+    const users = await UserDAO.getAllUser();
 
-    if (!data) throw Error('No user available');
-
-    const users = data.map((user) => {
-        user.password = null;
-        return user;
-    });
+    if (!users) throw Error(userExceptionMessage.USER_NOT_FOUND);
 
     return users;
 };

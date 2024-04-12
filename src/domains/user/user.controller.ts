@@ -1,18 +1,23 @@
 import { Request, Response } from 'express';
-import asyncWrapper from '../../middleware/async.js';
-import { getAllUser, getUser } from '../service/userServices.js';
 
-export const getUserHandler = asyncWrapper(async (re: Request, res: Response) => {
-    const { id } = req.params;
+import asyncWrapper from '../../middleware/async.ts';
+import * as user_service from './user.service.ts';
+import { userExceptionMessage } from './constant/userExceptionMessage.ts';
 
-    let user = await getUser(id);
+export const getUser = asyncWrapper(async (req: Request, res: Response) => {
+    const user_id = req.params.id;
 
-    res.status(200).json({ data: { ...user } });
+    if (!user_id) {
+        throw new Error(userExceptionMessage.INVALID_ID);
+    }
 
-})
+    const user = await user_service.getUser(user_id);
 
-export const getAllUserHandler = asyncWrapper(async (req, res) => {
-    let users = await getAllUser();
+    res.status(200).json({ data: user });
+});
 
-    res.status(200).json({ data: { ...users } })
-})
+export const getAllUser = asyncWrapper(async (req: Request, res: Response) => {
+    const users = await user_service.getAllUser();
+
+    res.status(200).json({ data: users });
+});

@@ -1,7 +1,22 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+
+export interface IUser extends Document {
+    firstName: string,
+    lastName: string,
+    name: string,
+    phoneNo: number,
+    gender: 'Male' | 'Female' | 'Others',
+    email: string,
+    password: string | null,
+    img?: string,
+}
 
 const userSchema = new mongoose.Schema(
     {
+        name: {
+            type: String,
+            required: true,
+        },
         firstName: {
             type: String,
             required: true,
@@ -25,15 +40,18 @@ const userSchema = new mongoose.Schema(
             unique: true,
         },
         password: {
-            type: String | null,
+            type: String || null,
             required: true,
         },
         img: {
             type: String,
         },
-    }, {
-    timestamps: true,
-});
+    },
+    {
+        timestamps: true,
+    },
+);
 
 
 export const User = mongoose.model('User', userSchema);
+

@@ -3,8 +3,11 @@ import express from 'express';
 import { upload } from '../../utils/multer';
 
 import * as post_controller from './post.controller';
+import { verifyToken } from '../../middleware/authentication.middleware';
 
 const router = express.Router();
+
+router.use(verifyToken);
 
 router.post('/post', upload.single('image'), post_controller.createPost)
     .get('/post', post_controller.getAllPost);  // get ALl the Posts

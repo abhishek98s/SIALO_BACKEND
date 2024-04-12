@@ -6,8 +6,8 @@ import { logger } from './config/logger';
 
 import userRoute from './domains/user/user.routes';
 import { swagger } from './swagger/swagger';
-import notFound from './middleware/not-found';
-import { errorHandlerMiddleware } from './middleware/error-handler';
+import notFound from './utils/not-found';
+import { errorHandlerMiddleware } from './utils/error-handler';
 
 const app = express();
 const port = config.app.port;

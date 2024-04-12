@@ -14,6 +14,16 @@ export const getAllPost = async () => {
     return posts;
 };
 
+export const getUserPosts = async (user_id: string) => {
+    const user = await UserDAO.fetchById(user_id);
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const user_posts = await PostDAO.fetchByUserId(user_id);
+    if (!user_posts) throw Error(postExceptionMessage.POST_UNAVAIABLE);
+
+    return user_posts;
+};
+
 export const createPost = async (postDetails, imagePath) => {
     const {
         userId,
@@ -79,16 +89,6 @@ export const addPostComments = async (postId, commentInfo) => {
     return upadatedPost;
 };
 
-
-export const getUserPosts = async (user_id: string) => {
-    const user = await UserDAO.getUserById(user_id);
-    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
-
-    const user_posts = await PostDAO.fetchByUserId(user_id);
-    if (!user_posts) throw Error(postExceptionMessage.POST_UNAVAIABLE);
-
-    return user_posts;
-};
 
 export const getRequestedPosts = async (noofItems: number) => {
     const itemsToRequest = 5;

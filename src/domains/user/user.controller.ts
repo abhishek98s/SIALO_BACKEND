@@ -16,8 +16,8 @@ export const getUser = asyncWrapper(async (req: Request, res: Response) => {
     res.status(200).json({ data: user });
 });
 
-export const getAllUser = asyncWrapper(async (req: Request, res: Response) => {
-    const users = await user_service.getAllUser();
+export const fetchAll = asyncWrapper(async (req: Request, res: Response) => {
+    const users = await user_service.fetchAll();
 
     res.status(200).json({ data: users });
 });

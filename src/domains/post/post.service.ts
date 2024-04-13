@@ -1,11 +1,11 @@
-import cloudinary from '../../utils/cloudinary.js';
+import cloudinary from '../../utils/cloudinary';
 import Post from './post.model';
 import sharp from 'sharp';
 
 import * as PostDAO from './post.repository';
-import * as UserDAO from '../user/user.repository.js';
-import { userExceptionMessage } from '../user/constant/userExceptionMessage.js';
-import { postExceptionMessage } from './constant/postExceptionMessage.js';
+import * as UserDAO from '../user/user.repository';
+import { userExceptionMessage } from '../user/constant/userExceptionMessage';
+import { postExceptionMessage } from './constant/postExceptionMessage';
 
 
 export const getAllPost = async () => {

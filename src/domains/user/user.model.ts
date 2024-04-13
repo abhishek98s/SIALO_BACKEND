@@ -1,11 +1,7 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose from 'mongoose';
 
-export interface IUser extends Document {
-    firstName: string,
-    lastName: string,
+export interface IUser {
     name: string,
-    phoneNo: number,
-    gender: 'Male' | 'Female' | 'Others',
     email: string,
     password: string | null,
     img?: string,
@@ -15,23 +11,6 @@ const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true,
-        },
-        firstName: {
-            type: String,
-            required: true,
-        },
-        lastName: {
-            type: String,
-            required: true,
-        },
-        phoneNo: {
-            type: Number,
-            required: true,
-        },
-        gender: {
-            type: String,
-            enum: ['Male', 'Female', 'others'],
             required: true,
         },
         email: {

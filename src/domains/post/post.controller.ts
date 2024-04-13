@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
-import asyncWrapper from '../../utils/async.js';
+import asyncWrapper from '../../utils/async';
 import * as post_service from './post.service';
-import { postExceptionMessage } from './constant/postExceptionMessage.js';
+import { postExceptionMessage } from './constant/postExceptionMessage';
 
 
 export const getAllPost = asyncWrapper(async (req: Request, res: Response) => {

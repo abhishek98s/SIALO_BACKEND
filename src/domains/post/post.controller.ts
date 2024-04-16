@@ -11,6 +11,7 @@ export const getAllPost = asyncWrapper(async (req: Request, res: Response) => {
     res.status(200).json({ data: posts });
 });
 
+
 export const getUserPosts = asyncWrapper(async (req: Request, res: Response) => {
     const userId = req.params.userId;
 
@@ -19,30 +20,46 @@ export const getUserPosts = asyncWrapper(async (req: Request, res: Response) => 
     res.status(200).json({ data: userPosts });
 });
 
+
 export const createPost = asyncWrapper(async (req: Request, res: Response) => {
-    const { userId, name, userPicturePath, caption } = req.body;
+    const { name, caption, user } = req.body;
+    const { userId } = req.body.user;
+
+    console.log(user);
 
     if (!name || !caption) {
         throw new Error(postExceptionMessage.FIELD_EMPTY);
     }
 
+    if (!req.file) throw new Error(postExceptionMessage.FILE_REQUIRED);
+
     const post_image = req.file!.path;
 
-    const userPost = await post_service.createPost({ userId, name, userPicturePath, caption }, post_image);
+    const userPost = await post_service.createPost({ userId, caption, post_image }, post_image);
 
     res.status(200).json({ data: userPost });
 });
 
+
 export const addComment = asyncWrapper(async (req: Request, res: Response) => {
-    const { name, comment, userId, userPicturePath } = req.body;
+    const { comment } = req.body;
+    const { name, image } = req.body.user;
+
     const { postId } = req.params;
 
-    if (!name || !comment) throw new Error(postExceptionMessage.NAME_COMMENT_REQUIRED);
+    if (!comment) throw new Error(postExceptionMessage.NAME_COMMENT_REQUIRED);
 
-    const post = await post_service.addPostComments(postId, { name, comment, userId, userPicturePath });
+    const comment_info = {
+        comment,
+        comment_user_name: name,
+        comment_user_picture: image,
+    };
+
+    const post = await post_service.addPostComments(postId, comment_info);
 
     res.status(200).json({ data: post });
 });
+
 
 export const getRequestedPosts = asyncWrapper(async (req: Request, res: Response) => {
     const no_of_posts = req.query.posts as unknown as number;

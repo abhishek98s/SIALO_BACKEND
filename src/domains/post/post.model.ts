@@ -1,17 +1,15 @@
 import mongoose from 'mongoose';
 
-interface IComment {
-    caption: string,
+export interface IComment {
+    comment: string,
     comment_user_name: string,
     comment_user_picture: string,
 }
 
 export interface IPost {
     userId: string,
-    name: string,
-    userPicturePath: string,
     caption: string,
-    img: string,
+    post_image: string,
     likes?: string,
     comments?: IComment[],
 }
@@ -22,19 +20,11 @@ export const postSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        name: {
-            type: String,
-            required: true,
-        },
-        userPicturePath: {
-            type: String,
-            required: true,
-        },
         caption: {
             type: String,
             required: true,
         },
-        img: {
+        post_image: {
             type: String,
         },
         likes: {

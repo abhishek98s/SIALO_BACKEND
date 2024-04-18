@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.use(verifyToken);
 
-router.post('/post', upload.single('image'), post_controller.createPost)
+router.post('/post', upload.single('sialo_image'), post_controller.createPost)
     .get('/post', post_controller.getAllPost);  // get ALl the Posts
 
 router.get('/post/:userId', post_controller.getUserPosts);  // get posts of a specific user

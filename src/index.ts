@@ -1,15 +1,16 @@
 import express from 'express';
-import { config } from './config/config';
 import cors from 'cors';
-import connectDB from './utils/db';
-import { logger } from './config/logger';
 
+import { config } from './config/config';
+import { logger } from './config/logger';
 import { swagger } from './swagger/swagger';
+import connectDB from './utils/db';
 import notFound from './utils/not-found';
 import { errorHandlerMiddleware } from './utils/error-handler';
 
 import userRoute from './domains/user/user.routes';
 import authRoute from './auth/auth.routes';
+import postRoute from './domains/post/post.routes';
 
 const app = express();
 const port = config.app.port;
@@ -20,9 +21,9 @@ app.use(express.json());
 
 swagger(app);
 
-
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
+app.use('/api/post', postRoute);
 
 app.use(notFound);
 app.use(errorHandlerMiddleware);

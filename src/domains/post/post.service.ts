@@ -1,6 +1,5 @@
-import cloudinary from '../../utils/cloudinary';
-import Post from './post.model';
-import sharp from 'sharp';
+import { uploadToCloudinary } from '../../utils/cloudinary';
+import Post, { IComment, IPost } from './post.model';
 
 import * as PostDAO from './post.repository';
 import * as UserDAO from '../user/user.repository';
@@ -10,6 +9,8 @@ import { postExceptionMessage } from './constant/postExceptionMessage';
 
 export const getAllPost = async () => {
     const posts = await PostDAO.fetchAll();
+
+    if (posts.length === 0) throw new Error(postExceptionMessage.POST_UNAVAIABLE);
 
     return posts;
 };
@@ -24,71 +25,24 @@ export const getUserPosts = async (user_id: string) => {
     return user_posts;
 };
 
-export const createPost = async (postDetails, imagePath) => {
-    const {
-        userId,
-        name,
-        userPicturePath,
-        caption,
-    } = postDetails;
+export const createPost = async (postDetails: IPost, image_path: string) => {
+    const img_url = await uploadToCloudinary(image_path);
 
-    //Compres the image
-    const compressedImagePath = imagePath + '.compressed.jpg';
-    await sharp(imagePath).jpeg({ quality: 80 }).toFile(compressedImagePath);
-
-    const imgUrl = await cloudinary.v2.uploader.upload(compressedImagePath, {
-        resource_type: 'image',
-        folder: 'Sialo',
-    });
-
-    const post = {
-        userId,
-        name,
-        userPicturePath,
-        caption,
-        img: imgUrl.secure_url,
+    const new_post = {
+        ...postDetails,
+        img: img_url,
     };
 
-    const userPost = await PostDAO.create({
-        userId,
-        name,
-        userPicturePath,
-        caption,
-        img: imgUrl.secure_url,
-    });
-
-    return userPost;
+    return await PostDAO.create(new_post);
 };
 
-export const addPostComments = async (postId, commentInfo) => {
+export const addPostComments = async (post_id: string, comment_data: IComment) => {
+    const post = await PostDAO.fetchById(post_id);
+    if (!post) throw new Error(postExceptionMessage.POST_UNAVAIABLE);
 
-    const {
-        userId,
-        firstName,
-        lastName,
-        userPicturePath,
-        comment,
-    } = commentInfo;
+    return await PostDAO.addCommentById(post_id, comment_data);
 
-    const upadatedPost = await Post.findOneAndUpdate(
-        { _id: postId.userId },
-        {
-            $push: {
-                comments: {
-                    userId,
-                    firstName,
-                    lastName,
-                    userImg: userPicturePath,
-                    comment,
-                },
-            },
-        },
-        { new: true },
-    );
-
-    return upadatedPost;
 };
-
 
 export const getRequestedPosts = async (noofItems: number) => {
     const itemsToRequest = 5;

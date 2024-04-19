@@ -8,7 +8,7 @@ export const upload = multer({
     fileFilter: (req, file, cb) => {
         const ext = path.extname(file.originalname);
 
-        if (allowedExtensions.test(ext.toLowerCase())) {
+        if (!allowedExtensions.test(ext.toLowerCase())) {
             cb(new Error('File type is not supported'));
         } else {
             cb(null, true);

@@ -8,6 +8,7 @@ export interface IComment {
 
 export interface IPost {
     userId: string,
+    name: string,
     caption: string,
     post_image: string,
     likes?: string,
@@ -16,6 +17,10 @@ export interface IPost {
 
 export const postSchema = new mongoose.Schema(
     {
+        name: {
+            type: String,
+            required: true,
+        },
         userId: {
             type: String,
             required: true,

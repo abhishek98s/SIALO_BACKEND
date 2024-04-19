@@ -30,7 +30,7 @@ export const createPost = async (postDetails: IPost, image_path: string) => {
 
     const new_post = {
         ...postDetails,
-        img: img_url,
+        post_image: img_url,
     };
 
     return await PostDAO.create(new_post);

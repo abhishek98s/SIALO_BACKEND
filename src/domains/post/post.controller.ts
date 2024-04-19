@@ -22,20 +22,18 @@ export const getUserPosts = asyncWrapper(async (req: Request, res: Response) => 
 
 
 export const createPost = asyncWrapper(async (req: Request, res: Response) => {
-    const { name, caption, user } = req.body;
-    const { userId } = req.body.user;
+    const { caption } = req.body;
+    const { id, name } = req.body.user;
 
-    console.log(user);
-
-    if (!name || !caption) {
-        throw new Error(postExceptionMessage.FIELD_EMPTY);
+    if (!caption) {
+        throw new Error(postExceptionMessage.CAPTION_REQUIRED);
     }
 
     if (!req.file) throw new Error(postExceptionMessage.FILE_REQUIRED);
 
     const post_image = req.file!.path;
 
-    const userPost = await post_service.createPost({ userId, caption, post_image }, post_image);
+    const userPost = await post_service.createPost({ name, userId: id, caption, post_image }, post_image);
 
     res.status(200).json({ data: userPost });
 });

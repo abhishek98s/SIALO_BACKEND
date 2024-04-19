@@ -57,7 +57,61 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/Post'
+ * /post/comment/{postId}:
+ *   patch:
+ *     tags:
+ *       - Post
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: postId
+ *         in: path
+ *         description: Post ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     summary: Add comment on a post. 
+ *     requestBody:
+ *       description: Comment Data.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               comment:
+ *                 type: string
+ *             required:
+ *               - name
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ * /post/reqPost:
+ *   get:
+ *     tags:
+ *       - Post
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get n no of posts.
+ *     parameters:
+ *       - name: no_of_posts
+ *         in: query
+ *         description: Number of post to get.
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
  * components:
  *   schemas:
  *     Post:
@@ -97,8 +151,4 @@
  *         - userId
  *         - caption
  *         - sialo_image
- *       example:
- *         userId: Examp
- *         caption: example@gmail.com
- *         post_image: Example123!
  */

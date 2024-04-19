@@ -1,11 +1,10 @@
 import { uploadToCloudinary } from '../../utils/cloudinary';
-import Post, { IComment, IPost } from './post.model';
+import { IComment, IPost } from './post.model';
 
 import * as PostDAO from './post.repository';
 import * as UserDAO from '../user/user.repository';
 import { userExceptionMessage } from '../user/constant/userExceptionMessage';
 import { postExceptionMessage } from './constant/postExceptionMessage';
-
 
 export const getAllPost = async () => {
     const posts = await PostDAO.fetchAll();
@@ -41,22 +40,14 @@ export const addPostComments = async (post_id: string, comment_data: IComment) =
     if (!post) throw new Error(postExceptionMessage.POST_UNAVAIABLE);
 
     return await PostDAO.addCommentById(post_id, comment_data);
-
 };
 
 export const getRequestedPosts = async (noofItems: number) => {
     const itemsToRequest = 5;
-    const result = await Post.find({}).limit(noofItems * itemsToRequest);
-
     const resultLength = noofItems * itemsToRequest;
-    const requestItem = result.length;
-    const itemLeft = resultLength - requestItem;
 
-    if (!result) throw Error('Something wrong');
+    const result = await PostDAO.fetchPostsUpTo(resultLength);
 
-    if ((resultLength !== requestItem) && (itemLeft > itemsToRequest)) {
-        return [];
-    }
-
-    return result.slice(-5);
+    const availableItems = result.splice(resultLength-5);
+    return availableItems;
 };

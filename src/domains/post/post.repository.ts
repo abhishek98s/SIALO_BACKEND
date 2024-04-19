@@ -10,6 +10,10 @@ export const fetchById = async (post_id: string) => {
     return await Post.find({ _id: post_id });
 };
 
+export const fetchPostsUpTo = async (no_of_posts: number) => {
+    return await Post.find({}).limit(no_of_posts);
+};
+
 export const create = async (post_details: IPost) => {
     const post = new Post({ ...post_details });
 

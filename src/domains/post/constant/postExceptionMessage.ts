@@ -7,4 +7,6 @@ export const postExceptionMessage = {
     NAME_COMMENT_REQUIRED: 'Name and comment are required.',
     FILE_REQUIRED: 'Image is required.',
     POST_FALIED: 'Failed to create the post.',
+    LIKE_SUCCESS: 'Sucessfully liked the post',
+    UNLIKE_SUCCESS: 'Sucessfully unliked the post',
 };

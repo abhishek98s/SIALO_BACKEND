@@ -27,15 +27,28 @@ export const fetchByUserId = async (user_id: string) => {
 };
 
 export const addCommentById = async (post_id: string, commentData: IComment) => {
-    const upadated_post = await Post.findOneAndUpdate(
+    return await Post.findOneAndUpdate(
         { _id: post_id },
-        {
-            $push: {
-                comments: { ...commentData },
-            },
-        },
+        { $push: { comments: { ...commentData } } },
         { new: true },
     );
+};
 
-    return upadated_post;
+export const isPostLiked = async (post_id: string, user_id: string) => {
+    const isLiked = await Post.find({ _id: post_id, likes: { $in: [user_id] } });
+    return (isLiked.length !== 0) ? 1 : 0;
+};
+
+export const addLike = async (post_id: string, user_id: string) => {
+    return await Post.updateOne(
+        { _id: post_id },
+        { $push: { likes: user_id } },
+    );
+};
+
+export const removeLike = async (post_id: string, user_id: string) => {
+    return await Post.updateOne(
+        { _id: post_id },
+        { $pull: { likes: user_id } },
+    );
 };

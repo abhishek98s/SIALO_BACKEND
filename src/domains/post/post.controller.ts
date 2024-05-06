@@ -66,3 +66,21 @@ export const getRequestedPosts = asyncWrapper(async (req: Request, res: Response
 
     res.status(200).json({ data: posts });
 });
+
+export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: user_id } = req.body.user;
+    const post_id = req.query.postId as unknown as string;
+
+    if (!user_id || !user_id) throw new Error(postExceptionMessage.INVALID_ID);
+
+    const isPostLiked = await post_service.toggleLikeIn(post_id, user_id);
+
+    let message = '';
+    if (isPostLiked) {
+        message = postExceptionMessage.LIKE_SUCCESS;
+    } else {
+        message = postExceptionMessage.UNLIKE_SUCCESS;
+    }
+
+    res.status(200).json({ success: true, message: message });
+});

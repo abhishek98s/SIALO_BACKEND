@@ -48,6 +48,22 @@ export const getRequestedPosts = async (noofItems: number) => {
 
     const result = await PostDAO.fetchPostsUpTo(resultLength);
 
-    const availableItems = result.splice(resultLength-5);
+    const availableItems = result.splice(resultLength - 5);
     return availableItems;
+};
+
+export const toggleLikeIn = async (post_id: string, user_id: string) => {
+    const isPostAvailable = await PostDAO.fetchById(post_id);
+
+    if (isPostAvailable.length === 0) throw new Error(postExceptionMessage.NOT_AVAILABLE);
+
+    const isLiked = await PostDAO.isPostLiked(post_id, user_id);
+
+    if (!isLiked) {
+        await PostDAO.addLike(post_id, user_id);
+        return 1;
+    } else {
+        await PostDAO.removeLike(post_id, user_id);
+        return 0;
+    }
 };

@@ -33,7 +33,8 @@ export const postSchema = new mongoose.Schema(
             type: String,
         },
         likes: {
-            type: Number,
+            type: Array,
+            default: [],
         },
         comments: {
             type: Array,

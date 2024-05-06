@@ -12,10 +12,11 @@ router.use(verifyToken);
 router.post('/', upload.single('sialo_image'), verifyToken, post_controller.createPost)
     .get('/', post_controller.getAllPost);
 
-    router.get('/reqPost', post_controller.getRequestedPosts);
+router.get('/reqPost', post_controller.getRequestedPosts);
 router.get('/:userId', post_controller.getUserPosts);
 
 router.patch('/comment/:postId', post_controller.addComment);
 
+router.patch('/like', post_controller.likeAPost);
 
 export default router;

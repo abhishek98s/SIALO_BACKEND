@@ -112,6 +112,27 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Post'
+ * /post/like:
+ *   patch:
+ *     tags:
+ *       - Post
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: postId
+ *         in: query
+ *         description: Post ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     summary: Add or remove like on a post.
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
  * components:
  *   schemas:
  *     Post:

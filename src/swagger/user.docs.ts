@@ -38,6 +38,27 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ * /user/friend/add/{friendId}:
+ *   patch:
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: friendId
+ *         in: path
+ *         description: ID of user to sent friend request.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     summary: Sent friend request to a user.
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
  * components:
  *   schemas:
  *     User:

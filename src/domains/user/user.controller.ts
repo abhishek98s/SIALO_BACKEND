@@ -21,3 +21,19 @@ export const fetchAll = asyncWrapper(async (req: Request, res: Response) => {
 
     res.status(200).json({ data: users });
 });
+
+export const addFriend = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: sender_id, name, image } = req.body.user;
+    const friend_id = req.params.friendId;
+
+    if (!friend_id) throw new Error(userExceptionMessage.INVALID_ID);
+
+    if (sender_id === friend_id) throw new Error(userExceptionMessage.ID_SAME);
+
+    const senderInfo = { id: sender_id, name, image };
+
+    const friend = await user_service.addFriend(friend_id, senderInfo);
+
+    res.status(200).json({ success: true, message: `Request sent to ${friend}` });
+});
+

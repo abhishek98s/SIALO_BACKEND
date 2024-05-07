@@ -1,4 +1,4 @@
-import { IUser, User } from './user.model';
+import { IFriend, IUser, User } from './user.model';
 
 export const fetchById = async (id: string) => {
     return await User.findOne({ _id: id });
@@ -19,4 +19,11 @@ export const create = async (new_user: IUser) => {
     const user = new User({ ...new_user });
 
     return await user.save();
+};
+
+export const addFriendInfo = async (user_id: string, friendInfo: IFriend) => {
+    return await User.updateMany(
+        { _id: user_id },
+        { $push: { friends: friendInfo } },
+    );
 };

@@ -1,10 +1,18 @@
 import mongoose from 'mongoose';
 
 export interface IUser {
+    _id?: string,
     name: string,
     email: string,
     password: string | null,
     img?: string,
+}
+
+export interface IFriend {
+    id: string,
+    name: string,
+    image: string,
+    pending: boolean,
 }
 
 const userSchema = new mongoose.Schema(
@@ -24,6 +32,10 @@ const userSchema = new mongoose.Schema(
         },
         img: {
             type: String,
+        },
+        friends: {
+            type: Array,
+            default: [],
         },
     },
     {

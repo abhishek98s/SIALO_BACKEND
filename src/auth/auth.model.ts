@@ -3,3 +3,9 @@ export interface IRegister {
     email: string,
     password: string,
 }
+
+export interface IJWT {
+    id: string,
+    name: string,
+    image: string,
+}

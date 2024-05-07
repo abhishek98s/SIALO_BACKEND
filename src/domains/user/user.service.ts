@@ -26,14 +26,14 @@ export const addFriend = async (friend_id: string, senderInfo: IJWT) => {
     const { _id, name, img, friends } = requested_user;
 
     for (const friend of friends) {
-        if (friend.id == senderInfo.id) {
-            if(!friend.pending){
+        if (friend.id === senderInfo.id) {
+            if (!friend.pending) {
                 throw new Error(userExceptionMessage.FRIEND_ALREADY);
             }
             throw new Error(userExceptionMessage.REQUEST_SENT_ALREADY);
         }
     }
-    
+
     await UserDAO.addFriendInfo(friend_id, { ...senderInfo, pending: true });
     await UserDAO.addFriendInfo(senderInfo.id, { id: _id.toString(), name, image: img!, pending: true });
 

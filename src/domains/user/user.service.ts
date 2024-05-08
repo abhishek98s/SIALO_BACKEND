@@ -60,3 +60,22 @@ export const acceptFriendRequest = async (sender_id: string, receiver_id: string
 
     return request_sender.name;
 };
+
+export const rejectFriendRequest = async (sender_id: string, receiver_id: string) => {
+    const request_sender = await UserDAO.fetchById(sender_id);
+
+    if (!request_sender) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const sender_friend = request_sender.friends.find(friend => friend.id === receiver_id);
+
+    if (!sender_friend) {
+        throw new Error(userExceptionMessage.REQUEST_NOT_SENT);
+    }
+
+    await Promise.all([
+        UserDAO.rejectFriendRequest(sender_id, receiver_id),
+        UserDAO.rejectFriendRequest(receiver_id, sender_id),
+    ]);
+
+    return request_sender.name;
+};

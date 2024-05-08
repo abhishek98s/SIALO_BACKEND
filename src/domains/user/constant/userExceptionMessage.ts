@@ -5,4 +5,5 @@ export const userExceptionMessage = {
     FRIEND_ALREADY: 'User is already friend',
     REQUEST_SENT_ALREADY: 'Request is already sent.',
     ACCEPTED_ALREADY: 'Request accepted already.',
+    REQUEST_NOT_SENT: 'Request has not been sent.',
 };

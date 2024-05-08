@@ -23,19 +23,40 @@ export const addFriend = async (friend_id: string, senderInfo: IJWT) => {
 
     if (!requested_user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
 
-    const { _id, name, img, friends } = requested_user;
+    const requester_friend = requested_user.friends.find(friend => friend.id === senderInfo.id);
 
-    for (const friend of friends) {
-        if (friend.id === senderInfo.id) {
-            if (!friend.pending) {
-                throw new Error(userExceptionMessage.FRIEND_ALREADY);
-            }
+    if (requester_friend) {
+        if (!requester_friend.pending) {
+            throw new Error(userExceptionMessage.FRIEND_ALREADY);
+        } else {
             throw new Error(userExceptionMessage.REQUEST_SENT_ALREADY);
         }
     }
+    const friendInfo = { id: requested_user._id.toString(), name: requested_user.name, image: requested_user.img!, pending: true };
 
-    await UserDAO.addFriendInfo(friend_id, { ...senderInfo, pending: true });
-    await UserDAO.addFriendInfo(senderInfo.id, { id: _id.toString(), name, image: img!, pending: true });
+    await Promise.all([
+        UserDAO.addFriendInfo(friend_id, { ...senderInfo, pending: true }),
+        UserDAO.addFriendInfo(senderInfo.id, friendInfo),
+    ]);
 
     return requested_user.name;
+};
+
+export const acceptFriendRequest = async (sender_id: string, receiver_id: string) => {
+    const request_sender = await UserDAO.fetchById(sender_id);
+
+    if (!request_sender) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const sender_friend = request_sender.friends.find(friend => friend.id === receiver_id);
+
+    if (sender_friend && !sender_friend.pending) {
+        throw new Error(userExceptionMessage.ACCEPTED_ALREADY);
+    }
+
+    await Promise.all([
+        UserDAO.acceptFriendRequest(sender_id, receiver_id),
+        UserDAO.acceptFriendRequest(receiver_id, sender_id),
+    ]);
+
+    return request_sender.name;
 };

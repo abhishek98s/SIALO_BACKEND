@@ -4,4 +4,5 @@ export const userExceptionMessage = {
     ID_SAME: 'Id and friend_id same',
     FRIEND_ALREADY: 'User is already friend',
     REQUEST_SENT_ALREADY: 'Request is already sent.',
+    ACCEPTED_ALREADY: 'Request accepted already.',
 };

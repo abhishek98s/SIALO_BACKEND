@@ -58,7 +58,28 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Post'
+ *               $ref: '#/components/schemas/User'
+ * /user/friend/accept/{friendId}:
+ *   patch:
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: friendId
+ *         in: path
+ *         description: ID of user to accept the friend request.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     summary: Accept friend request of a user.
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  * components:
  *   schemas:
  *     User:

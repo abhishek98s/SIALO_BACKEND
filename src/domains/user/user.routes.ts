@@ -9,6 +9,8 @@ router.use(verifyToken);
 
 router.get('/:id', user_controller.getUser);
 router.get('/', user_controller.fetchAll);
-router.patch('/friend/add/:friendId', user_controller.addFriend);
+
+router.patch('/friend/add/:friendId', user_controller.addFriend)
+    .patch('/friend/accept/:friendId', user_controller.acceptRequest);
 
 export default router;

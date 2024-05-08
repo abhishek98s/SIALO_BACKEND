@@ -34,3 +34,10 @@ export const acceptFriendRequest = async (user_id: string, friend_id: string) =>
         { $set: { 'friends.$.pending': false } },
     );
 };
+
+export const rejectFriendRequest = async (user_id: string, friend_id: string) => {
+    return await User.updateOne(
+        { _id: user_id, friends: { $elemMatch: { id: friend_id } } },
+        { $pull: { friends: { id: friend_id } } },
+    );
+};

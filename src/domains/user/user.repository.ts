@@ -22,8 +22,15 @@ export const create = async (new_user: IUser) => {
 };
 
 export const addFriendInfo = async (user_id: string, friendInfo: IFriend) => {
-    return await User.updateMany(
+    return await User.updateOne(
         { _id: user_id },
         { $push: { friends: friendInfo } },
+    );
+};
+
+export const acceptFriendRequest = async (user_id: string, friend_id: string) => {
+    return await User.updateOne(
+        { _id: user_id, friends: { $elemMatch: { id: friend_id } } },
+        { $set: { 'friends.$.pending': false } },
     );
 };

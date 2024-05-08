@@ -37,3 +37,14 @@ export const addFriend = asyncWrapper(async (req: Request, res: Response) => {
     res.status(200).json({ success: true, message: `Request sent to ${friend}` });
 });
 
+export const acceptRequest = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: receiver_id } = req.body.user;
+    const sender_id = req.params.friendId;
+
+    if (!sender_id) throw new Error(userExceptionMessage.INVALID_ID);
+    if (receiver_id === sender_id) throw new Error(userExceptionMessage.ID_SAME);
+
+    const friend = await user_service.acceptFriendRequest(sender_id, receiver_id);
+
+    res.status(200).json({ success: true, message: `Request accepted of ${friend}` });
+});

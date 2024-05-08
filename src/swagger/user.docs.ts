@@ -80,6 +80,27 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ * /user/friend/reject/{friendId}:
+ *   patch:
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: friendId
+ *         in: path
+ *         description: ID of user to reject the friend request.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     summary: Reject friend request of a user.
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  * components:
  *   schemas:
  *     User:

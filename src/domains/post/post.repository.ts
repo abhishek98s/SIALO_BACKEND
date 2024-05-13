@@ -56,3 +56,7 @@ export const removeLike = async (post_id: string, user_id: string) => {
 export const removePostById = async (post_id: string) => {
     return await Post.deleteOne({ _id: post_id });
 };
+
+export const removePostsByuserId = async (user_id: string) => {
+    return await Post.deleteMany({ userId: user_id });
+};

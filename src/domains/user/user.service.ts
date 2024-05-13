@@ -89,11 +89,7 @@ export const removeUserById = async (user_id: string) => {
     const user = await UserDAO.fetchById(user_id);
     if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
 
-    const user_posts = await PostDAO.fetchByUserId(user_id);
-
-    for (const post of user_posts) {
-        await PostDAO.removePostById(post.id);
-    }
+    await PostDAO.removePostsByuserId(user_id);
 
     const isDeleted = await UserDAO.deleteUserById(user_id);
 

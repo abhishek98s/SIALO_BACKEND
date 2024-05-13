@@ -48,3 +48,7 @@ export const rejectFriendRequest = async (user_id: string, friend_id: string) =>
         { $pull: { friends: { id: friend_id } } },
     );
 };
+
+export const deleteUserById = async (user_id: string) => {
+    return await User.deleteOne({ _id: user_id });
+};

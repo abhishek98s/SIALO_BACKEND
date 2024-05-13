@@ -43,7 +43,7 @@
  *       - Post
  *     security:
  *       - bearerAuth: []
- *     summary: Get a user by id.
+ *     summary: Get all post of a user.
  *     parameters:
  *       - name: userId
  *         in: path
@@ -146,7 +146,7 @@
  *         required: true
  *         schema:
  *           type: string
- *     summary: Delete a post.
+ *     summary: Delete a post by id.
  *     responses:
  *       '200':
  *         description: Successful operation

@@ -15,6 +15,8 @@ router.post('/', upload.single('sialo_image'), verifyToken, post_controller.crea
 router.get('/reqPost', post_controller.getRequestedPosts);
 router.get('/:userId', post_controller.getUserPosts);
 
+router.delete('/:id', post_controller.deletePost);
+
 router.patch('/comment/:postId', post_controller.addComment);
 
 router.patch('/like', post_controller.likeAPost);

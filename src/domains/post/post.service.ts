@@ -67,3 +67,15 @@ export const toggleLikeIn = async (post_id: string, user_id: string) => {
         return 0;
     }
 };
+
+export const deletePost = async (post_id: string) => {
+    const isPostAvailable = await PostDAO.fetchById(post_id);
+
+    if (isPostAvailable.length === 0) throw new Error(postExceptionMessage.NOT_AVAILABLE);
+
+    const deleted_post = await PostDAO.removePostById(post_id);
+
+    if (!deleted_post) throw new Error(postExceptionMessage.DELETE_FAILED);
+
+    return isPostAvailable[0];
+};

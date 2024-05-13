@@ -52,3 +52,7 @@ export const removeLike = async (post_id: string, user_id: string) => {
         { $pull: { likes: user_id } },
     );
 };
+
+export const removePostById = async (post_id: string) => {
+    return await Post.deleteOne({ _id: post_id });
+};

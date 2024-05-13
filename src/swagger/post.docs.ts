@@ -133,6 +133,27 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Post'
+ * /post/{id}:
+ *   delete:
+ *     tags:
+ *       - Post
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: Post ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     summary: Delete a post.
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
  * components:
  *   schemas:
  *     Post:

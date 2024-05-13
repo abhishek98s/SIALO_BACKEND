@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.use(verifyToken);
 
+router.get('/search', user_controller.searchUser);
 router.get('/:id', user_controller.getUser);
 router.get('/', user_controller.fetchAll);
 

@@ -11,6 +11,13 @@ export const fetchByEmail = async (email: string) => {
     return user;
 };
 
+export const fetchByName = async (name: string) => {
+    const user = await User.find({ name: { $regex: new RegExp(name, 'ig') } }).select(['name', 'img']);
+    if (user.length === 0) throw new Error('User doesnot exist');
+
+    return user;
+};
+
 export const fetchAll = async () => {
     return await User.find();
 };

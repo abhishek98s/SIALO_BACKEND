@@ -38,6 +38,27 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ * /user/search:
+ *   get:
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get user by nmae
+ *     parameters:
+ *       - name: name
+ *         in: query
+ *         description: Name of a user
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  * /user/friend/add/{friendId}:
  *   patch:
  *     tags:

@@ -71,7 +71,7 @@ export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
     const post_id = req.query.postId as unknown as string;
 
-    if (!user_id || !user_id) throw new Error(postExceptionMessage.INVALID_ID);
+    if (!user_id || !post_id) throw new Error(postExceptionMessage.INVALID_ID);
 
     const isPostLiked = await post_service.toggleLikeIn(post_id, user_id);
 
@@ -83,4 +83,14 @@ export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
     }
 
     res.status(200).json({ success: true, message: message });
+});
+
+export const deletePost = asyncWrapper(async (req: Request, res: Response) => {
+    const post_id = req.params.id as unknown as string;
+
+    if (!post_id) throw new Error(postExceptionMessage.INVALID_ID);
+
+    await post_service.deletePost(post_id);
+
+    res.status(200).json({ success: true, message: 'Post deleted sucessfully.' });
 });

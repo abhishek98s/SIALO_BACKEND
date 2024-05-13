@@ -70,3 +70,12 @@ export const searchUser = asyncWrapper(async (req: Request, res: Response) => {
 
     res.status(200).json({ success: true, data: searchResult });
 });
+
+export const deleteUser = asyncWrapper(async (req: Request, res: Response) => {
+    const user_id = req.params.id as unknown as string;
+    if (!user_id) throw new Error(userExceptionMessage.INVALID_ID);
+
+    const deleted_user = await user_service.removeUserById(user_id);
+
+    res.status(200).json({ success: true, message: `Deleted user ${deleted_user}` });
+});

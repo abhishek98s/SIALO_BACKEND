@@ -1,5 +1,6 @@
 import { IJWT } from '../../auth/auth.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';
+import * as PostDAO from '../post/post.repository';
 import * as UserDAO from './user.repository';
 
 export const getUser = async (id: string) => {
@@ -82,4 +83,21 @@ export const rejectFriendRequest = async (sender_id: string, receiver_id: string
 
 export const fetchUserByName = async (searchText: string) => {
     return await UserDAO.fetchByName(searchText);
+};
+
+export const removeUserById = async (user_id: string) => {
+    const user = await UserDAO.fetchById(user_id);
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const user_posts = await PostDAO.fetchByUserId(user_id);
+
+    for (const post of user_posts) {
+        await PostDAO.removePostById(post.id);
+    }
+
+    const isDeleted = await UserDAO.deleteUserById(user_id);
+
+    if (!isDeleted) throw new Error(userExceptionMessage.DELETE_FAILED);
+
+    return user.name;
 };

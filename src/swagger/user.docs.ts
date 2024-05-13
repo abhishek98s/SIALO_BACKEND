@@ -38,6 +38,26 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ *   delete:
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Delete a user by id.
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: User ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  * /user/search:
  *   get:
  *     tags:

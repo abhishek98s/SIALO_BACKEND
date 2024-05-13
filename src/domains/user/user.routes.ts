@@ -8,7 +8,7 @@ const router = express.Router();
 router.use(verifyToken);
 
 router.get('/search', user_controller.searchUser);
-router.get('/:id', user_controller.getUser);
+router.route('/:id').get(user_controller.getUser).delete(user_controller.deleteUser);
 router.get('/', user_controller.fetchAll);
 
 router.patch('/friend/add/:friendId', user_controller.addFriend)

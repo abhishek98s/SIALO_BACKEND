@@ -79,3 +79,7 @@ export const rejectFriendRequest = async (sender_id: string, receiver_id: string
 
     return request_sender.name;
 };
+
+export const fetchUserByName = async (searchText: string) => {
+    return await UserDAO.fetchByName(searchText);
+};

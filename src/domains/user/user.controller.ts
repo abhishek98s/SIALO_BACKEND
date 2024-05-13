@@ -60,3 +60,13 @@ export const rejectRequest = asyncWrapper(async (req: Request, res: Response) =>
 
     res.status(200).json({ success: true, message: `Request rejected of ${friend}` });
 });
+
+export const searchUser = asyncWrapper(async (req: Request, res: Response) => {
+    const searchText = req.query.name as unknown as string;
+
+    if (!searchText) throw new Error(userExceptionMessage.EMPTY_STRING);
+
+    const searchResult = await user_service.fetchUserByName(searchText);
+
+    res.status(200).json({ success: true, data: searchResult });
+});

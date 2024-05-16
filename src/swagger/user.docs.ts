@@ -79,6 +79,21 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ * /user/recommendation:
+ *   get:
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     summary: User recommendation.
+ *     description: Get user recommendation.
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  * /user/friend/add/{friendId}:
  *   patch:
  *     tags:

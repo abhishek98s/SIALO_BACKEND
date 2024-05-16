@@ -2,6 +2,8 @@ import { IJWT } from '../../auth/auth.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';
 import * as PostDAO from '../post/post.repository';
 import * as UserDAO from './user.repository';
+import mongoose from 'mongoose';
+import _ from 'lodash';
 
 export const getUser = async (id: string) => {
     const user = await UserDAO.fetchById(id);
@@ -96,4 +98,14 @@ export const removeUserById = async (user_id: string) => {
     if (!isDeleted) throw new Error(userExceptionMessage.DELETE_FAILED);
 
     return user.name;
+};
+
+export const fetchRecommendedPeople = async (user_id: string) => {
+    const user = await UserDAO.fetchById(user_id);
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const user_friends_id = user.friends.map(friend => new mongoose.Types.ObjectId(friend.id));
+    const recommend_user = await UserDAO.fetchRecommendedPeople(user_id, user_friends_id);
+
+    return _.sampleSize(recommend_user, 4);
 };

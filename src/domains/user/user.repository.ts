@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { IFriend, IUser, User } from './user.model';
 
 export const fetchById = async (id: string) => {
@@ -51,4 +52,12 @@ export const rejectFriendRequest = async (user_id: string, friend_id: string) =>
 
 export const deleteUserById = async (user_id: string) => {
     return await User.deleteOne({ _id: user_id });
+};
+
+export const fetchFriends = async (user_id: string) => {
+    return await User.find({ _id: user_id }).select(['friends']);
+};
+
+export const fetchRecommendedPeople = async (user_id: string, user_friends: mongoose.Types.ObjectId[]) => {
+    return await User.find({ _id: { $nin: user_friends } }).select(['name', 'img']);
 };

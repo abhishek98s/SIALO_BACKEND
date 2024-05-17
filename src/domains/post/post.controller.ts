@@ -94,3 +94,16 @@ export const deletePost = asyncWrapper(async (req: Request, res: Response) => {
 
     res.status(200).json({ success: true, message: 'Post deleted sucessfully.' });
 });
+
+export const updateCaption = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: user_id } = req.body.user;
+    const post_id = req.params.id as unknown as string;
+    const { caption } = req.body;
+
+    if (!post_id) throw new Error(postExceptionMessage.INVALID_ID);
+    if (!caption) throw new Error(postExceptionMessage.CAPTION_REQUIRED);
+
+    const updatedPost = await post_service.updateCaption(user_id, post_id, caption);
+
+    res.status(200).json({ success: true, data: updatedPost });
+});

@@ -10,4 +10,5 @@ export const postExceptionMessage = {
     DELETE_FAILED: 'Failed to deleted the post.',
     LIKE_SUCCESS: 'Sucessfully liked the post',
     UNLIKE_SUCCESS: 'Sucessfully unliked the post',
+    PERMISSION_DENIED: 'Permisson Denied',
 };

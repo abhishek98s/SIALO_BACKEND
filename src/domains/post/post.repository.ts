@@ -60,3 +60,7 @@ export const removePostById = async (post_id: string) => {
 export const removePostsByuserId = async (user_id: string) => {
     return await Post.deleteMany({ userId: user_id });
 };
+
+export const updateCaption = async (post_id: string, caption: string) => {
+    return await Post.findOneAndUpdate({ _id: post_id }, { caption: caption }, { new: true }).select(['caption']);
+};

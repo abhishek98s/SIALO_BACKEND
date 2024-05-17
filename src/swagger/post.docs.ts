@@ -134,6 +134,38 @@
  *             schema:
  *               $ref: '#/components/schemas/Post'
  * /post/{id}:
+ *   patch:
+ *     tags:
+ *       - Post
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: Post ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *     summary: Update the caption of a post.
+ *     requestBody:
+ *       description: Comment Data.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               caption:
+ *                 type: string
+ *             required:
+ *               - caption
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
  *   delete:
  *     tags:
  *       - Post

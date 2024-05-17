@@ -79,3 +79,14 @@ export const deletePost = async (post_id: string) => {
 
     return isPostAvailable[0];
 };
+
+
+export const updateCaption = async (user_id: string, post_id: string, caption: string) => {
+    const isPostAvailable = await PostDAO.fetchById(post_id);
+
+    if (isPostAvailable.length === 0) throw new Error(postExceptionMessage.NOT_AVAILABLE);
+
+    if (isPostAvailable[0].userId !== user_id) throw new Error(postExceptionMessage.PERMISSION_DENIED);
+
+    return await PostDAO.updateCaption(post_id, caption);
+};

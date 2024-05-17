@@ -10,7 +10,8 @@ const router = express.Router();
 router.use(verifyToken);
 
 router.post('/', upload.single('sialo_image'), verifyToken, post_controller.createPost)
-    .get('/', post_controller.getAllPost);
+    .get('/', post_controller.getAllPost)
+    .patch('/:id', post_controller.updateCaption);
 
 router.get('/reqPost', post_controller.getRequestedPosts);
 router.get('/:userId', post_controller.getUserPosts);

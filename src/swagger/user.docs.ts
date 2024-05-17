@@ -64,7 +64,7 @@
  *       - User
  *     security:
  *       - bearerAuth: []
- *     summary: Get user by nmae
+ *     summary: Get users by name
  *     parameters:
  *       - name: name
  *         in: query

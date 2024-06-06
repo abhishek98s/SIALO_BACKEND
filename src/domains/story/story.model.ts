@@ -1,4 +1,11 @@
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
+
+export interface IStory {
+    user: ObjectId,
+    caption: string,
+    storyImage: string,
+    createdAt?: Date
+}
 
 export const storySchema = new mongoose.Schema(
     {
@@ -7,7 +14,7 @@ export const storySchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        content: {
+        storyImage: {
             type: String,
             required: true,
         },

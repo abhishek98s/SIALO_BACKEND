@@ -11,6 +11,7 @@ import { errorHandlerMiddleware } from './utils/error-handler';
 import userRoute from './domains/user/user.routes';
 import authRoute from './auth/auth.routes';
 import postRoute from './domains/post/post.routes';
+import storyRoute from './domains/story/story.routes';
 
 const app = express();
 const port = config.app.port;
@@ -24,6 +25,7 @@ swagger(app);
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/post', postRoute);
+app.use('/api/story', storyRoute);
 
 app.use(notFound);
 app.use(errorHandlerMiddleware);

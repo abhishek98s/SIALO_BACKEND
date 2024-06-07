@@ -6,6 +6,7 @@ export interface IUser {
     email: string,
     password: string | null,
     img?: string,
+    friends?: Array<IFriend>
 }
 
 export interface IFriend {
@@ -14,6 +15,13 @@ export interface IFriend {
     image: string,
     pending: boolean,
 }
+
+const friendSchema = new mongoose.Schema<IFriend>({
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    image: { type: String, required: true },
+    pending: { type: Boolean, required: true },
+});
 
 const userSchema = new mongoose.Schema(
     {
@@ -33,10 +41,7 @@ const userSchema = new mongoose.Schema(
         img: {
             type: String,
         },
-        friends: {
-            type: Array,
-            default: [],
-        },
+        friends: [friendSchema],
     },
     {
         timestamps: true,

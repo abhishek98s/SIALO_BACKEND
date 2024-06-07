@@ -1,5 +1,13 @@
 import mongoose from 'mongoose';
 
+export interface IStory {
+    id?: mongoose.Types.ObjectId;
+    user: mongoose.Types.ObjectId,
+    caption: string,
+    storyImage: string,
+    createdAt?: Date
+}
+
 export const storySchema = new mongoose.Schema(
     {
         user: {
@@ -7,7 +15,11 @@ export const storySchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        content: {
+        caption: {
+            type: String,
+            required: true,
+        },
+        storyImage: {
             type: String,
             required: true,
         },
@@ -17,3 +29,8 @@ export const storySchema = new mongoose.Schema(
         },
     },
 );
+
+const Story = mongoose.model('Story', storySchema);
+
+export default Story;
+

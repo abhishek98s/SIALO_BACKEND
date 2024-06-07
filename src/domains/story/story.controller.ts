@@ -5,7 +5,8 @@ import * as story_service from './story.service';
 import { storyExceptionMessage } from './constant/storyExceptionMessage';
 
 export const getAllStories = asyncWrapper(async (req: Request, res: Response) => {
-    const stories = await story_service.getAllStories();
+    const { id } = req.body.user;
+    const stories = await story_service.getAllStories(id);
 
     res.status(200).json({ status: true, data: stories });
 });
@@ -32,24 +33,28 @@ export const postStory = asyncWrapper(async (req: Request, res: Response) => {
 });
 
 export const patchStory = asyncWrapper(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id: story_id } = req.params;
+    const { id: user_id } = req.body.user;
     const { caption } = req.body;
 
-    if (!id) throw new Error(storyExceptionMessage.INVALID_ID);
+    if (!story_id) throw new Error(storyExceptionMessage.INVALID_ID);
 
-    if (!caption && !req.file) throw new Error(storyExceptionMessage.CAPTION_IMG_REQUIRED);
+    if (!caption) throw new Error(storyExceptionMessage.CAPTION_REQUIRED);
 
-    const updated_story = await story_service.updateStory(caption, req.file!.path);
+    const file_path = (req.file) ? req.file.path : null;
+
+    const updated_story = await story_service.updateStory(story_id, user_id, caption, file_path);
 
     res.status(200).json({ status: true, data: updated_story });
 });
 
 export const deleteStory = asyncWrapper(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id: story_id } = req.params;
+    const { id: user_id } = req.body.user;
 
-    if (!id) throw new Error(storyExceptionMessage.INVALID_ID);
+    if (!story_id) throw new Error(storyExceptionMessage.INVALID_ID);
 
-    await story_service.deleteStory(id);
+    await story_service.deleteStory(story_id, user_id);
 
     res.status(200).json({ status: true, message: storyExceptionMessage.DELETE_SUCESS });
 });

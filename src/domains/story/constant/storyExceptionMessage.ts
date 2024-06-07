@@ -4,4 +4,6 @@ export const storyExceptionMessage = {
     FILE_REQUIRED: 'Image is required',
     CAPTION_IMG_REQUIRED: 'Caption ir Image is required',
     DELETE_SUCESS: 'story deleted sucessfully',
+    STORY_NOT_FOUND: 'Story doesn\'t exist',
+    NOT_PERMITABLE: 'Permission Denied',
 };

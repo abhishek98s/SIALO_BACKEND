@@ -5,6 +5,7 @@ import { OAS3Definition } from 'swagger-jsdoc';
 import * as auth_docs from './auth.docs';
 import * as user_docs from './user.docs';
 import * as post_docs from './post.docs';
+import * as story_docs from './story.docs';
 
 export const swaggerConfig: OAS3Definition = {
   openapi: '3.0.0',
@@ -23,12 +24,14 @@ export const swaggerConfig: OAS3Definition = {
     ...auth_docs.docs,
     ...user_docs.docs,
     ...post_docs.docs,
-    },
+    ...story_docs.docs,
+  },
   components: {
     ...auth_docs.schema,
     schemas: {
       ...user_docs.schema,
       ...post_docs.schema,
+      ...story_docs.schema,
     },
   },
 };

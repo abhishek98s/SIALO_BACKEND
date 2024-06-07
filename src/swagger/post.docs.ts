@@ -325,7 +325,7 @@ export const docs = {
             },
         },
     },
-    '/post/comment/postId': {
+    '/post/comment/{postId}': {
         patch: {
             tags: [
                 'Post',
@@ -380,7 +380,7 @@ export const docs = {
             },
         },
     },
-    '/post/reqPost': {
+    '/post/{reqPost}': {
         get: {
             tags: [
                 'Post',
@@ -452,7 +452,7 @@ export const docs = {
             },
         },
     },
-    '/post/id': {
+    '/post/{id}': {
         patch: {
             tags: [
                 'Post',

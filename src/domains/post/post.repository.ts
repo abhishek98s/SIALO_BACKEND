@@ -3,15 +3,15 @@ import Post, { IComment, IPost } from './post.model';
 
 
 export const fetchAll = async () => {
-    return await Post.find({});
+    return await Post.find({}).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
 };
 
 export const fetchById = async (post_id: string) => {
-    return await Post.find({ _id: post_id });
+    return await Post.find({ _id: post_id }).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
 };
 
 export const fetchPostsUpTo = async (no_of_posts: number) => {
-    return await Post.find({}).limit(no_of_posts);
+    return await Post.find({}).limit(no_of_posts).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
 };
 
 export const create = async (post_details: IPost) => {
@@ -19,19 +19,25 @@ export const create = async (post_details: IPost) => {
 
     if (!post) throw new Error(postExceptionMessage.POST_FALIED);
 
-    return await post.save();
+    const returned_post = await post.save();
+
+    const { name, userId, caption, post_image, likes, comments, _id } = returned_post;
+    return { name, userId, caption, post_image, likes, comments, _id };
 };
 
 export const fetchByUserId = async (user_id: string) => {
-    return await Post.find({ userId: user_id });
+    return await Post.find({ userId: user_id }).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
 };
 
 export const addCommentById = async (post_id: string, commentData: IComment) => {
-    return await Post.findOneAndUpdate(
+    const updatedPost = await Post.findOneAndUpdate(
         { _id: post_id },
         { $push: { comments: { ...commentData } } },
-        { new: true },
+        { new: true, select: ['comments'] },
     );
+
+    const lastComment = updatedPost?.comments[updatedPost.comments.length - 1];
+    return { _id: post_id, lastComment }
 };
 
 export const isPostLiked = async (post_id: string, user_id: string) => {

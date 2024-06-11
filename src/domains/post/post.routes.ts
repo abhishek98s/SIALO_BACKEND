@@ -9,6 +9,8 @@ const router = express.Router();
 
 router.use(verifyToken);
 
+router.patch('/like', post_controller.likeAPost);
+
 router.post('/', upload.single('sialo_image'), verifyToken, post_controller.createPost)
     .get('/', post_controller.getAllPost)
     .patch('/:id', post_controller.updateCaption);
@@ -20,6 +22,5 @@ router.delete('/:id', post_controller.deletePost);
 
 router.patch('/comment/:postId', post_controller.addComment);
 
-router.patch('/like', post_controller.likeAPost);
 
 export default router;

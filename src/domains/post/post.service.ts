@@ -8,9 +8,6 @@ import { postExceptionMessage } from './constant/postExceptionMessage';
 
 export const getAllPost = async () => {
     const posts = await PostDAO.fetchAll();
-
-    if (posts.length === 0) throw new Error(postExceptionMessage.POST_UNAVAIABLE);
-
     return posts;
 };
 

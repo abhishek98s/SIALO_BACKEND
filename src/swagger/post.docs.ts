@@ -246,7 +246,15 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Post',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            $ref: '#/components/schemas/Post',
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -268,7 +276,7 @@ export const docs = {
                 description: 'Post content',
                 required: true,
                 content: {
-                    'multipart/formdata': {
+                    'multipart/form-data': {
                         schema: {
                             $ref: '#/components/schemas/Post',
                         },
@@ -281,7 +289,50 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Post',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        properties: {
+                                            _id: {
+                                                type: 'string',
+                                            },
+                                            name: {
+                                                type: 'string',
+                                            },
+                                            userId: {
+                                                type: 'string',
+                                            },
+                                            caption: {
+                                                type: 'string',
+                                            },
+                                            post_image: {
+                                                type: 'string',
+                                            },
+                                            likes: {
+                                                type: 'array',
+                                                items: {
+                                                    type: 'string',
+                                                },
+                                            },
+                                            comments: {
+                                                type: 'array',
+                                                items: {
+                                                    properties: {
+                                                        comment: {
+                                                            type: 'string',
+                                                        },
+                                                        comment_user_name: {
+                                                            type: 'string',
+                                                        },
+                                                        comment_user_picture: {
+                                                            type: 'string',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -289,7 +340,7 @@ export const docs = {
             },
         },
     },
-    '/post/userId': {
+    '/post/{userId}': {
         get: {
             tags: [
                 'Post',
@@ -317,7 +368,53 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Post',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                _id: {
+                                                    type: 'string',
+                                                },
+                                                name: {
+                                                    type: 'string',
+                                                },
+                                                userId: {
+                                                    type: 'string',
+                                                },
+                                                caption: {
+                                                    type: 'string',
+                                                },
+                                                post_image: {
+                                                    type: 'string',
+                                                },
+                                                likes: {
+                                                    type: 'array',
+                                                    items: {
+                                                        type: 'string',
+                                                    },
+                                                },
+                                                comments: {
+                                                    type: 'array',
+                                                    items: {
+                                                        properties: {
+                                                            comment: {
+                                                                type: 'string',
+                                                            },
+                                                            comment_user_name: {
+                                                                type: 'string',
+                                                            },
+                                                            comment_user_picture: {
+                                                                type: 'string',
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -372,7 +469,24 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Post',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        properties: {
+                                            _id: {
+                                                type: 'string',
+                                            },
+                                            lastComment: {
+                                                type: 'object',
+                                                properties: {
+                                                    comment: { type: 'string' },
+                                                    comment_user_name: { type: 'string' },
+                                                    comment_user_picture: { type: 'string' },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -380,7 +494,7 @@ export const docs = {
             },
         },
     },
-    '/post/{reqPost}': {
+    '/post/reqPost': {
         get: {
             tags: [
                 'Post',
@@ -408,7 +522,53 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Post',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                _id: {
+                                                    type: 'string',
+                                                },
+                                                name: {
+                                                    type: 'string',
+                                                },
+                                                userId: {
+                                                    type: 'string',
+                                                },
+                                                caption: {
+                                                    type: 'string',
+                                                },
+                                                post_image: {
+                                                    type: 'string',
+                                                },
+                                                likes: {
+                                                    type: 'array',
+                                                    items: {
+                                                        type: 'string',
+                                                    },
+                                                },
+                                                comments: {
+                                                    type: 'array',
+                                                    items: {
+                                                        properties: {
+                                                            comment: {
+                                                                type: 'string',
+                                                            },
+                                                            comment_user_name: {
+                                                                type: 'string',
+                                                            },
+                                                            comment_user_picture: {
+                                                                type: 'string',
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -444,7 +604,10 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Post',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    message: { type: 'string' },
+                                },
                             },
                         },
                     },
@@ -499,7 +662,20 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Post',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'object',
+                                        properties: {
+                                            _id: {
+                                                type: 'string',
+                                            },
+                                            caption: {
+                                                type: 'string',
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -533,7 +709,10 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/Post',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    message: { type: 'string' },
+                                },
                             },
                         },
                     },
@@ -544,48 +723,55 @@ export const docs = {
 };
 
 export const schema = {
-        Post: {
-            type: 'object',
-            properties: {
-                _id: {
+    Post: {
+        type: 'object',
+        properties: {
+            _id: {
+                type: 'string',
+                readOnly: true,
+            },
+            name: {
+                type: 'string',
+                readOnly: true,
+            },
+            userId: {
+                type: 'string',
+            },
+            caption: {
+                type: 'string',
+            },
+            post_image: {
+                type: 'string',
+                readOnly: true,
+            },
+            sialo_image: {
+                type: 'string',
+                format: 'binary',
+            },
+            likes: {
+                type: 'array',
+                items: {
                     type: 'string',
-                    readOnly: true,
                 },
-                name: {
-                    type: 'string',
-                    readOnly: true,
-                },
-                userId: {
-                    type: 'string',
-                },
-                caption: {
-                    type: 'string',
-                },
-                post_image: {
-                    type: 'string',
-                    readOnly: true,
-                },
-                sialo_image: {
-                    type: 'string',
-                    format: 'binary',
-                },
-                likes: {
-                    type: 'integer',
-                    readOnly: true,
-                },
-                comments: {
-                    type: 'Array',
-                    items: {
-                        properties: {
-                            comment: {
-                                type: 'string',
-                            },
-                            comment_user_name: {
-                                type: 'string',
-                            },
+                readOnly: true,
+            },
+            comments: {
+                type: 'array',
+                items: {
+                    properties: {
+                        comment: {
+                            type: 'string',
+                        },
+                        comment_user_name: {
+                            type: 'string',
+                        },
+                        comment_user_picture: {
+                            type: 'string',
                         },
                     },
                 },
+                readOnly: true,
             },
         },
+    },
 };

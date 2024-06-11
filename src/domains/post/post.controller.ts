@@ -8,7 +8,7 @@ import { postExceptionMessage } from './constant/postExceptionMessage';
 export const getAllPost = asyncWrapper(async (req: Request, res: Response) => {
     const posts = await post_service.getAllPost();
 
-    res.status(200).json({ data: posts });
+    res.status(200).json({ status: true, data: posts });
 });
 
 
@@ -17,7 +17,7 @@ export const getUserPosts = asyncWrapper(async (req: Request, res: Response) => 
 
     const userPosts = await post_service.getUserPosts(userId);
 
-    res.status(200).json({ data: userPosts });
+    res.status(200).json({ status: true, data: userPosts });
 });
 
 
@@ -35,7 +35,7 @@ export const createPost = asyncWrapper(async (req: Request, res: Response) => {
 
     const userPost = await post_service.createPost({ name, userId: id, caption, post_image }, post_image);
 
-    res.status(200).json({ data: userPost });
+    res.status(200).json({ status: true, data: userPost });
 });
 
 
@@ -55,7 +55,7 @@ export const addComment = asyncWrapper(async (req: Request, res: Response) => {
 
     const post = await post_service.addPostComments(postId, comment_info);
 
-    res.status(200).json({ data: post });
+    res.status(200).json({ status: true, data: post });
 });
 
 
@@ -64,7 +64,7 @@ export const getRequestedPosts = asyncWrapper(async (req: Request, res: Response
 
     const posts = await post_service.getRequestedPosts(no_of_posts);
 
-    res.status(200).json({ data: posts });
+    res.status(200).json({ status: true, data: posts });
 });
 
 export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {

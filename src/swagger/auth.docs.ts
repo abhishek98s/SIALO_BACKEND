@@ -77,11 +77,13 @@ export const docs = {
                         'application/json': {
                             schema: {
                                 properties: {
-                                    email: {
-                                        type: 'string',
-                                    },
-                                    password: {
-                                        type: 'string',
+                                    data: {
+                                        type: 'object',
+                                        properties: {
+                                            token: {
+                                                type: 'string',
+                                            },
+                                        },
                                     },
                                 },
                             },

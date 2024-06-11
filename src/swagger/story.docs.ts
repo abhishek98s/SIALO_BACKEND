@@ -20,22 +20,24 @@ export const docs = {
                                 properties: {
                                     status: { type: 'boolean' },
                                     data: {
-                                        type: 'object',
-                                        properties: {
-                                            _id: {
-                                                type: 'string',
-                                            },
-                                            user: {
-                                                type: 'string',
-                                            },
-                                            caption: {
-                                                type: 'string',
-                                            },
-                                            storyImage: {
-                                                type: 'string',
-                                            },
-                                            createdAt: {
-                                                type: 'date',
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                _id: {
+                                                    type: 'string',
+                                                },
+                                                user: {
+                                                    type: 'string',
+                                                },
+                                                caption: {
+                                                    type: 'string',
+                                                },
+                                                storyImage: {
+                                                    type: 'string',
+                                                },
+                                                createdAt: {
+                                                    type: 'string',
+                                                },
                                             },
                                         },
                                     },
@@ -169,7 +171,7 @@ export const docs = {
                                                 type: 'string',
                                             },
                                             createdAt: {
-                                                type: 'date',
+                                                type: 'string',
                                             },
                                         },
                                     },
@@ -225,7 +227,7 @@ export const docs = {
                                                 type: 'string',
                                             },
                                             createdAt: {
-                                                type: 'date',
+                                                type: 'string',
                                             },
                                         },
                                     },

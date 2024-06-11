@@ -12,6 +12,7 @@ import userRoute from './domains/user/user.routes';
 import authRoute from './auth/auth.routes';
 import postRoute from './domains/post/post.routes';
 import storyRoute from './domains/story/story.routes';
+import { cron_story } from './cron/story.crone';
 
 const app = express();
 const port = config.app.port;
@@ -33,6 +34,8 @@ app.use(errorHandlerMiddleware);
 app.get('/', (req, res) => {
     res.send('Sialo : Social Media App');
 });
+
+cron_story();
 
 const start = async () => {
     try {

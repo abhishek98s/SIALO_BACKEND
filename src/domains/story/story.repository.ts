@@ -25,3 +25,11 @@ export const deleteById = async (story_id: string) => {
     await Story.deleteOne({ _id: story_id });
     return;
 };
+
+export const deleteOldStories = async () => {
+    const twentyFourHoursAgo = new Date(Date.now() - (24 * 60 * 60 * 1000));
+
+    await Story.deleteMany({
+        createdAt: { $lt: twentyFourHoursAgo },
+    });
+};

@@ -62,7 +62,7 @@ export const docs = {
                 description: 'Story content',
                 required: true,
                 content: {
-                    'multipart/formdata': {
+                    'multipart/form-data': {
                         schema: {
                             $ref: '#/components/schemas/Story',
                             required: [

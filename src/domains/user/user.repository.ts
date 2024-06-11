@@ -6,7 +6,7 @@ export const fetchById = async (id: string) => {
 };
 
 export const fetchByEmail = async (email: string) => {
-    const user = await User.findOne({ email: email }).select(['_id', 'name', 'email', 'img', 'friends']);
+    const user = await User.findOne({ email: email }).select(['_id', 'name', 'email', 'img', 'friends', 'password']);
     if (!user) throw new Error('User doesnot exist');
 
     return user;

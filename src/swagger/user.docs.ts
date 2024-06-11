@@ -198,7 +198,15 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/User',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            $ref: '#/components/schemas/User',
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -232,7 +240,12 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/User',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        $ref: '#/components/schemas/User',
+                                    },
+                                },
                             },
                         },
                     },
@@ -264,7 +277,10 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/User',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    message: { type: 'string' },
+                                },
                             },
                         },
                     },
@@ -298,7 +314,19 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/User',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                _id: { type: 'string' },
+                                                img: { type: 'string' },
+                                                name: { type: 'string' },
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -322,7 +350,19 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/User',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                _id: { type: 'string' },
+                                                name: { type: 'string' },
+                                                img: { type: 'string' },
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -356,7 +396,10 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/User',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    message: { type: 'string' },
+                                },
                             },
                         },
                     },
@@ -390,7 +433,10 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/User',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    message: { type: 'string' },
+                                },
                             },
                         },
                     },
@@ -424,7 +470,10 @@ export const docs = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/User',
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    message: { type: 'string' },
+                                },
                             },
                         },
                     },
@@ -451,13 +500,20 @@ export const schema = {
             password: {
                 type: 'string',
             },
+            img: {
+                type: 'string',
+            },
+            friends: {
+                properties: {
+                    id: { type: 'string' },
+                    name: { type: 'string' },
+                    image: { type: 'string' },
+                    pending: { type: 'string' },
+                    _id: { type: 'string' },
+                },
+            },
         },
         required: ['name', 'email', 'password'],
-        example: {
-            name: 'Examp',
-            email: 'example@gmail.com',
-            password: 'Example123!',
-        },
     },
 };
 

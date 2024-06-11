@@ -102,10 +102,9 @@ export const removeUserById = async (user_id: string) => {
 
 export const fetchRecommendedPeople = async (user_id: string) => {
     const user = await UserDAO.fetchById(user_id);
-    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
 
-    const user_friends_id = user.friends.map(friend => new mongoose.Types.ObjectId(friend.id));
-    const recommend_user = await UserDAO.fetchRecommendedPeople(user_id, user_friends_id);
+    const user_friends_id = user?.friends.map(friend => new mongoose.Types.ObjectId(friend.id));
+    const recommend_user = await UserDAO.fetchRecommendedPeople(user_id, user_friends_id!);
 
     return _.sampleSize(recommend_user, 4);
 };

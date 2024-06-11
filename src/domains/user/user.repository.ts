@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 import { IFriend, IUser, User } from './user.model';
 
 export const fetchById = async (id: string) => {
-    return await User.findOne({ _id: id });
+    return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends']);
 };
 
 export const fetchByEmail = async (email: string) => {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select(['_id', 'name', 'email', 'img', 'friends']);
     if (!user) throw new Error('User doesnot exist');
 
     return user;
@@ -17,7 +17,7 @@ export const fetchByName = async (name: string) => {
 };
 
 export const fetchAll = async () => {
-    return await User.find();
+    return await User.find().select(['_id', 'name', 'email', 'img', 'friends']);
 };
 
 export const create = async (new_user: IUser) => {
@@ -56,5 +56,5 @@ export const fetchFriends = async (user_id: string) => {
 };
 
 export const fetchRecommendedPeople = async (user_id: string, user_friends: mongoose.Types.ObjectId[]) => {
-    return await User.find({ _id: { $nin: user_friends } }).select(['name', 'img']);
+    return await User.find({ _id: { $nin: [...user_friends, user_id] } }).select(['name', 'img']);
 };

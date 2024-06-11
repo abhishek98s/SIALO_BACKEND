@@ -37,7 +37,7 @@ export const addCommentById = async (post_id: string, commentData: IComment) => 
     );
 
     const lastComment = updatedPost?.comments[updatedPost.comments.length - 1];
-    return { _id: post_id, lastComment }
+    return { _id: post_id, lastComment };
 };
 
 export const isPostLiked = async (post_id: string, user_id: string) => {

@@ -8,14 +8,16 @@
     "start:dev": "npx kill-port 3000 5000 9000 && npx nodemon",
     "dev": "node build/index.js",
     "build": "rimraf ./build && tsc",
-    "start": "node build/index.js"
+    "start": "node api/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^20.14.12",
     "@types/swagger-ui-express": "^4.1.6",
     "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
     "cloudinary": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -30,6 +32,7 @@
     "node-cron": "^3.0.3",
     "sharp": "^0.33.3",
     "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-dist": "^5.17.14",
     "swagger-ui-express": "^5.0.0",
     "validator": "^13.11.0",
     "vercel": "^35.1.0",
@@ -49,6 +52,7 @@
     "@types/multer": "^1.4.11",
     "@types/node-cron": "^3.0.11",
     "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-dist": "^3.30.5",
     "@types/validator": "^13.11.9",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
@@ -59,7 +63,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "globals": "^15.0.0",
     "nodemon": "^3.1.0",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.4",
     "typescript-eslint": "^7.6.0"
   }
 }

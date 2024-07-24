@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "npx kill-port 3000 5000 9000 && npx nodemon",
-    "build": "rimraf ./build/index.js",
-    "start": "nom run build && node build/index.js"
+    "build": "rimraf ./build && tsc",
+    "start": "node api/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +31,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "validator": "^13.11.0",
+    "vercel": "^35.1.0",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0"
   },

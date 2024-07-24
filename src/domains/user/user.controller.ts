@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
-import asyncWrapper from '../../utils/async.ts';
-import * as user_service from './user.service.ts';
-import { userExceptionMessage } from './constant/userExceptionMessage.ts';
+import asyncWrapper from '../../utils/async';
+import * as user_service from './user.service';
+import { userExceptionMessage } from './constant/userExceptionMessage';
 
 export const getUser = asyncWrapper(async (req: Request, res: Response) => {
     const user_id = req.params.id;

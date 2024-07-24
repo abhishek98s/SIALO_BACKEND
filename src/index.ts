@@ -54,7 +54,7 @@ const start = async () => {
             console.log(`${name} started at http://localhost:${port}`);
         });
     } catch (err) {
-        logger.error(err);
+        console.error(err);
     }
 };
 

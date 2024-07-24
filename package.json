@@ -8,7 +8,7 @@
     "start:dev": "npx kill-port 3000 5000 9000 && npx nodemon",
     "dev": "node build/index.js",
     "build": "rimraf ./build && tsc",
-    "start": "node build/index.ts"
+    "start": "node build/index.js"
   },
   "keywords": [],
   "author": "",

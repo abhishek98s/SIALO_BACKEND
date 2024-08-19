@@ -14,8 +14,28 @@ export const getAllStories = async (user_id: string) => {
 
     const friends_ids = user.friends.map((friend: IFriend) => friend.id);
 
-    return await StoryDAO.fetchStoriesOfFriends(friends_ids);
+    const storiesPromises = friends_ids.map((user_id) => {
+        return StoryDAO.fetchByUserId(user_id).then((user_stories) => {
+            const stories_info = user_stories.map((story) => ({
+                story_id: story._id,
+                story_image: story.story_image,
+                caption: story.caption
+            }))
+
+            return {
+                user_id,
+                user_name: user_stories[0].user_name,
+                user_image: user_stories[0].user_image,
+                stories: stories_info
+            }
+        })
+    })
+
+    const stories = await Promise.all(storiesPromises);
+
+    return stories;
 };
+
 
 export const createStory = async (story_data: IStory) => {
     const user_id = story_data.user_id.toString();
@@ -24,9 +44,9 @@ export const createStory = async (story_data: IStory) => {
 
     if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
 
-    const img_url = await uploadToCloudinary(story_data.storyImage);
+    const img_url = await uploadToCloudinary(story_data.story_image);
 
-    story_data.storyImage = img_url;
+    story_data.story_image = img_url;
     story_data.user_id = new mongoose.Types.ObjectId(_id);
     story_data.user_name = name;
     story_data.user_image = name;
@@ -44,7 +64,7 @@ export const updateStory = async (story_id: string, user_id: string, caption: st
 
     if (file_path) {
         const img_url = await uploadToCloudinary(file_path);
-        story.storyImage = img_url;
+        story.story_image = img_url;
     }
 
     return StoryDAO.update(story, caption);

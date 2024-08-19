@@ -26,7 +26,7 @@ export const postStory = asyncWrapper(async (req: Request, res: Response) => {
         user_name: '',
         user_image: '',
         caption,
-        storyImage: req.file!.path,
+        story_image: req.file!.path,
     };
 
     const posted_story = await story_service.createStory(story_data);

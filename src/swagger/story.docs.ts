@@ -23,20 +23,30 @@ export const docs = {
                                         type: 'array',
                                         items: {
                                             properties: {
-                                                _id: {
+                                                user_id: {
                                                     type: 'string',
                                                 },
-                                                user: {
+                                                user_name: {
                                                     type: 'string',
                                                 },
-                                                caption: {
+                                                user_image: {
                                                     type: 'string',
                                                 },
-                                                storyImage: {
-                                                    type: 'string',
-                                                },
-                                                createdAt: {
-                                                    type: 'string',
+                                                stories: {
+                                                    type: 'array',
+                                                    items: {
+                                                        properties: {
+                                                            story_id: {
+                                                                type: 'string',
+                                                            },
+                                                            story_image: {
+                                                                type: 'string',
+                                                            },
+                                                            caption: {
+                                                                type: 'string',
+                                                            },
+                                                        },
+                                                    },
                                                 },
                                             },
                                         },
@@ -92,7 +102,7 @@ export const docs = {
                                             caption: {
                                                 type: 'string',
                                             },
-                                            storyImage: {
+                                            story_image: {
                                                 type: 'string',
                                             },
                                             createdAt: {
@@ -167,7 +177,7 @@ export const docs = {
                                             caption: {
                                                 type: 'string',
                                             },
-                                            storyImage: {
+                                            story_image: {
                                                 type: 'string',
                                             },
                                             createdAt: {
@@ -223,7 +233,7 @@ export const docs = {
                                             caption: {
                                                 type: 'string',
                                             },
-                                            storyImage: {
+                                            story_image: {
                                                 type: 'string',
                                             },
                                             createdAt: {
@@ -257,7 +267,7 @@ export const schema = {
                 type: 'string',
                 required: true,
             },
-            storyImage: {
+            story_image: {
                 type: 'string',
                 readOnly: true,
             },

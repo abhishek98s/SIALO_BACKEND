@@ -2,7 +2,9 @@ import mongoose from 'mongoose';
 
 export interface IStory {
     id?: mongoose.Types.ObjectId;
-    user: mongoose.Types.ObjectId,
+    user_id: mongoose.Types.ObjectId,
+    user_name: string,
+    user_image: string,
     caption: string,
     storyImage: string,
     createdAt?: Date
@@ -10,9 +12,17 @@ export interface IStory {
 
 export const storySchema = new mongoose.Schema(
     {
-        user: {
+        user_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
+            required: true,
+        },
+        user_name: {
+            type: String,
+            required: true,
+        },
+        user_image: {
+            type: String,
             required: true,
         },
         caption: {

@@ -10,7 +10,9 @@ export const fetchStoriesOfFriends = async (friend_ids: string[]) => {
 
 export const create = async (story_data: IStory) => {
     const story = new Story({ ...story_data });
-    return await story.save();
+    const response = await story.save();
+    const { _id, user_id, user_name, user_image, storyImage } = response;
+    return { _id, user_id, user_name, user_image, storyImage }
 };
 
 export const update = async (story_data: IStory, caption: string) => {

@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { IRegister } from './auth.model';
-import cloudinary from '../utils/cloudinary';
 import { isMatchingPassword, passwordHash } from '../utils/bcrypt';
 import * as UserDAO from '../domains/user/user.repository';
 import { userExceptionMessage } from '../domains/user/constant/userExceptionMessage';

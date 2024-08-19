@@ -5,6 +5,7 @@ import { storyExceptionMessage } from './constant/storyExceptionMessage';
 import { userExceptionMessage } from './../user/constant/userExceptionMessage';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { IFriend } from '../user/user.model';
+import mongoose from 'mongoose';
 
 export const getAllStories = async (user_id: string) => {
     const user = await UserDAO.fetchById(user_id.toString());
@@ -17,18 +18,21 @@ export const getAllStories = async (user_id: string) => {
 };
 
 export const createStory = async (story_data: IStory) => {
-    const user_id = story_data.user.toString();
+    const user_id = story_data.user_id.toString();
     const user = await UserDAO.fetchById(user_id);
+    const { _id, name } = user;
 
     if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
 
     const img_url = await uploadToCloudinary(story_data.storyImage);
 
     story_data.storyImage = img_url;
+    story_data.user_id = new mongoose.Types.ObjectId(_id);
+    story_data.user_name = name;
+    story_data.user_image = name;
 
-    const db_response = await StoryDAO.create(story_data);
+    return await StoryDAO.create(story_data);
 
-    return { ...db_response, user };
 };
 
 export const updateStory = async (story_id: string, user_id: string, caption: string, file_path: string | null) => {
@@ -36,7 +40,7 @@ export const updateStory = async (story_id: string, user_id: string, caption: st
 
     if (!story) throw new Error(storyExceptionMessage.STORY_NOT_FOUND);
 
-    if (story.user.toString() !== user_id.toString()) throw new Error(storyExceptionMessage.NOT_PERMITABLE);
+    if (story.user_id.toString() !== user_id.toString()) throw new Error(storyExceptionMessage.NOT_PERMITABLE);
 
     if (file_path) {
         const img_url = await uploadToCloudinary(file_path);
@@ -51,7 +55,7 @@ export const deleteStory = async (story_id: string, user_id: string) => {
 
     if (!story) throw new Error(storyExceptionMessage.STORY_NOT_FOUND);
 
-    if (story.user.toString() !== user_id.toString()) throw new Error(storyExceptionMessage.NOT_PERMITABLE);
+    if (story.user_id.toString() !== user_id.toString()) throw new Error(storyExceptionMessage.NOT_PERMITABLE);
 
     await StoryDAO.deleteById(story_id);
 

@@ -22,7 +22,9 @@ export const postStory = asyncWrapper(async (req: Request, res: Response) => {
     if (!req.file) throw new Error(storyExceptionMessage.FILE_REQUIRED);
 
     const story_data = {
-        user: id,
+        user_id: id,
+        user_name: '',
+        user_image: '',
         caption,
         storyImage: req.file!.path,
     };

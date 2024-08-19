@@ -4,6 +4,9 @@ import { upload } from '../../utils/multer';
 
 import * as post_controller from './post.controller';
 import { verifyToken } from '../../middleware/authentication.middleware';
+import joiValidationMiddleware, { joiFileValidationMiddleware } from '../../middleware/joiValidationMiddleware';
+import { postBodySchema } from './post.schema';
+import { fileSchema } from '../user/user.schema';
 
 const router = express.Router();
 
@@ -11,7 +14,10 @@ router.use(verifyToken);
 
 router.patch('/like', post_controller.likeAPost);
 
-router.post('/', upload.single('sialo_image'), verifyToken, post_controller.createPost)
+router.post('/', upload.single('sialo_image'),
+    joiFileValidationMiddleware(fileSchema),
+    joiValidationMiddleware(postBodySchema),
+    verifyToken, post_controller.createPost)
     .get('/', post_controller.getAllPost)
     .patch('/:id', post_controller.updateCaption);
 

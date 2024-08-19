@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { IFriend, IUser, User } from './user.model';
 
-export const fetchById = async (id: string) => {
+export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, friends: IFriend[], }> => {
     return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends']);
 };
 

@@ -6,7 +6,7 @@ export interface IStory {
     user_name: string,
     user_image: string,
     caption: string,
-    storyImage: string,
+    story_image: string,
     createdAt?: Date
 }
 
@@ -29,7 +29,7 @@ export const storySchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        storyImage: {
+        story_image: {
             type: String,
             required: true,
         },

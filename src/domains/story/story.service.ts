@@ -17,7 +17,8 @@ export const getAllStories = async (user_id: string) => {
 };
 
 export const createStory = async (story_data: IStory) => {
-    const user = await UserDAO.fetchById(story_data.user.toString());
+    const user_id = story_data.user.toString();
+    const user = await UserDAO.fetchById(user_id);
 
     if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
 
@@ -25,7 +26,9 @@ export const createStory = async (story_data: IStory) => {
 
     story_data.storyImage = img_url;
 
-    return await StoryDAO.create(story_data);
+    const db_response = await StoryDAO.create(story_data);
+
+    return { ...db_response, user };
 };
 
 export const updateStory = async (story_id: string, user_id: string, caption: string, file_path: string | null) => {

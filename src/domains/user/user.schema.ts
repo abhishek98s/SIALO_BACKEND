@@ -3,6 +3,7 @@ import Joi, { Schema } from 'joi';
 export const jwtUserSchema = Joi.object().keys({
     id: Joi.string().required(),
     name: Joi.string().required(),
+    image: Joi.string(),
     iat: Joi.number(),
     exp: Joi.number(),
 })

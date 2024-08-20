@@ -16,6 +16,9 @@ export const getAllStories = async (user_id: string) => {
 
     const storiesPromises = friends_ids.map((user_id) => {
         return StoryDAO.fetchByUserId(user_id).then((user_stories) => {
+
+            if (user_stories.length === 0) return;
+
             const stories_info = user_stories.map((story) => ({
                 story_id: story._id,
                 story_image: story.story_image,
@@ -33,7 +36,7 @@ export const getAllStories = async (user_id: string) => {
 
     const stories = await Promise.all(storiesPromises);
 
-    return stories;
+    return stories.filter((story) => story != null);
 };
 
 

@@ -736,6 +736,7 @@ export const schema = {
             },
             userId: {
                 type: 'string',
+                readOnly: true,
             },
             caption: {
                 type: 'string',

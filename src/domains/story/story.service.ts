@@ -54,7 +54,7 @@ export const createStory = async (story_data: IStory) => {
     story_data.story_image = img_url;
     story_data.user_id = new mongoose.Types.ObjectId(_id);
     story_data.user_name = name;
-    story_data.user_image = name;
+    story_data.user_image = user.img;
 
     return await StoryDAO.create(story_data);
 

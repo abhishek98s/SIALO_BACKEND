@@ -46,6 +46,7 @@ app.get('/', (req, res) => {
 });
 
 cron_story();
+app.use('/cron', cron_story);
 
 const start = async () => {
     try {

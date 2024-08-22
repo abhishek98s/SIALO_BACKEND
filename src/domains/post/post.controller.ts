@@ -23,7 +23,7 @@ export const getUserPosts = asyncWrapper(async (req: Request, res: Response) => 
 
 export const createPost = asyncWrapper(async (req: Request, res: Response) => {
     const { caption } = req.body;
-    const { id, name } = req.body.user;
+    const { id, name, image } = req.body.user;
 
     if (!caption) {
         throw new Error(postExceptionMessage.CAPTION_REQUIRED);
@@ -33,7 +33,7 @@ export const createPost = asyncWrapper(async (req: Request, res: Response) => {
 
     const post_image = req.file!.path;
 
-    const userPost = await post_service.createPost({ name, userId: id, caption, post_image }, post_image);
+    const userPost = await post_service.createPost({ name, userId: id, caption, post_image, user_image: image }, post_image);
 
     res.status(200).json({ status: true, data: userPost });
 });
@@ -41,13 +41,14 @@ export const createPost = asyncWrapper(async (req: Request, res: Response) => {
 
 export const addComment = asyncWrapper(async (req: Request, res: Response) => {
     const { comment } = req.body;
-    const { name, image } = req.body.user;
+    const { name, image, id } = req.body.user;
 
     const { postId } = req.params;
 
     if (!comment) throw new Error(postExceptionMessage.NAME_COMMENT_REQUIRED);
 
     const comment_info = {
+        user_id: id,
         comment,
         comment_user_name: name,
         comment_user_picture: image,

@@ -3,7 +3,7 @@ import Post, { IComment, IPost } from './post.model';
 
 
 export const fetchAll = async () => {
-    return await Post.find({}).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
+    return await Post.find({}).select(['_id', 'name', 'userId', 'user_image', 'caption', 'post_image', 'comments', 'likes', 'createdAt']);
 };
 
 export const fetchById = async (post_id: string) => {
@@ -21,12 +21,14 @@ export const create = async (post_details: IPost) => {
 
     const returned_post = await post.save();
 
-    const { name, userId, caption, post_image, likes, comments, _id } = returned_post;
-    return { name, userId, caption, post_image, likes, comments, _id };
+    const { name, userId, caption, post_image, likes, comments, user_image, _id } = returned_post;
+    return {
+        _id, userId, user_image, name, caption, post_image, likes, comments,
+    };
 };
 
 export const fetchByUserId = async (user_id: string) => {
-    return await Post.find({ userId: user_id }).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
+    return await Post.find({ userId: user_id }).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes', 'createdAt']);
 };
 
 export const addCommentById = async (post_id: string, commentData: IComment) => {

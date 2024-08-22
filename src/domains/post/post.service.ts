@@ -5,10 +5,21 @@ import * as PostDAO from './post.repository';
 import * as UserDAO from '../user/user.repository';
 import { userExceptionMessage } from '../user/constant/userExceptionMessage';
 import { postExceptionMessage } from './constant/postExceptionMessage';
+import { convertDateTime } from '../../utils/date';
 
 export const getAllPost = async () => {
     const posts = await PostDAO.fetchAll();
-    return posts;
+    return posts.map((post) => ({
+        id: post._id,
+        userId: post.userId,
+        name: post.name,
+        user_image: post.user_image,
+        caption: post.caption,
+        createdAt: convertDateTime(post.createdAt.toString()),
+        post_image: post.post_image,
+        likes: post.likes,
+        comments: post.comments,
+    }));
 };
 
 export const getUserPosts = async (user_id: string) => {
@@ -18,7 +29,10 @@ export const getUserPosts = async (user_id: string) => {
     const user_posts = await PostDAO.fetchByUserId(user_id);
     if (!user_posts) throw Error(postExceptionMessage.POST_UNAVAIABLE);
 
-    return user_posts;
+    return user_posts.map((post) => ({
+        ...post,
+        createdAt: convertDateTime(post.createdAt.toString()),
+    }));
 };
 
 export const createPost = async (postDetails: IPost, image_path: string) => {

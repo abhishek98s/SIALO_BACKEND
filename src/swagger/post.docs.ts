@@ -452,6 +452,7 @@ export const docs = {
                         schema: {
                             type: 'object',
                             properties: {
+                                status: { type: 'boolean' },
                                 comment: {
                                     type: 'string',
                                 },

@@ -3,9 +3,10 @@ import jwt from 'jsonwebtoken';
 
 import dotenv from 'dotenv';
 import { middlewareExceptionMessage } from './constant/middlewareExceptionMessage';
+import asyncWrapper from '../utils/async';
 
 dotenv.config();
-export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.headers['authorization'];
         if (!token) throw new Error(middlewareExceptionMessage.TOKEN_REQUIRED);
@@ -19,6 +20,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
             next();
         });
     } catch (error) {
-        res.status(401).json({ msg: (error as Error).message });
+        res.status(401).json({ status: false, message: (error as Error).message });
     }
-};
+});

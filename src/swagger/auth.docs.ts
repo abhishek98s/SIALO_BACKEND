@@ -77,6 +77,7 @@ export const docs = {
                         'application/json': {
                             schema: {
                                 properties: {
+                                    status: { type: 'boolean' },
                                     data: {
                                         type: 'object',
                                         properties: {

@@ -83,7 +83,7 @@ export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
         message = postExceptionMessage.UNLIKE_SUCCESS;
     }
 
-    res.status(200).json({ success: true, message: message });
+    res.status(200).json({ status: true, message: message });
 });
 
 export const deletePost = asyncWrapper(async (req: Request, res: Response) => {
@@ -93,7 +93,7 @@ export const deletePost = asyncWrapper(async (req: Request, res: Response) => {
 
     await post_service.deletePost(post_id);
 
-    res.status(200).json({ success: true, message: 'Post deleted sucessfully.' });
+    res.status(200).json({ status: true, message: 'Post deleted sucessfully.' });
 });
 
 export const updateCaption = asyncWrapper(async (req: Request, res: Response) => {
@@ -106,5 +106,5 @@ export const updateCaption = asyncWrapper(async (req: Request, res: Response) =>
 
     const updatedPost = await post_service.updateCaption(user_id, post_id, caption);
 
-    res.status(200).json({ success: true, data: updatedPost });
+    res.status(200).json({ status: true, data: updatedPost });
 });

@@ -61,9 +61,9 @@ export const addComment = asyncWrapper(async (req: Request, res: Response) => {
 
 
 export const getRequestedPosts = asyncWrapper(async (req: Request, res: Response) => {
-    const no_of_posts = req.query.no_of_posts as unknown as number;
+    const page = req.query.page as unknown as number;
 
-    const posts = await post_service.getRequestedPosts(no_of_posts);
+    const posts = await post_service.getRequestedPosts(page);
 
     res.status(200).json({ status: true, data: posts });
 });

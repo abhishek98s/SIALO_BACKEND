@@ -13,7 +13,7 @@ export const getUser = asyncWrapper(async (req: Request, res: Response) => {
 
     const user = await user_service.getUser(user_id);
 
-    res.status(200).json({ data: user });
+    res.status(200).json({ status: true, data: user });
 });
 
 export const fetchAll = asyncWrapper(async (req: Request, res: Response) => {
@@ -34,7 +34,7 @@ export const addFriend = asyncWrapper(async (req: Request, res: Response) => {
 
     const friend = await user_service.addFriend(friend_id, senderInfo);
 
-    res.status(200).json({ success: true, message: `Request sent to ${friend}` });
+    res.status(200).json({ status: true, message: `Request sent to ${friend}` });
 });
 
 export const acceptRequest = asyncWrapper(async (req: Request, res: Response) => {
@@ -46,7 +46,7 @@ export const acceptRequest = asyncWrapper(async (req: Request, res: Response) =>
 
     const friend = await user_service.acceptFriendRequest(sender_id, receiver_id);
 
-    res.status(200).json({ success: true, message: `Request accepted of ${friend}` });
+    res.status(200).json({ status: true, message: `Request accepted of ${friend}` });
 });
 
 export const rejectRequest = asyncWrapper(async (req: Request, res: Response) => {
@@ -58,7 +58,7 @@ export const rejectRequest = asyncWrapper(async (req: Request, res: Response) =>
 
     const friend = await user_service.rejectFriendRequest(sender_id, receiver_id);
 
-    res.status(200).json({ success: true, message: `Request rejected of ${friend}` });
+    res.status(200).json({ status: true, message: `Request rejected of ${friend}` });
 });
 
 export const searchUser = asyncWrapper(async (req: Request, res: Response) => {
@@ -68,7 +68,7 @@ export const searchUser = asyncWrapper(async (req: Request, res: Response) => {
 
     const searchResult = await user_service.fetchUserByName(searchText);
 
-    res.status(200).json({ success: true, data: searchResult });
+    res.status(200).json({ status: true, data: searchResult });
 });
 
 export const deleteUser = asyncWrapper(async (req: Request, res: Response) => {
@@ -77,7 +77,7 @@ export const deleteUser = asyncWrapper(async (req: Request, res: Response) => {
 
     const deleted_user = await user_service.removeUserById(user_id);
 
-    res.status(200).json({ success: true, message: `Deleted user ${deleted_user}` });
+    res.status(200).json({ status: true, message: `Deleted user ${deleted_user}` });
 });
 
 export const fetchUnknownPeople = asyncWrapper(async (req: Request, res: Response) => {
@@ -87,5 +87,5 @@ export const fetchUnknownPeople = asyncWrapper(async (req: Request, res: Respons
 
     const unknownPeoples = await user_service.fetchRecommendedPeople(user_id);
 
-    res.status(200).json({ success: true, data: unknownPeoples });
+    res.status(200).json({ status: true, data: unknownPeoples });
 });

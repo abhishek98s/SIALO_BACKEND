@@ -13,7 +13,7 @@ export const loginHandler = asyncWrapper(async (req: Request, res: Response) => 
 
     const token = await auth_service.getToken(email, password);
 
-    res.status(200).json({ data: { token } });
+    res.status(200).json({ status: true, data: { token } });
 });
 
 
@@ -28,5 +28,5 @@ export const registerHandler = asyncWrapper(async (req: Request, res: Response) 
 
     const savedUser = await auth_service.registerUser(userData);
 
-    res.status(201).json(savedUser);
+    res.status(201).json({ status: true, data: savedUser });
 });

@@ -99,7 +99,7 @@
  *       - bearerAuth: []
  *     summary: Get n no of posts.
  *     parameters:
- *       - name: no_of_posts
+ *       - name: page
  *         in: query
  *         description: Number of post to get.
  *         required: true
@@ -507,7 +507,7 @@ export const docs = {
             summary: 'Get n no of posts.',
             parameters: [
                 {
-                    name: 'no_of_posts',
+                    name: 'page',
                     in: 'query',
                     description: 'Number of post to get.',
                     required: true,

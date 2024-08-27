@@ -11,7 +11,7 @@ export const verifyToken = asyncWrapper(async (req: Request, res: Response, next
         const token = req.headers['authorization'];
         if (!token) throw new Error(middlewareExceptionMessage.TOKEN_REQUIRED);
 
-        jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET as string, (err, decoded) => {
+        jwt.verify(token.replace('Bearer ', ''), process.env.ACCESS_TOKEN_SECRET as string, (err, decoded) => {
             if (err) {
                 throw new Error(middlewareExceptionMessage.UNAUTHORIZE);
             }

@@ -6,4 +6,8 @@ const registerkSchema: Schema = joi.object().keys({
     password: joi.string().required(),
 })
 
+export const refreshTokenSchema: Schema = joi.object().keys({
+    refreshToken: joi.string().required(),
+})
+
 export default registerkSchema;

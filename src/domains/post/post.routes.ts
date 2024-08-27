@@ -21,6 +21,8 @@ router.post('/', upload.single('sialo_image'),
     .get('/', post_controller.getAllPost)
     .patch('/:id', post_controller.updateCaption);
 
+router.get('/random', post_controller.getRandomPost);
+
 router.get('/reqPost', post_controller.getRequestedPosts);
 router.get('/:userId', post_controller.getUserPosts);
 

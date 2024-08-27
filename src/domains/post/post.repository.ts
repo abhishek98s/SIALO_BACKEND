@@ -12,7 +12,7 @@ export const fetchById = async (post_id: string) => {
 };
 
 export const fetchPostsUpTo = async (no_of_posts: number) => {
-    return await Post.find({}).limit(no_of_posts).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
+    return await Post.find({}).limit(no_of_posts).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes', 'createdAt', 'user_image']);
 };
 
 export const create = async (post_details: IPost) => {
@@ -29,7 +29,7 @@ export const create = async (post_details: IPost) => {
 };
 
 export const fetchByUserId = async (user_id: string) => {
-    return await Post.find({ userId: user_id }).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes', 'createdAt']);
+    return await Post.find({ userId: user_id }).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes', 'createdAt', 'user_image']);
 };
 
 export const fetchRandomPostsUpTo = async (no_of_post: number) => {
@@ -37,7 +37,7 @@ export const fetchRandomPostsUpTo = async (no_of_post: number) => {
 
     return await Post.aggregate([
         { $sample: { size: noOfPost } },
-        { $project: { _id: 1, name: 1, userId: 1, caption: 1, post_image: 1, comments: 1, likes: 1 } }
+        { $project: { _id: 1, name: 1, userId: 1, caption: 1, post_image: 1, comments: 1, likes: 1, createdAt: 1, user_image: 1 } }
     ]);
 };
 

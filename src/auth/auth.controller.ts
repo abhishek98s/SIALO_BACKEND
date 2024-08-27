@@ -38,5 +38,5 @@ export const refreshTokenHandler = asyncWrapper(async (req: Request, res: Respon
 
     const newAccessToken = await auth_service.getRefreshToken(refreshToken);
 
-    res.status(201).json({ status: true, data: newAccessToken });
+    res.status(201).json({ status: true, data: { accessToken: newAccessToken } });
 });

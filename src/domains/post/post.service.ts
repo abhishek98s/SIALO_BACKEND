@@ -66,7 +66,17 @@ export const getRequestedPosts = async (noofItems: number) => {
 export const getRandomPost = async (noofPosts: number) => {
     const postToRequest = noofPosts;
     const result = await PostDAO.fetchRandomPostsUpTo(postToRequest);
-    return result;
+    return result.map((post) => ({
+        id: post._id,
+        userId: post.userId,
+        name: post.name,
+        user_image: post.user_image,
+        caption: post.caption,
+        createdAt: convertDateTime(post.createdAt.toString()),
+        post_image: post.post_image,
+        likes: post.likes.length,
+        comments: post.comments,
+    }));
 };
 
 export const toggleLikeIn = async (post_id: string, user_id: string) => {

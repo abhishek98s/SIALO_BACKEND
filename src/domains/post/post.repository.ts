@@ -1,3 +1,4 @@
+import { toNumber } from 'lodash';
 import { postExceptionMessage } from './constant/postExceptionMessage';
 import Post, { IComment, IPost } from './post.model';
 
@@ -12,6 +13,15 @@ export const fetchById = async (post_id: string) => {
 
 export const fetchPostsUpTo = async (no_of_posts: number) => {
     return await Post.find({}).limit(no_of_posts).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
+};
+
+export const fetchRandomPostsUpTo = async (no_of_posts: number) => {
+     
+    const postToRequest = toNumber(no_of_posts);
+    return await Post.aggregate([
+        { $sample: { size: postToRequest } },
+        { $project: { _id: 1, name: 1, userId: 1, caption: 1, post_image: 1, comments: 1, likes: 1 } }
+    ]);
 };
 
 export const create = async (post_details: IPost) => {

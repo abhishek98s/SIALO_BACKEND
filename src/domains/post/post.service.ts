@@ -63,6 +63,12 @@ export const getRequestedPosts = async (noofItems: number) => {
     return availableItems;
 };
 
+export const getRandomPost = async (noofPosts: number) => {
+    const postToRequest = noofPosts;
+    const result = await PostDAO.fetchRandomPostsUpTo(postToRequest);
+    return result;
+};
+
 export const toggleLikeIn = async (post_id: string, user_id: string) => {
     const isPostAvailable = await PostDAO.fetchById(post_id);
 

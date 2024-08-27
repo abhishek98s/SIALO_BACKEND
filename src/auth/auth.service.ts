@@ -2,13 +2,13 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { IRegister } from './auth.model';
+import { IJWT, IRegister } from './auth.model';
 import { isMatchingPassword, passwordHash } from '../utils/bcrypt';
 import * as UserDAO from '../domains/user/user.repository';
 import { userExceptionMessage } from '../domains/user/constant/userExceptionMessage';
+import { authExceptionMessage } from './constant/authExceptionMessage';
 
-
-export const getToken = async (email: string, password: string) => {
+export const getTokens = async (email: string, password: string) => {
     const user = await UserDAO.fetchByEmail(email);
 
     if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
@@ -20,13 +20,17 @@ export const getToken = async (email: string, password: string) => {
         name: user.name,
         image: user.img,
     };
-
-    const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-        expiresIn: process.env.JWT_LIFETIME,
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET as string, {
+        expiresIn: process.env.ACCESS_TOKEN_LIFETIME,
     });
 
-    return token;
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET as string, {
+        expiresIn: process.env.REFRESH_TOKEN_LIFETIME,
+    });
+
+    return { accessToken, refreshToken };
 };
+
 
 export const registerUser = async (userData: IRegister) => {
     const { name, email, password } = userData;
@@ -42,4 +46,21 @@ export const registerUser = async (userData: IRegister) => {
     };
 
     return await UserDAO.create(newUser);
+};
+
+export const getRefreshToken = async (refreshToken: string) => {
+    let accessToken;
+    jwt.verify(refreshToken, (process.env.REFRESH_TOKEN_SECRET as string)!, (err, decoded) => {
+        if (err) {
+            throw new Error(authExceptionMessage.INVALID_TOKEN);
+        }
+        const { id, name, image } = decoded as IJWT;
+
+        const newAccessToken = jwt.sign({ id, name, image }, process.env.ACCESS_TOKEN_SECRET as string, {
+            expiresIn: process.env.ACCESS_TOKEN_LIFETIME,
+        });
+        accessToken = newAccessToken;
+    });
+
+    return accessToken;
 };

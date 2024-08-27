@@ -81,7 +81,59 @@ export const docs = {
                                     data: {
                                         type: 'object',
                                         properties: {
-                                            token: {
+                                            accessToken: {
+                                                type: 'string',
+                                            },
+                                            refreshToken: {
+                                                type: 'string',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+    '/auth/refresh': {
+        post: {
+            tags: [
+                'Authentication',
+            ],
+            summary: 'Refresh',
+            requestBody: {
+                description: 'Login credentials',
+                required: true,
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                refreshToken: {
+                                    type: 'string',
+                                },
+                            },
+                            required: [
+                                'refreshToken',
+                            ],
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: 'Successful operation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'object',
+                                        properties: {
+                                            accessToken: {
                                                 type: 'string',
                                             },
                                         },

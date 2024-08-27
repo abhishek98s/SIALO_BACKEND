@@ -11,9 +11,10 @@ export const loginHandler = asyncWrapper(async (req: Request, res: Response) => 
 
     if (!email || !password) throw new Error(authExceptionMessage.EMAIL_PASSWORD_REQUIRED);
 
-    const token = await auth_service.getToken(email, password);
+    const tokens = await auth_service.getTokens(email, password);
+    const { accessToken, refreshToken } = tokens;
 
-    res.status(200).json({ status: true, data: { token } });
+    res.status(200).json({ status: true, data: { accessToken, refreshToken } });
 });
 
 
@@ -29,4 +30,13 @@ export const registerHandler = asyncWrapper(async (req: Request, res: Response) 
     const savedUser = await auth_service.registerUser(userData);
 
     res.status(201).json({ status: true, data: savedUser });
+});
+
+
+export const refreshTokenHandler = asyncWrapper(async (req: Request, res: Response) => {
+    const refreshToken = req.body.refreshToken;
+
+    const newAccessToken = await auth_service.getRefreshToken(refreshToken);
+
+    res.status(201).json({ status: true, data: { accessToken: newAccessToken } });
 });

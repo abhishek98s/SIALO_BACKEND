@@ -84,14 +84,19 @@ export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
 
     const isPostLiked = await post_service.toggleLikeIn(post_id, user_id);
 
+    const { isLiked, totalLike } = isPostLiked;
+
     let message = '';
-    if (isPostLiked) {
+    let liked;
+    if (isLiked) {
         message = postExceptionMessage.LIKE_SUCCESS;
+        liked = true;
     } else {
         message = postExceptionMessage.UNLIKE_SUCCESS;
+        liked = false;
     }
 
-    res.status(200).json({ status: true, message: message });
+    res.status(200).json({ status: true, liked, totalLike, message: message });
 });
 
 export const deletePost = asyncWrapper(async (req: Request, res: Response) => {

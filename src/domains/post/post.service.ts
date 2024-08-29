@@ -86,12 +86,14 @@ export const toggleLikeIn = async (post_id: string, user_id: string) => {
 
     const isLiked = await PostDAO.isPostLiked(post_id, user_id);
 
+    const totalLike = await isPostAvailable[0].likes.length;
+
     if (!isLiked) {
         await PostDAO.addLike(post_id, user_id);
-        return 1;
+        return { isLiked: true, totalLike };
     } else {
         await PostDAO.removeLike(post_id, user_id);
-        return 0;
+        return { isLiked: false, totalLike };
     }
 };
 

@@ -674,6 +674,8 @@ export const docs = {
                             schema: {
                                 properties: {
                                     status: { type: 'boolean' },
+                                    liked: { type: 'boolean' },
+                                    totalLike: { type: 'integer' },
                                     message: { type: 'string' },
                                 },
                             },

@@ -7,7 +7,7 @@ export const fetchAll = async () => {
     return await Post.find({}).select(['_id', 'name', 'userId', 'user_image', 'caption', 'post_image', 'comments', 'likes', 'createdAt']);
 };
 
-export const fetchById = async (post_id: string) => {
+export const fetchById = async (post_id: string): Promise<{ _id: string, name: string, userId: string, caption: string, post_image: string, comments: IComment[], likes: string[] }[]> => {
     return await Post.find({ _id: post_id }).select(['_id', 'name', 'userId', 'caption', 'post_image', 'comments', 'likes']);
 };
 

@@ -11,4 +11,5 @@ export const postExceptionMessage = {
     LIKE_SUCCESS: 'Sucessfully liked the post',
     UNLIKE_SUCCESS: 'Sucessfully unliked the post',
     PERMISSION_DENIED: 'Permisson Denied',
+    COMMENT_SUCESS: 'Comment Sucess',
 };

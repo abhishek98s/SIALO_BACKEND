@@ -54,9 +54,9 @@ export const addComment = asyncWrapper(async (req: Request, res: Response) => {
         comment_user_picture: image,
     };
 
-    const post = await post_service.addPostComments(postId, comment_info);
+    await post_service.addPostComments(postId, comment_info);
 
-    res.status(200).json({ status: true, data: post });
+    res.status(200).json({ status: true, message: postExceptionMessage.COMMENT_SUCESS });
 });
 
 

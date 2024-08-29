@@ -534,13 +534,12 @@ export const docs = {
                         schema: {
                             type: 'object',
                             properties: {
-                                status: { type: 'boolean' },
                                 comment: {
                                     type: 'string',
                                 },
                             },
                             required: [
-                                'name',
+                                'comment',
                             ],
                         },
                     },
@@ -554,21 +553,7 @@ export const docs = {
                             schema: {
                                 properties: {
                                     status: { type: 'boolean' },
-                                    data: {
-                                        properties: {
-                                            _id: {
-                                                type: 'string',
-                                            },
-                                            lastComment: {
-                                                type: 'object',
-                                                properties: {
-                                                    comment: { type: 'string' },
-                                                    comment_user_name: { type: 'string' },
-                                                    comment_user_picture: { type: 'string' },
-                                                },
-                                            },
-                                        },
-                                    },
+                                    message: { type: 'string' },
                                 },
                             },
                         },

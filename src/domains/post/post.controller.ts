@@ -70,8 +70,10 @@ export const getRequestedPosts = asyncWrapper(async (req: Request, res: Response
 
 export const getRandomPost = asyncWrapper(async (req: Request, res: Response) => {
     const noOfPosts = req.query.noOfPosts as unknown as number || 5;
+    const { id: user_id } = req.body.user;
 
-    const posts = await post_service.getRandomPost(noOfPosts);
+
+    const posts = await post_service.getRandomPost(noOfPosts, user_id);
 
     res.status(200).json({ status: true, data: posts });
 });

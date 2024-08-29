@@ -13,7 +13,7 @@ export interface IPost {
     name: string,
     caption: string,
     post_image: string,
-    likes?: string,
+    likes?: string[],
     comments?: IComment[],
 }
 

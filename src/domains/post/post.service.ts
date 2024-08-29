@@ -63,9 +63,11 @@ export const getRequestedPosts = async (noofItems: number) => {
     return availableItems;
 };
 
-export const getRandomPost = async (noofPosts: number) => {
+export const getRandomPost = async (noofPosts: number, user_id: string) => {
     const postToRequest = noofPosts;
     const result = await PostDAO.fetchRandomPostsUpTo(postToRequest);
+
+
     return result.map((post) => ({
         id: post._id,
         userId: post.userId,
@@ -75,6 +77,7 @@ export const getRandomPost = async (noofPosts: number) => {
         createdAt: convertDateTime(post.createdAt.toString()),
         post_image: post.post_image,
         likes: post.likes.length,
+        isLiked: post.likes.includes(user_id),
         comments: post.comments,
     }));
 };

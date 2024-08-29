@@ -477,6 +477,7 @@ export const docs = {
                                                         type: 'string',
                                                     },
                                                 },
+                                                isLiked: { type: 'boolean' },
                                                 comments: {
                                                     type: 'array',
                                                     items: {

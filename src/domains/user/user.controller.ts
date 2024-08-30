@@ -25,7 +25,7 @@ export const fetchAll = asyncWrapper(async (req: Request, res: Response) => {
 
 export const getFriends = asyncWrapper(async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
-console.log(user_id)
+
     const friends: IFriend[] = await user_service.getAllFriends(user_id);
 
     res.status(200).json({ status: true, data: friends });

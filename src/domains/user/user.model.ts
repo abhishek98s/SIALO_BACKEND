@@ -14,6 +14,7 @@ export interface IFriend {
     name: string,
     image: string,
     pending: boolean,
+    isFriend: boolean,
 }
 
 const friendSchema = new mongoose.Schema<IFriend>({
@@ -21,6 +22,7 @@ const friendSchema = new mongoose.Schema<IFriend>({
     name: { type: String, required: true },
     image: { type: String, required: true },
     pending: { type: Boolean, required: true },
+    isFriend: { type: Boolean, required: true },
 });
 
 const userSchema = new mongoose.Schema(

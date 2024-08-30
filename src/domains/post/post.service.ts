@@ -30,8 +30,15 @@ export const getUserPosts = async (user_id: string) => {
     if (!user_posts) throw Error(postExceptionMessage.POST_UNAVAIABLE);
 
     return user_posts.map((post) => ({
-        ...post,
+        id: post._id,
+        userId: post.userId,
+        name: post.name,
+        user_image: post.user_image,
+        caption: post.caption,
         createdAt: convertDateTime(post.createdAt.toString()),
+        post_image: post.post_image,
+        likes: post.likes,
+        comments: post.comments,
     }));
 };
 

@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.use(verifyToken);
 
+router.get('/friendRequests', user_controller.getFriendRequests);
 router.get('/search', user_controller.searchUser);
 router.get('/recommendation', user_controller.fetchUnknownPeople);
 router.route('/:id').get(user_controller.getUser).delete(user_controller.deleteUser);

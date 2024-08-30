@@ -37,6 +37,14 @@ export const addFriend = asyncWrapper(async (req: Request, res: Response) => {
     res.status(200).json({ status: true, message: `Request sent to ${friend}` });
 });
 
+export const getFriendRequests = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: user_id } = req.body.user;
+
+    const pendingRequests = await user_service.getFriendRequests(user_id);
+
+    res.status(200).json({ status: true, data: pendingRequests });
+});
+
 export const acceptRequest = asyncWrapper(async (req: Request, res: Response) => {
     const { id: receiver_id } = req.body.user;
     const sender_id = req.params.friendId;
@@ -48,6 +56,7 @@ export const acceptRequest = asyncWrapper(async (req: Request, res: Response) =>
 
     res.status(200).json({ status: true, message: `Request accepted of ${friend}` });
 });
+
 
 export const rejectRequest = asyncWrapper(async (req: Request, res: Response) => {
     const { id: receiver_id } = req.body.user;

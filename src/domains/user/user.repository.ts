@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { IFriend, IUser, User } from './user.model';
 
 export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, friends: IFriend[], }> => {
@@ -24,6 +24,17 @@ export const create = async (new_user: IUser) => {
     const user = new User({ ...new_user });
 
     return await user.save();
+};
+
+export const fetchPendingRequests = async (user_id: string) => {
+    const userId = new Types.ObjectId(user_id as string);
+
+    const result = await User.aggregate([
+        { $match: { _id: userId } },
+        { $project: { friends: { $filter: { input: "$friends", as: "friend", cond: { $eq: ["$$friend.pending", false] } } } } }
+    ]);
+
+    return result[0].friends;
 };
 
 export const addFriendInfo = async (user_id: string, friendInfo: IFriend) => {

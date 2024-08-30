@@ -370,6 +370,42 @@ export const docs = {
             },
         },
     },
+    '/user/friendRequests': {
+        get: {
+            tags: ['User'],
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            summary: 'Get all the friend requests',
+            responses: {
+                '200': {
+                    description: 'Successful operation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                id: { type: 'string' },
+                                                name: { type: 'string' },
+                                                image: { type: 'string' },
+                                                pending: { type: 'boolean' },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
     '/user/friend/add/{friendId}': {
         patch: {
             tags: ['User'],

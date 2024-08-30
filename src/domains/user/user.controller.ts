@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import asyncWrapper from '../../utils/async';
 import * as user_service from './user.service';
 import { userExceptionMessage } from './constant/userExceptionMessage';
+import { IFriend } from './user.model';
 
 export const getUser = asyncWrapper(async (req: Request, res: Response) => {
     const user_id = req.params.id;
@@ -20,6 +21,14 @@ export const fetchAll = asyncWrapper(async (req: Request, res: Response) => {
     const users = await user_service.fetchAll();
 
     res.status(200).json({ data: users });
+});
+
+export const getFriends = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: user_id } = req.body.user;
+console.log(user_id)
+    const friends: IFriend[] = await user_service.getAllFriends(user_id);
+
+    res.status(200).json({ status: true, data: friends });
 });
 
 export const addFriend = asyncWrapper(async (req: Request, res: Response) => {

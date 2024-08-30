@@ -27,6 +27,31 @@ export const create = async (new_user: IUser) => {
     return await user.save();
 };
 
+export const fetchAllFriends = async (user_id: string): Promise<IFriend[]> => {
+    const userId = new Types.ObjectId(user_id as string);
+
+    const result = await User.aggregate([
+        { $match: { _id: userId } },
+        {
+            $project: {
+                friends: {
+                    $filter: {
+                        input: "$friends",
+                        as: "friend",
+                        cond: {
+                            $and: [
+                                { $eq: ["$$friend.isFriend", true] }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]);
+
+    return result[0].friends;
+};
+
 export const fetchPendingRequests = async (user_id: string) => {
     const userId = new Types.ObjectId(user_id as string);
 

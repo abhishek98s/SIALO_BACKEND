@@ -46,6 +46,14 @@ export const addFriend = async (friend_id: string, senderInfo: IJWT) => {
     return requested_user.name;
 };
 
+export const getAllFriends = async (user_id: string): Promise<IFriend[]> => {
+    const user = await UserDAO.fetchById(user_id);
+
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    return await UserDAO.fetchAllFriends(user_id);
+};
+
 export const getFriendRequests = async (user_id: string) => {
     const user = await UserDAO.fetchById(user_id);
 

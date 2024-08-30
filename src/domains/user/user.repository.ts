@@ -1,5 +1,6 @@
 import mongoose, { Types } from 'mongoose';
 import { IFriend, IUser, User } from './user.model';
+import { truncate } from 'lodash';
 
 export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, friends: IFriend[], }> => {
     return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends']);
@@ -31,7 +32,22 @@ export const fetchPendingRequests = async (user_id: string) => {
 
     const result = await User.aggregate([
         { $match: { _id: userId } },
-        { $project: { friends: { $filter: { input: "$friends", as: "friend", cond: { $eq: ["$$friend.pending", false] } } } } }
+        {
+            $project: {
+                friends: {
+                    $filter: {
+                        input: "$friends",
+                        as: "friend",
+                        cond: {
+                            $and: [
+                                { $eq: ["$$friend.pending", true] },
+                                { $eq: ["$$friend.isFriend", false] }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
     ]);
 
     return result[0].friends;
@@ -47,11 +63,23 @@ export const addFriendInfo = async (user_id: string, friendInfo: IFriend) => {
 export const acceptFriendRequest = async (user_id: string, friend_id: string) => {
     return await User.updateOne(
         { _id: user_id, friends: { $elemMatch: { id: friend_id } } },
-        { $set: { 'friends.$.pending': false } },
+        {
+            $set: {
+                'friends.$.pending': false,
+                'friends.$.isFriend': true
+            }
+        },
     );
 };
 
 export const rejectFriendRequest = async (user_id: string, friend_id: string) => {
+    return await User.updateOne(
+        { _id: user_id, friends: { $elemMatch: { id: friend_id } } },
+        { $pull: { friends: { id: friend_id } } },
+    );
+};
+
+export const deleteFriend = async (user_id: string, friend_id: string) => {
     return await User.updateOne(
         { _id: user_id, friends: { $elemMatch: { id: friend_id } } },
         { $pull: { friends: { id: friend_id } } },

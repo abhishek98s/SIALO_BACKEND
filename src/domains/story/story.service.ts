@@ -12,12 +12,16 @@ export const getAllStories = async (user_id: string) => {
 
     if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
 
-    const friends_ids = user.friends.map((friend: IFriend) => friend.id);
+    const friends_ids = user.friends.map((friend: IFriend) => {
+        if (friend.isFriend) {
+            return friend.id
+        }
+    });
 
     friends_ids.unshift(user_id);
 
     const storiesPromises = friends_ids.map((user_id) => {
-        return StoryDAO.fetchByUserId(user_id).then((user_stories) => {
+        return StoryDAO.fetchByUserId(user_id!).then((user_stories) => {
 
             if (user_stories.length === 0) return;
 

@@ -4,6 +4,7 @@ import * as PostDAO from '../post/post.repository';
 import * as UserDAO from './user.repository';
 import mongoose from 'mongoose';
 import _ from 'lodash';
+import { IFriend } from './user.model';
 
 export const getUser = async (id: string) => {
     const user = await UserDAO.fetchById(id);
@@ -35,10 +36,10 @@ export const addFriend = async (friend_id: string, senderInfo: IJWT) => {
             throw new Error(userExceptionMessage.REQUEST_SENT_ALREADY);
         }
     }
-    const friendInfo = { id: requested_user._id.toString(), name: requested_user.name, image: requested_user.img!, pending: true };
+    const friendInfo: IFriend = { id: requested_user._id.toString(), name: requested_user.name, image: requested_user.img!, pending: true, isFriend: false };
 
     await Promise.all([
-        UserDAO.addFriendInfo(friend_id, { ...senderInfo, pending: true }),
+        UserDAO.addFriendInfo(friend_id, { ...senderInfo, pending: true, isFriend: false }),
         UserDAO.addFriendInfo(senderInfo.id, friendInfo),
     ]);
 
@@ -75,7 +76,10 @@ export const acceptFriendRequest = async (sender_id: string, receiver_id: string
 export const rejectFriendRequest = async (sender_id: string, receiver_id: string) => {
     const request_sender = await UserDAO.fetchById(sender_id);
 
-    if (!request_sender) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+    if (!request_sender) {
+        await UserDAO.deleteFriend(receiver_id, sender_id);
+        throw new Error(userExceptionMessage.USER_NOT_FOUND);
+    }
 
     const sender_friend = request_sender.friends.find(friend => friend.id === receiver_id);
 

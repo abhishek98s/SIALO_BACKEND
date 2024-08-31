@@ -370,6 +370,43 @@ export const docs = {
             },
         },
     },
+    '/user/friend': {
+        get: {
+            tags: ['User'],
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            summary: 'Get all the friends of a user',
+            responses: {
+                '200': {
+                    description: 'Successful operation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                id: { type: 'string' },
+                                                name: { type: 'string' },
+                                                image: { type: 'string' },
+                                                pending: { type: 'boolean' },
+                                                isFriend: { type: 'boolean' },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
     '/user/friendRequests': {
         get: {
             tags: ['User'],

@@ -14,7 +14,7 @@ export const fetchByEmail = async (email: string) => {
 };
 
 export const fetchByName = async (name: string) => {
-    return await User.find({ name: { $regex: new RegExp(`^${name}`, 'ig') } }).select(['name', 'img']);
+    return await User.find({ name: { $regex: new RegExp(name, 'ig') } }).select(['name', 'img']);
 };
 
 export const fetchAll = async () => {

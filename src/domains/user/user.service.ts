@@ -6,12 +6,23 @@ import mongoose from 'mongoose';
 import _ from 'lodash';
 import { IFriend } from './user.model';
 
-export const getUser = async (id: string) => {
+export const getUser = async (id: string, sender_id: string) => {
     const user = await UserDAO.fetchById(id);
 
     if (!user) throw Error(userExceptionMessage.USER_NOT_FOUND);
 
-    return user;
+    const isFriend = user.friends.some((friend: IFriend) => friend.id === sender_id);
+
+    const response = {
+        id: user._id,
+        email: user.email,
+        img: user.img,
+        name: user.name,
+        friends: user.friends,
+        isFriend
+    }
+
+    return response;
 };
 
 export const fetchAll = async () => {

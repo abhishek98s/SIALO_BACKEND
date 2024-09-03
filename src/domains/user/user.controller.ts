@@ -7,12 +7,13 @@ import { IFriend } from './user.model';
 
 export const getUser = asyncWrapper(async (req: Request, res: Response) => {
     const user_id = req.params.id;
+    const { id: sender_id } = req.body.user;
 
     if (!user_id) {
         throw new Error(userExceptionMessage.INVALID_ID);
     }
 
-    const user = await user_service.getUser(user_id);
+    const user = await user_service.getUser(user_id, sender_id);
 
     res.status(200).json({ status: true, data: user });
 });

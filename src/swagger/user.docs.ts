@@ -288,6 +288,102 @@ export const docs = {
             },
         },
     },
+    '/user/profilePicture': {
+        patch: {
+            tags: ['User'],
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            summary: 'Update the profile picture of the user',
+            requestBody: {
+                description: 'Image to upload',
+                required: true,
+                content: {
+                    'multipart/form-data': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                sialo_profile_image: {
+                                    type: 'string',
+                                    format: 'binary',
+                                    required: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: 'Successful operation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        default: []
+                                    },
+                                    message: { type: 'string' },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+    '/user/coverPicture': {
+        patch: {
+            tags: ['User'],
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            summary: 'Update the cover picture of the user',
+            requestBody: {
+                description: 'Image to upload',
+                required: true,
+                content: {
+                    'multipart/form-data': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                sialo_cover_image: {
+                                    type: 'string',
+                                    format: 'binary',
+                                    required: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: 'Successful operation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        default: []
+                                    },
+                                    message: { type: 'string' },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
     '/user/search': {
         get: {
             tags: ['User'],
@@ -577,13 +673,22 @@ export const schema = {
                 type: 'string',
             },
             friends: {
-                properties: {
-                    id: { type: 'string' },
-                    name: { type: 'string' },
-                    image: { type: 'string' },
-                    pending: { type: 'string' },
-                    _id: { type: 'string' },
+                type: 'array',
+                items: {
+                    properties: {
+                        id: { type: 'string' },
+                        name: { type: 'string' },
+                        image: { type: 'string' },
+                        pending: { type: 'string' },
+                        _id: { type: 'string' },
+                    },
                 },
+            },
+            isFriend: {
+                type: 'boolean',
+            },
+            coverImg: {
+                type: 'string',
             },
         },
         required: ['name', 'email', 'password'],

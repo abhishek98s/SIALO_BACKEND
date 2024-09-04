@@ -104,7 +104,7 @@ export const docs = {
             ],
             summary: 'Refresh',
             requestBody: {
-                description: 'Login credentials',
+                description: 'Refresh token',
                 required: true,
                 content: {
                     'application/json': {
@@ -134,6 +134,9 @@ export const docs = {
                                         type: 'object',
                                         properties: {
                                             accessToken: {
+                                                type: 'string',
+                                            },
+                                            refreshToken: {
                                                 type: 'string',
                                             },
                                         },

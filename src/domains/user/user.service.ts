@@ -12,10 +12,18 @@ export const getUser = async (id: string, sender_id: string) => {
 
     if (!user) throw Error(userExceptionMessage.USER_NOT_FOUND);
 
-    let isFriend = user.friends.some((friend: IFriend) => friend.id === sender_id);
+    let isUserPresent = user.friends.find((friend: IFriend) => friend.id === sender_id);
+    let isUserAFriend = isUserPresent && !isUserPresent.pending && isUserPresent.isFriend;
+    let isFriendRequestPending = isUserPresent && isUserPresent.pending && !isUserPresent.isFriend;
 
     if (id === sender_id) {
-        isFriend = true;
+        isUserAFriend = true;
+        isFriendRequestPending = false;
+    }
+
+    if (user.friends.length === 0) {
+        isUserAFriend = false;
+        isFriendRequestPending = false;
     }
 
     const response = {
@@ -24,8 +32,9 @@ export const getUser = async (id: string, sender_id: string) => {
         img: user.img,
         name: user.name,
         friends: user.friends,
-        isFriend,
-        coverImg: user.coverImg
+        isFriend: isUserAFriend,
+        coverImg: user.coverImg,
+        isFriendRequestPending
     }
 
     return response;

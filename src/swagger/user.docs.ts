@@ -690,6 +690,9 @@ export const schema = {
             coverImg: {
                 type: 'string',
             },
+            isFriendRequestPending: {
+                type: 'boolean',
+            },
         },
         required: ['name', 'email', 'password'],
     },

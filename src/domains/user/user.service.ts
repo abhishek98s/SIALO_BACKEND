@@ -5,13 +5,18 @@ import * as UserDAO from './user.repository';
 import mongoose from 'mongoose';
 import _ from 'lodash';
 import { IFriend } from './user.model';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 
 export const getUser = async (id: string, sender_id: string) => {
     const user = await UserDAO.fetchById(id);
 
     if (!user) throw Error(userExceptionMessage.USER_NOT_FOUND);
 
-    const isFriend = user.friends.some((friend: IFriend) => friend.id === sender_id);
+    let isFriend = user.friends.some((friend: IFriend) => friend.id === sender_id);
+
+    if (id === sender_id) {
+        isFriend = true;
+    }
 
     const response = {
         id: user._id,
@@ -19,7 +24,8 @@ export const getUser = async (id: string, sender_id: string) => {
         img: user.img,
         name: user.name,
         friends: user.friends,
-        isFriend
+        isFriend,
+        coverImg: user.coverImg
     }
 
     return response;
@@ -138,4 +144,24 @@ export const fetchRecommendedPeople = async (user_id: string) => {
     const recommend_user = await UserDAO.fetchRecommendedPeople(user_id, user_friends_id!);
 
     return _.sampleSize(recommend_user, 4);
+};
+
+export const updateProfilePicture = async (user_id: string, file_path: string) => {
+    const user = await UserDAO.fetchById(user_id);
+
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const img_url = await uploadToCloudinary(file_path);
+
+    return await UserDAO.updateProfilePicture(user_id, img_url);
+};
+
+export const updateCoverPicture = async (user_id: string, file_path: string) => {
+    const user = await UserDAO.fetchById(user_id);
+
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const img_url = await uploadToCloudinary(file_path);
+
+    return await UserDAO.updateCoverPicture(user_id, img_url);
 };

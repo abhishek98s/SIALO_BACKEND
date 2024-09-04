@@ -2,8 +2,8 @@ import mongoose, { Types } from 'mongoose';
 import { IFriend, IUser, User } from './user.model';
 import { truncate } from 'lodash';
 
-export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, friends: IFriend[], }> => {
-    return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends']);
+export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, coverImg: string, friends: IFriend[], }> => {
+    return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends','coverImg']);
 };
 
 export const fetchByEmail = async (email: string) => {
@@ -121,4 +121,12 @@ export const fetchFriends = async (user_id: string) => {
 
 export const fetchRecommendedPeople = async (user_id: string, user_friends: mongoose.Types.ObjectId[]) => {
     return await User.find({ _id: { $nin: [...user_friends, user_id] } }).select(['name', 'img']);
+};
+
+export const updateProfilePicture = async (user_id: string, img_url: string) => {
+    return await User.updateOne({ _id: user_id }, { $set: { 'img': img_url } })
+};
+
+export const updateCoverPicture = async (user_id: string, img_url: string) => {
+    return await User.updateOne({ _id: user_id }, { $set: { 'coverImg': img_url } })
 };

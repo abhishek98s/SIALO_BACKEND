@@ -505,6 +505,97 @@ export const docs = {
             },
         },
     },
+    '/post/random/{userId}': {
+        get: {
+            tags: [
+                'Post',
+            ],
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            summary: 'Get random n no of post of a user.',
+            parameters: [
+                {
+                    name: 'noOfPosts',
+                    in: 'query',
+                    description: 'No of post to request',
+                    required: true,
+                    schema: {
+                        type: 'number',
+                    },
+                },
+                {
+                    name: 'userId',
+                    in: 'params',
+                    description: 'Id of the user',
+                    schema: {
+                        type: 'number',
+                    },
+                },
+            ],
+            responses: {
+                200: {
+                    description: 'Successful operation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                _id: {
+                                                    type: 'string',
+                                                },
+                                                name: {
+                                                    type: 'string',
+                                                },
+                                                userId: {
+                                                    type: 'string',
+                                                },
+                                                caption: {
+                                                    type: 'string',
+                                                },
+                                                post_image: {
+                                                    type: 'string',
+                                                },
+                                                likes: {
+                                                    type: 'array',
+                                                    items: {
+                                                        type: 'string',
+                                                    },
+                                                },
+                                                isLiked: { type: 'boolean' },
+                                                comments: {
+                                                    type: 'array',
+                                                    items: {
+                                                        properties: {
+                                                            comment: {
+                                                                type: 'string',
+                                                            },
+                                                            comment_user_name: {
+                                                                type: 'string',
+                                                            },
+                                                            comment_user_picture: {
+                                                                type: 'string',
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
     '/post/comment/{postId}': {
         patch: {
             tags: [

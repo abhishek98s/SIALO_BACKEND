@@ -89,6 +89,25 @@ export const getRandomPost = async (noofPosts: number, user_id: string) => {
     }));
 };
 
+export const getRandomPostOfUser = async (noofPosts: number, user_id: string) => {
+    const postToRequest = noofPosts;
+    const result = await PostDAO.fetchRandomPostsOfUserUpTo(postToRequest, user_id);
+
+
+    return result.map((post) => ({
+        id: post._id,
+        userId: post.userId,
+        name: post.name,
+        user_image: post.user_image,
+        caption: post.caption,
+        createdAt: convertDateTime(post.createdAt.toString()),
+        post_image: post.post_image,
+        likes: post.likes.length,
+        isLiked: post.likes.includes(user_id),
+        comments: post.comments,
+    }));
+};
+
 export const toggleLikeIn = async (post_id: string, user_id: string) => {
     const isPostAvailable = await PostDAO.fetchById(post_id);
 

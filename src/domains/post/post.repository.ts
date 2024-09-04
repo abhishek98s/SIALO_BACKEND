@@ -41,6 +41,16 @@ export const fetchRandomPostsUpTo = async (no_of_post: number) => {
     ]);
 };
 
+export const fetchRandomPostsOfUserUpTo = async (no_of_post: number, user_id: string) => {
+    const noOfPost = toNumber(no_of_post);
+
+    return await Post.aggregate([
+        { $match: { userId: user_id } },
+        { $sample: { size: noOfPost } },
+        { $project: { _id: 1, name: 1, userId: 1, caption: 1, post_image: 1, comments: 1, likes: 1, createdAt: 1, user_image: 1 } }
+    ]);
+};
+
 export const addCommentById = async (post_id: string, commentData: IComment) => {
     const updatedPost = await Post.findOneAndUpdate(
         { _id: post_id },

@@ -78,6 +78,15 @@ export const getRandomPost = asyncWrapper(async (req: Request, res: Response) =>
     res.status(200).json({ status: true, data: posts });
 });
 
+export const getRandomPostOFUser = asyncWrapper(async (req: Request, res: Response) => {
+    const noOfPosts = req.query.noOfPosts as unknown as number || 4;
+    const { userId } = req.params;
+
+    const posts = await post_service.getRandomPostOfUser(noOfPosts, userId);
+
+    res.status(200).json({ status: true, data: posts });
+});
+
 export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
     const post_id = req.query.postId as unknown as string;

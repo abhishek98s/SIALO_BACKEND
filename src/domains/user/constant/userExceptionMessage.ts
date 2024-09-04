@@ -8,4 +8,5 @@ export const userExceptionMessage = {
     REQUEST_NOT_SENT: 'Request has not been sent.',
     EMPTY_STRING: 'Search text empty',
     DELETE_FAILED: 'Failed to deleted the user.',
+    FILE_REQUIRED: 'Image is required',
 };

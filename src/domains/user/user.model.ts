@@ -5,8 +5,9 @@ export interface IUser {
     name: string,
     email: string,
     password: string | null,
-    img?: string,
     friends?: Array<IFriend>
+    img?: string,
+    coverImg?: string,
 }
 
 export interface IFriend {
@@ -41,6 +42,9 @@ const userSchema = new mongoose.Schema(
             required: true,
         },
         img: {
+            type: String,
+        },
+        coverImg: {
             type: String,
         },
         friends: [friendSchema],

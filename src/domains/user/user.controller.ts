@@ -108,3 +108,24 @@ export const fetchUnknownPeople = asyncWrapper(async (req: Request, res: Respons
 
     res.status(200).json({ status: true, data: unknownPeoples });
 });
+
+export const updateProfilePicture = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: user_id } = req.body.user;
+
+    if (!req.file) throw new Error(userExceptionMessage.FILE_REQUIRED);
+
+    await user_service.updateProfilePicture(user_id, req.file!.path);
+
+    res.status(200).json({ status: true, data: [], message: 'Profile picture updated' });
+});
+
+
+export const updateCoverPicture = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: user_id } = req.body.user;
+
+    if (!req.file) throw new Error(userExceptionMessage.FILE_REQUIRED);
+
+    await user_service.updateCoverPicture(user_id, req.file!.path);
+
+    res.status(200).json({ status: true, data: [], message: 'Cover picture updated' });
+});

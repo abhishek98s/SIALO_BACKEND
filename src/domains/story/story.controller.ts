@@ -34,6 +34,14 @@ export const postStory = asyncWrapper(async (req: Request, res: Response) => {
     res.status(200).json({ status: true, data: posted_story });
 });
 
+export const getStoryById = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: user_id } = req.params;
+
+    const result = await story_service.getStoryById(user_id);
+
+    res.status(200).json({ status: true, data: result });
+});
+
 export const patchStory = asyncWrapper(async (req: Request, res: Response) => {
     const { id: story_id } = req.params;
     const { id: user_id } = req.body.user;

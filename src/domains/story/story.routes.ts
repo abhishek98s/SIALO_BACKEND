@@ -14,7 +14,7 @@ router.use(verifyToken);
 router.route('/').get(story_controller.getAllStories)
     .post(joiValidationMiddleware(storyPostSchema), joiFileValidationMiddleware(fileSchema), story_controller.postStory);
 
-router.route('/:id').patch(joiValidationMiddleware(storyPostSchema),joiValidationMiddleware(storyPostSchema), story_controller.patchStory)
+router.route('/:id').get(story_controller.getStoryById).patch(joiValidationMiddleware(storyPostSchema), joiValidationMiddleware(storyPostSchema), story_controller.patchStory)
     .delete(story_controller.deleteStory);
 
 export default router;

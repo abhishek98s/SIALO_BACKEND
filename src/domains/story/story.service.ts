@@ -6,6 +6,7 @@ import { userExceptionMessage } from './../user/constant/userExceptionMessage';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { IFriend } from '../user/user.model';
 import mongoose from 'mongoose';
+import { convertDateTime, timeAgo } from '../../utils/date';
 
 export const getAllStories = async (user_id: string) => {
     const user = await UserDAO.fetchById(user_id.toString());
@@ -46,6 +47,26 @@ export const getAllStories = async (user_id: string) => {
 };
 
 
+export const getStoryById = async (user_id: string) => {
+    const user = await UserDAO.fetchById(user_id.toString());
+
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const userStories = await StoryDAO.fetchByUserId(user_id);
+
+    return userStories.map((story) => {
+        return {
+            id: story._id,
+            user_id: story.user_id,
+            user_name: story.user_name,
+            user_image: story.user_image,
+            caption: story.caption,
+            story_image: story.story_image,
+            date: timeAgo(story.createdAt.toString())
+        }
+    })
+};
+
 export const createStory = async (story_data: IStory) => {
     const user_id = story_data.user_id.toString();
     const user = await UserDAO.fetchById(user_id);
@@ -61,7 +82,6 @@ export const createStory = async (story_data: IStory) => {
     story_data.user_image = user.img;
 
     return await StoryDAO.create(story_data);
-
 };
 
 export const updateStory = async (story_id: string, user_id: string, caption: string, file_path: string | null) => {

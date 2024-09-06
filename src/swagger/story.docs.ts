@@ -119,6 +119,71 @@ export const docs = {
         },
     },
     '/story/{id}': {
+        get: {
+            tags: [
+                'Story',
+            ],
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            summary: 'Get stories by Id',
+            description: 'Fetch storeis of of user',
+            parameters: [
+                {
+                    name: 'id',
+                    in: 'path',
+                    description: 'User ID',
+                    required: true,
+                    schema: {
+                        type: 'string',
+                    },
+                },
+            ],
+            responses: {
+                '200': {
+                    description: 'Successfully Opearation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        items: {
+                                            properties: {
+                                                id: {
+                                                    type: 'string',
+                                                },
+                                                user_id: {
+                                                    type: 'string',
+                                                },
+                                                user_name: {
+                                                    type: 'string',
+                                                },
+                                                user_image: {
+                                                    type: 'string',
+                                                },
+                                                caption: {
+                                                    type: 'string',
+                                                },
+                                                story_image: {
+                                                    type: 'string',
+                                                },
+                                                date: {
+                                                    type: 'string',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
         patch: {
             tags: [
                 'Story',

@@ -4,7 +4,7 @@ export interface IStory {
     id?: mongoose.Types.ObjectId;
     user_id: mongoose.Types.ObjectId,
     user_name: string,
-    user_image: string,
+    user_image?: string,
     caption: string,
     story_image: string,
     createdAt?: Date
@@ -23,7 +23,7 @@ export const storySchema = new mongoose.Schema(
         },
         user_image: {
             type: String,
-            required: true,
+            required: false,
         },
         caption: {
             type: String,

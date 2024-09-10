@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import _ from 'lodash';
 import { IFriend } from './user.model';
 import { uploadToCloudinary } from '../../utils/cloudinary';
+import { userSuccessnMessage } from './constant/userSuccessMessage';
 
 export const getUser = async (id: string, sender_id: string) => {
     const user = await UserDAO.fetchById(id);
@@ -173,4 +174,20 @@ export const updateCoverPicture = async (user_id: string, file_path: string) => 
     const img_url = await uploadToCloudinary(file_path);
 
     return await UserDAO.updateCoverPicture(user_id, img_url);
+};
+
+
+export const updateUsername = async (user_id: string, updateUsername: string) => {
+    const user = await UserDAO.fetchById(user_id);
+
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+    
+    const result = await UserDAO.updateUsername(user_id, updateUsername);
+    const isUpdated = result.modifiedCount
+
+    if (isUpdated) {
+        return userSuccessnMessage.USERNAME_UPDATE_SUCCESS;
+    } else {
+        throw new Error(userExceptionMessage.UPDATE_FAILED);
+    }
 };

@@ -5,8 +5,10 @@ dotenv.config();
 import { IJWT, IRegister } from './auth.model';
 import { isMatchingPassword, passwordHash } from '../utils/bcrypt';
 import * as UserDAO from '../domains/user/user.repository';
+import * as AuthDAO from './auth.repository';
 import { userExceptionMessage } from '../domains/user/constant/userExceptionMessage';
 import { authExceptionMessage } from './constant/authExceptionMessage';
+import { authSuccessMessage } from './constant/authSuccessMessages';
 
 export const getTokens = async (email: string, password: string) => {
     const user = await UserDAO.fetchByEmail(email);
@@ -63,4 +65,28 @@ export const getRefreshToken = async (refreshToken: string) => {
     });
 
     return accessToken;
+};
+
+export const updatePassword = async (currentPassword: string, newPassword: string, user_id: string) => {
+    const user = await UserDAO.fetchById(user_id);
+
+    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+
+    const { password } = user;
+
+    await isMatchingPassword(currentPassword, password);
+
+    if (currentPassword === newPassword) throw new Error(authExceptionMessage.SAME_PASSWORD)
+
+    const hashedPassword = await passwordHash(newPassword);
+
+    const result = await AuthDAO.updatePassword(user_id, hashedPassword);
+
+    const isUpdated = result.modifiedCount;
+
+    if (isUpdated) {
+        return authSuccessMessage.PASSWORD_UPDATED;
+    } else {
+        throw new Error(authExceptionMessage.PASSWORD_UPDATE);
+    }
 };

@@ -2,8 +2,8 @@ import mongoose, { Types } from 'mongoose';
 import { IFriend, IUser, User } from './user.model';
 import { truncate } from 'lodash';
 
-export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, coverImg: string, friends: IFriend[], }> => {
-    return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends', 'coverImg']);
+export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, coverImg: string, friends: IFriend[], password: string }> => {
+    return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends', 'coverImg', 'password']);
 };
 
 export const fetchByEmail = async (email: string) => {

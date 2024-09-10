@@ -149,6 +149,61 @@ export const docs = {
             },
         },
     },
+    '/auth/changePassword': {
+        post: {
+            tags: [
+                'Authentication',
+            ],
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            summary: 'Change password',
+            requestBody: {
+                description: 'Password credentials',
+                required: true,
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                newPassword: {
+                                    type: 'string',
+                                },
+                                currentPassword: {
+                                    type: 'string',
+                                },
+                            },
+                            required: [
+                                'newPassword',
+                                'currentPassword',
+                            ],
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: 'Successful operation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        default: [],
+                                    },
+                                    message: { type: 'string' },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
 };
 
 export const schema = {

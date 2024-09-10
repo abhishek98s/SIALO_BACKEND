@@ -17,3 +17,8 @@ export const fileSchema: Schema = Joi.object().keys({
     path: Joi.string().required(),
     size: Joi.number().required(),
 });
+
+export const changeUsernameSchema = Joi.object().keys({
+    username: Joi.string().required(),
+    user: jwtUserSchema,
+});

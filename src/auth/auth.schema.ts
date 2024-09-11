@@ -1,8 +1,13 @@
 import joi, { Schema } from 'joi';
 import { jwtUserSchema } from '../domains/user/user.schema';
 
-const registerkSchema: Schema = joi.object().keys({
+export const registerSchema: Schema = joi.object().keys({
     name: joi.string().required(),
+    email: joi.string().required(),
+    password: joi.string().required(),
+})
+
+export const loginSchema: Schema = joi.object().keys({
     email: joi.string().required(),
     password: joi.string().required(),
 })
@@ -16,6 +21,3 @@ export const changePasswordSchema: Schema = joi.object().keys({
     newPassword: joi.string().required(),
     user: jwtUserSchema,
 })
-
-
-export default registerkSchema;

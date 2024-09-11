@@ -94,6 +94,8 @@ export const docs = {
                         },
                     },
                 },
+                400: { description: 'Invalid crediantials' },
+                404: { description: 'User doesn\'t exit' },
             },
         },
     },

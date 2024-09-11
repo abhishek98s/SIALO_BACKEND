@@ -1,3 +1,4 @@
+import createError from 'http-errors';
 import bcrypt from 'bcrypt';
 
 import { authExceptionMessage } from '../auth/constant/authExceptionMessage';
@@ -5,7 +6,7 @@ import { authExceptionMessage } from '../auth/constant/authExceptionMessage';
 
 export const isMatchingPassword = async (password: string, hashed_password: string) => {
     const isMatch = await bcrypt.compare(password, hashed_password);
-    if (!isMatch) throw Error(authExceptionMessage.INVALID_PASS);
+    if (!isMatch) throw new createError.BadRequest(authExceptionMessage.INVALID_PASS);
 
     return;
 };

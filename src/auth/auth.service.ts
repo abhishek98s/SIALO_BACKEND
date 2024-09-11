@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import createError from 'http-errors';
 dotenv.config();
 
 import { IJWT, IRegister } from './auth.model';
@@ -11,7 +12,7 @@ import { authExceptionMessage } from './constant/authExceptionMessage';
 export const getTokens = async (email: string, password: string) => {
     const user = await UserDAO.fetchByEmail(email);
 
-    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
 
     await isMatchingPassword(password, user.password);
 
@@ -52,7 +53,7 @@ export const getRefreshToken = async (refreshToken: string) => {
     let accessToken;
     jwt.verify(refreshToken, (process.env.REFRESH_TOKEN_SECRET as string)!, (err, decoded) => {
         if (err) {
-            throw new Error(authExceptionMessage.INVALID_TOKEN);
+            throw new createError.BadRequest(authExceptionMessage.INVALID_TOKEN);
         }
         const { id, name, image } = decoded as IJWT;
 

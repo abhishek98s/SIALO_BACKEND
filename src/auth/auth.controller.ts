@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import validator from 'validator';
+import createError from 'http-errors';
 
 import * as auth_service from './auth.service';
 import asyncWrapper from '../utils/async';
@@ -9,7 +10,7 @@ import { authExceptionMessage } from './constant/authExceptionMessage';
 export const loginHandler = asyncWrapper(async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
-    if (!email || !password) throw new Error(authExceptionMessage.EMAIL_PASSWORD_REQUIRED);
+    if (!email || !password) throw new createError.BadRequest(authExceptionMessage.EMAIL_PASSWORD_REQUIRED);
 
     const tokens = await auth_service.getTokens(email, password);
     const { accessToken, refreshToken } = tokens;

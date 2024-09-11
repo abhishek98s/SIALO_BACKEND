@@ -22,9 +22,9 @@ export const loginHandler = asyncWrapper(async (req: Request, res: Response) => 
 export const registerHandler = asyncWrapper(async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
 
-    if (!name || !password || !email) throw new Error(authExceptionMessage.EMAIL_PASSWORD_REQUIRED);
+    if (!name || !password || !email) throw new createError.BadRequest(authExceptionMessage.EMAIL_PASSWORD_REQUIRED);
 
-    if (!validator.isEmail(email)) throw new Error(authExceptionMessage.EMAIL_INVALID);
+    if (!validator.isEmail(email)) throw new createError.BadRequest(authExceptionMessage.EMAIL_INVALID);
 
     const userData = { name, email, password };
 

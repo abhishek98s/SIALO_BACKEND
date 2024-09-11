@@ -129,3 +129,17 @@ export const updateCoverPicture = asyncWrapper(async (req: Request, res: Respons
 
     res.status(200).json({ status: true, data: [], message: 'Cover picture updated' });
 });
+
+export const updateUsername = asyncWrapper(async (req: Request, res: Response) => {
+    const { id: user_id } = req.body.user;
+    const { id: user_params_id } = req.params;
+    const { username: updatedUserName } = req.body;
+
+    if (updatedUserName.length < 3) throw new Error(userExceptionMessage.USERNAME_LENGTH)
+
+    if (user_id !== user_params_id) throw new Error(userExceptionMessage.PERMISSION_DENIED)
+
+    const message: string = await user_service.updateUsername(user_id, updatedUserName);
+
+    res.status(200).json({ status: true, data: [], message });
+});

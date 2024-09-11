@@ -252,6 +252,62 @@ export const docs = {
                 },
             },
         },
+        patch: {
+            tags: ['User'],
+            security: [
+                {
+                    bearerAuth: [],
+                },
+            ],
+            summary: 'Update the username',
+            parameters: [
+                {
+                    name: 'id',
+                    in: 'path',
+                    description: 'User ID',
+                    required: true,
+                    schema: {
+                        type: 'string',
+                    },
+                },
+            ],
+            requestBody: {
+                description: 'Image to upload',
+                required: true,
+                content: {
+                    'application/json': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                username: {
+                                    type: 'string',
+                                    required: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            responses: {
+                200: {
+                    description: 'Successful operation',
+                    content: {
+                        'application/json': {
+                            schema: {
+                                properties: {
+                                    status: { type: 'boolean' },
+                                    data: {
+                                        type: 'array',
+                                        default: []
+                                    },
+                                    message: { type: 'string' },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
         delete: {
             tags: ['User'],
             security: [

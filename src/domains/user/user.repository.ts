@@ -2,8 +2,8 @@ import mongoose, { Types } from 'mongoose';
 import { IFriend, IUser, User } from './user.model';
 import { truncate } from 'lodash';
 
-export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, coverImg: string, friends: IFriend[], }> => {
-    return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends','coverImg']);
+export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, coverImg: string, friends: IFriend[], password: string }> => {
+    return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends', 'coverImg', 'password']);
 };
 
 export const fetchByEmail = async (email: string) => {
@@ -129,4 +129,8 @@ export const updateProfilePicture = async (user_id: string, img_url: string) => 
 
 export const updateCoverPicture = async (user_id: string, img_url: string) => {
     return await User.updateOne({ _id: user_id }, { $set: { 'coverImg': img_url } })
+};
+
+export const updateUsername = async (user_id: string, updateUsername: string) => {
+    return await User.updateOne({ _id: user_id }, { $set: { 'name': updateUsername } })
 };

@@ -9,4 +9,7 @@ export const userExceptionMessage = {
     EMPTY_STRING: 'Search text empty',
     DELETE_FAILED: 'Failed to deleted the user.',
     FILE_REQUIRED: 'Image is required',
+    UPDATE_FAILED: 'Update failed',
+    PERMISSION_DENIED: 'Permission denied',
+    USERNAME_LENGTH: 'Username should be 3 character long'
 };

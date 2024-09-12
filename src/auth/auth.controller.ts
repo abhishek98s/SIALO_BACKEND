@@ -49,7 +49,7 @@ export const changePassword = asyncWrapper(async (req: Request, res: Response) =
     const regex = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (!regex.test(newPassword)) {
-        throw new Error(authExceptionMessage.INVALID_PASSWORD);
+        throw new createError.BadRequest(authExceptionMessage.INVALID_PASSWORD);
     }
 
     const message = await auth_service.updatePassword(currentPassword, newPassword, id);

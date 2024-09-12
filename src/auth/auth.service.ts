@@ -71,13 +71,13 @@ export const getRefreshToken = async (refreshToken: string) => {
 export const updatePassword = async (currentPassword: string, newPassword: string, user_id: string) => {
     const user = await UserDAO.fetchById(user_id);
 
-    if (!user) throw new Error(userExceptionMessage.USER_NOT_FOUND);
+    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
 
     const { password } = user;
 
     await isMatchingPassword(currentPassword, password);
 
-    if (currentPassword === newPassword) throw new Error(authExceptionMessage.SAME_PASSWORD)
+    if (currentPassword === newPassword) throw new createError.BadRequest(authExceptionMessage.SAME_PASSWORD)
 
     const hashedPassword = await passwordHash(newPassword);
 
@@ -88,6 +88,6 @@ export const updatePassword = async (currentPassword: string, newPassword: strin
     if (isUpdated) {
         return authSuccessMessage.PASSWORD_UPDATED;
     } else {
-        throw new Error(authExceptionMessage.PASSWORD_UPDATE);
+        throw new createError.InternalServerError(authExceptionMessage.PASSWORD_UPDATE);
     }
 };

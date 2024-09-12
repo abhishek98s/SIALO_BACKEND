@@ -56,7 +56,7 @@ export const docs = {
                         },
                     },
                 },
-                400: { description: 'User doesn\'t exit' }
+                404: { description: 'User doesn\'t exit' }
             },
         },
         post: {
@@ -318,9 +318,9 @@ export const docs = {
                         },
                     },
                 },
-                400: { description: 'Story ID is invalid' },
-                403: { description: 'Permission Denied' },
-                404: { description: 'Story doesn\'t exist' },
+                '400': { description: 'Story ID is invalid' },
+                '403': { description: 'Permission Denied' },
+                '404': { description: 'Story doesn\'t exist' },
             },
         },
     },

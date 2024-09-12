@@ -8,7 +8,7 @@ import { userExceptionMessage } from './../user/constant/userExceptionMessage';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { IFriend } from '../user/user.model';
 import mongoose from 'mongoose';
-import { convertDateTime, timeAgo } from '../../utils/date';
+import { timeAgo } from '../../utils/date';
 
 export const getAllStories = async (user_id: string) => {
     const user = await UserDAO.fetchById(user_id.toString());

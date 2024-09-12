@@ -1,4 +1,6 @@
+import createError from 'http-errors';
 import { toNumber } from 'lodash';
+
 import { postExceptionMessage } from './constant/postExceptionMessage';
 import Post, { IComment, IPost } from './post.model';
 
@@ -18,7 +20,7 @@ export const fetchPostsUpTo = async (no_of_posts: number) => {
 export const create = async (post_details: IPost) => {
     const post = new Post({ ...post_details });
 
-    if (!post) throw new Error(postExceptionMessage.POST_FALIED);
+    if (!post) throw new createError.NotFound(postExceptionMessage.POST_FALIED);
 
     const returned_post = await post.save();
 

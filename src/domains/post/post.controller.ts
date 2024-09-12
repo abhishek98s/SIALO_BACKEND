@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import createError from 'http-errors'
 
 import asyncWrapper from '../../utils/async';
 import * as post_service from './post.service';
@@ -26,16 +27,16 @@ export const createPost = asyncWrapper(async (req: Request, res: Response) => {
     const { id, name, image } = req.body.user;
 
     if (!caption) {
-        throw new Error(postExceptionMessage.CAPTION_REQUIRED);
+        throw new createError.BadRequest(postExceptionMessage.CAPTION_REQUIRED);
     }
 
-    if (!req.file) throw new Error(postExceptionMessage.FILE_REQUIRED);
+    if (!req.file) throw new createError.BadRequest(postExceptionMessage.FILE_REQUIRED);
 
     const post_image = req.file!.path;
 
     const userPost = await post_service.createPost({ name, userId: id, caption, post_image, user_image: image }, post_image);
 
-    res.status(200).json({ status: true, data: userPost });
+    res.status(201).json({ status: true, data: userPost });
 });
 
 
@@ -45,7 +46,7 @@ export const addComment = asyncWrapper(async (req: Request, res: Response) => {
 
     const { postId } = req.params;
 
-    if (!comment) throw new Error(postExceptionMessage.NAME_COMMENT_REQUIRED);
+    if (!comment) throw new createError.BadRequest(postExceptionMessage.NAME_COMMENT_REQUIRED);
 
     const comment_info = {
         user_id: id,
@@ -70,8 +71,8 @@ export const getRequestedPosts = asyncWrapper(async (req: Request, res: Response
 
 export const getRandomPost = asyncWrapper(async (req: Request, res: Response) => {
     const noOfPosts = req.query.noOfPosts as unknown as number || 5;
-    const { id: user_id } = req.body.user;
 
+    const { id: user_id } = req.body.user;
 
     const posts = await post_service.getRandomPost(noOfPosts, user_id);
 
@@ -91,7 +92,7 @@ export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
     const post_id = req.query.postId as unknown as string;
 
-    if (!user_id || !post_id) throw new Error(postExceptionMessage.INVALID_ID);
+    if (!user_id || !post_id) throw new createError.BadRequest(postExceptionMessage.INVALID_ID);
 
     const isPostLiked = await post_service.toggleLikeIn(post_id, user_id);
 
@@ -113,7 +114,7 @@ export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
 export const deletePost = asyncWrapper(async (req: Request, res: Response) => {
     const post_id = req.params.id as unknown as string;
 
-    if (!post_id) throw new Error(postExceptionMessage.INVALID_ID);
+    if (!post_id) throw new createError.BadRequest(postExceptionMessage.INVALID_ID);
 
     await post_service.deletePost(post_id);
 
@@ -125,8 +126,8 @@ export const updateCaption = asyncWrapper(async (req: Request, res: Response) =>
     const post_id = req.params.id as unknown as string;
     const { caption } = req.body;
 
-    if (!post_id) throw new Error(postExceptionMessage.INVALID_ID);
-    if (!caption) throw new Error(postExceptionMessage.CAPTION_REQUIRED);
+    if (!post_id) throw new createError.BadRequest(postExceptionMessage.INVALID_ID);
+    if (!caption) throw new createError.BadRequest(postExceptionMessage.CAPTION_REQUIRED);
 
     const updatedPost = await post_service.updateCaption(user_id, post_id, caption);
 

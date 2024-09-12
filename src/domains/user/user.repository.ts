@@ -1,6 +1,9 @@
 import mongoose, { Types } from 'mongoose';
+import createError from 'http-errors';
+
 import { IFriend, IUser, User } from './user.model';
-import { truncate } from 'lodash';
+import { userExceptionMessage } from './constant/userExceptionMessage';
+
 
 export const fetchById = async (id: string): Promise<{ _id: string, name: string, email: string, img: string, coverImg: string, friends: IFriend[], password: string }> => {
     return await User.findOne({ _id: id }).select(['_id', 'name', 'email', 'img', 'friends', 'coverImg', 'password']);
@@ -8,7 +11,8 @@ export const fetchById = async (id: string): Promise<{ _id: string, name: string
 
 export const fetchByEmail = async (email: string) => {
     const user = await User.findOne({ email: email }).select(['_id', 'name', 'email', 'img', 'friends', 'password']);
-    if (!user) throw new Error('User doesnot exist');
+
+    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
 
     return user;
 };

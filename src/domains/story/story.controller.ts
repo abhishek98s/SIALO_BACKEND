@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import createError from 'http-errors';
 
 import asyncWrapper from '../../utils/async';
 import * as story_service from './story.service';
@@ -16,10 +17,10 @@ export const postStory = asyncWrapper(async (req: Request, res: Response) => {
     const { id } = req.body.user;
 
     if (!caption) {
-        throw new Error(storyExceptionMessage.CAPTION_REQUIRED);
+        throw new createError.BadRequest(storyExceptionMessage.CAPTION_REQUIRED);
     }
 
-    if (!req.file) throw new Error(storyExceptionMessage.FILE_REQUIRED);
+    if (!req.file) throw new createError.BadRequest(storyExceptionMessage.FILE_REQUIRED);
 
     const story_data = {
         user_id: id,
@@ -47,9 +48,9 @@ export const patchStory = asyncWrapper(async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
     const { caption } = req.body;
 
-    if (!story_id) throw new Error(storyExceptionMessage.INVALID_ID);
+    if (!story_id) throw new createError.BadRequest(storyExceptionMessage.INVALID_ID);
 
-    if (!caption) throw new Error(storyExceptionMessage.CAPTION_REQUIRED);
+    if (!caption) throw new createError.BadRequest(storyExceptionMessage.CAPTION_REQUIRED);
 
     const file_path = (req.file) ? req.file.path : null;
 
@@ -62,7 +63,7 @@ export const deleteStory = asyncWrapper(async (req: Request, res: Response) => {
     const { id: story_id } = req.params;
     const { id: user_id } = req.body.user;
 
-    if (!story_id) throw new Error(storyExceptionMessage.INVALID_ID);
+    if (!story_id) throw new createError.BadRequest(storyExceptionMessage.INVALID_ID);
 
     await story_service.deleteStory(story_id, user_id);
 

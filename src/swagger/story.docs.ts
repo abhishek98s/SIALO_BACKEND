@@ -56,6 +56,7 @@ export const docs = {
                         },
                     },
                 },
+                404: { description: 'User doesn\'t exit' }
             },
         },
         post: {
@@ -115,6 +116,8 @@ export const docs = {
                         },
                     },
                 },
+                400: { description: 'Caption and file is required' },
+                404: { description: 'User doesn\'t exit' }
             },
         },
     },
@@ -182,6 +185,7 @@ export const docs = {
                         },
                     },
                 },
+                404: { description: 'User doesn\'t exit' },
             },
         },
         patch: {
@@ -255,6 +259,9 @@ export const docs = {
                         },
                     },
                 },
+                400: { description: 'Caption is required' },
+                403: { description: 'Permission Denied' },
+                404: { description: 'Story doesn\'t exist' },
             },
         },
         delete: {
@@ -311,6 +318,9 @@ export const docs = {
                         },
                     },
                 },
+                '400': { description: 'Story ID is invalid' },
+                '403': { description: 'Permission Denied' },
+                '404': { description: 'Story doesn\'t exist' },
             },
         },
     },

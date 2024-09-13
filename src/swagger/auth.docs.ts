@@ -148,6 +148,7 @@ export const docs = {
                         },
                     },
                 },
+                400: { description: 'Invalid refresh token' }
             },
         },
     },
@@ -203,6 +204,9 @@ export const docs = {
                         },
                     },
                 },
+                400: { description: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character' },
+                404: { description: 'User doesn\'t exit' },
+                500: { description: 'Failed to update the database' },
             },
         },
     },

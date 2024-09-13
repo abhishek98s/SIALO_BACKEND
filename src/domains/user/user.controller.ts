@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import createError from 'http-errors';
 
 import asyncWrapper from '../../utils/async';
 import * as user_service from './user.service';
@@ -10,7 +11,7 @@ export const getUser = asyncWrapper(async (req: Request, res: Response) => {
     const { id: sender_id } = req.body.user;
 
     if (!user_id) {
-        throw new Error(userExceptionMessage.INVALID_ID);
+        throw new createError.BadRequest(userExceptionMessage.INVALID_ID);
     }
 
     const user = await user_service.getUser(user_id, sender_id);
@@ -36,9 +37,9 @@ export const addFriend = asyncWrapper(async (req: Request, res: Response) => {
     const { id: sender_id, name, image } = req.body.user;
     const friend_id = req.params.friendId;
 
-    if (!friend_id) throw new Error(userExceptionMessage.INVALID_ID);
+    if (!friend_id) throw new createError.BadRequest(userExceptionMessage.INVALID_ID);
 
-    if (sender_id === friend_id) throw new Error(userExceptionMessage.ID_SAME);
+    if (sender_id === friend_id) throw new createError.Forbidden(userExceptionMessage.ID_SAME);
 
     const senderInfo = { id: sender_id, name, image };
 
@@ -59,8 +60,8 @@ export const acceptRequest = asyncWrapper(async (req: Request, res: Response) =>
     const { id: receiver_id } = req.body.user;
     const sender_id = req.params.friendId;
 
-    if (!sender_id) throw new Error(userExceptionMessage.INVALID_ID);
-    if (receiver_id === sender_id) throw new Error(userExceptionMessage.ID_SAME);
+    if (!sender_id) throw new createError.BadRequest(userExceptionMessage.INVALID_ID);
+    if (receiver_id === sender_id) throw new createError.Forbidden(userExceptionMessage.ID_SAME);
 
     const friend = await user_service.acceptFriendRequest(sender_id, receiver_id);
 
@@ -72,8 +73,8 @@ export const rejectRequest = asyncWrapper(async (req: Request, res: Response) =>
     const { id: receiver_id } = req.body.user;
     const sender_id = req.params.friendId;
 
-    if (!sender_id) throw new Error(userExceptionMessage.INVALID_ID);
-    if (receiver_id === sender_id) throw new Error(userExceptionMessage.ID_SAME);
+    if (!sender_id) throw new createError.BadRequest(userExceptionMessage.INVALID_ID);
+    if (receiver_id === sender_id) throw new createError.Forbidden(userExceptionMessage.ID_SAME);
 
     const friend = await user_service.rejectFriendRequest(sender_id, receiver_id);
 
@@ -83,7 +84,7 @@ export const rejectRequest = asyncWrapper(async (req: Request, res: Response) =>
 export const searchUser = asyncWrapper(async (req: Request, res: Response) => {
     const searchText = req.query.name as unknown as string;
 
-    if (!searchText) throw new Error(userExceptionMessage.EMPTY_STRING);
+    if (!searchText) throw new createError.BadRequest(userExceptionMessage.EMPTY_STRING);
 
     const searchResult = await user_service.fetchUserByName(searchText);
 
@@ -92,7 +93,7 @@ export const searchUser = asyncWrapper(async (req: Request, res: Response) => {
 
 export const deleteUser = asyncWrapper(async (req: Request, res: Response) => {
     const user_id = req.params.id as unknown as string;
-    if (!user_id) throw new Error(userExceptionMessage.INVALID_ID);
+    if (!user_id) throw new createError.BadRequest(userExceptionMessage.INVALID_ID);
 
     const deleted_user = await user_service.removeUserById(user_id);
 
@@ -102,7 +103,7 @@ export const deleteUser = asyncWrapper(async (req: Request, res: Response) => {
 export const fetchUnknownPeople = asyncWrapper(async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
 
-    if (!user_id) throw new Error(userExceptionMessage.INVALID_ID);
+    if (!user_id) throw new createError.BadRequest(userExceptionMessage.INVALID_ID);
 
     const unknownPeoples = await user_service.fetchRecommendedPeople(user_id);
 
@@ -112,7 +113,7 @@ export const fetchUnknownPeople = asyncWrapper(async (req: Request, res: Respons
 export const updateProfilePicture = asyncWrapper(async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
 
-    if (!req.file) throw new Error(userExceptionMessage.FILE_REQUIRED);
+    if (!req.file) throw new createError.BadRequest(userExceptionMessage.FILE_REQUIRED);
 
     await user_service.updateProfilePicture(user_id, req.file!.path);
 
@@ -123,7 +124,7 @@ export const updateProfilePicture = asyncWrapper(async (req: Request, res: Respo
 export const updateCoverPicture = asyncWrapper(async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
 
-    if (!req.file) throw new Error(userExceptionMessage.FILE_REQUIRED);
+    if (!req.file) throw new createError.BadRequest(userExceptionMessage.FILE_REQUIRED);
 
     await user_service.updateCoverPicture(user_id, req.file!.path);
 
@@ -135,9 +136,9 @@ export const updateUsername = asyncWrapper(async (req: Request, res: Response) =
     const { id: user_params_id } = req.params;
     const { username: updatedUserName } = req.body;
 
-    if (updatedUserName.length < 3) throw new Error(userExceptionMessage.USERNAME_LENGTH)
+    if (updatedUserName.length < 3) throw new createError.BadRequest(userExceptionMessage.USERNAME_LENGTH)
 
-    if (user_id !== user_params_id) throw new Error(userExceptionMessage.PERMISSION_DENIED)
+    if (user_id !== user_params_id) throw new createError.Forbidden(userExceptionMessage.PERMISSION_DENIED)
 
     const message: string = await user_service.updateUsername(user_id, updatedUserName);
 

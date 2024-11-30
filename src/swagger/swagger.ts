@@ -16,7 +16,7 @@ export const swaggerConfig: OAS3Definition = {
   },
   servers: [
     {
-      url: 'http://localhost:5000/api',
+      url: 'https://sialo-backend-2.vercel.app/api',
       description: 'Local development server',
     },
   ],

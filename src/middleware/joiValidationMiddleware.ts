@@ -1,5 +1,9 @@
+/** @format */
+
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { Schema } from 'joi';
+import { middlewareExceptionMessage } from './constant/middlewareExceptionMessage';
 
 const joiValidationMiddleware = (schema: Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -10,8 +14,10 @@ const joiValidationMiddleware = (schema: Schema) => {
       next();
     } else {
       const { details } = error;
-      const message = details.map(i => i.message).join(',');
-      res.status(422).json({ status: false, message });
+      const message = details.map((i) => i.message).join(',');
+      res
+        .status(StatusCodes.UNPROCESSABLE_ENTITY)
+        .json({ status: false, message });
     }
   };
 };
@@ -19,7 +25,9 @@ const joiValidationMiddleware = (schema: Schema) => {
 export const joiFileValidationMiddleware = (schema: Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.file) {
-      return res.status(400).json({ error: 'No file provided' });
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: middlewareExceptionMessage.FILE_REQUIRED });
     }
 
     const { error } = schema.validate(req.file);
@@ -29,11 +37,10 @@ export const joiFileValidationMiddleware = (schema: Schema) => {
       next();
     } else {
       const { details } = error;
-      const message = details.map(i => i.message).join(',');
-      res.status(422).json({ error: message });
+      const message = details.map((i) => i.message).join(',');
+      res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ error: message });
     }
   };
 };
-
 
 export default joiValidationMiddleware;

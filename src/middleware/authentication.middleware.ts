@@ -1,25 +1,44 @@
+/** @format */
+
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 import dotenv from 'dotenv';
 import { middlewareExceptionMessage } from './constant/middlewareExceptionMessage';
 import asyncWrapper from '../utils/async';
+import { customHttpError } from '../utils/customHttpError';
+import { StatusCodes } from 'http-status-codes';
 
 dotenv.config();
-export const verifyToken = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = asyncWrapper(
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.headers['authorization'];
-        if (!token) throw new Error(middlewareExceptionMessage.TOKEN_REQUIRED);
+      const token = req.headers['authorization'];
+      if (!token)
+        throw new customHttpError(
+          StatusCodes.UNAUTHORIZED,
+          middlewareExceptionMessage.TOKEN_REQUIRED,
+        );
 
-        jwt.verify(token.replace('Bearer ', ''), process.env.ACCESS_TOKEN_SECRET as string, (err, decoded) => {
-            if (err) {
-                throw new Error(middlewareExceptionMessage.UNAUTHORIZE);
-            }
+      jwt.verify(
+        token.replace('Bearer ', ''),
+        process.env.ACCESS_TOKEN_SECRET as string,
+        (err, decoded) => {
+          if (err) {
+            throw new customHttpError(
+              StatusCodes.FORBIDDEN,
+              middlewareExceptionMessage.UNAUTHORIZE,
+            );
+          }
 
-            req.body.user = decoded;
-            next();
-        });
+          req.body.user = decoded;
+          next();
+        },
+      );
     } catch (error) {
-        res.status(401).json({ status: false, message: (error as Error).message });
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ status: false, message: (error as Error).message });
     }
-});
+  },
+);

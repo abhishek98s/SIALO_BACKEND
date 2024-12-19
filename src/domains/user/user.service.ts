@@ -1,4 +1,5 @@
-import createError from 'http-errors';
+/** @format */
+
 import { IJWT } from '../../auth/auth.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';
 import * as PostDAO from '../post/post.repository';
@@ -8,187 +9,290 @@ import _ from 'lodash';
 import { IFriend } from './user.model';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { userSuccessnMessage } from './constant/userSuccessMessage';
+import { customHttpError } from '../../utils/customHttpError';
+import { StatusCodes } from 'http-status-codes';
 
 export const getUser = async (id: string, sender_id: string) => {
-    const user = await UserDAO.fetchById(id);
+  const user = await UserDAO.fetchById(id);
 
-    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  if (!user)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    let isUserPresent = user.friends.find((friend: IFriend) => friend.id === sender_id);
-    let isUserAFriend = isUserPresent && !isUserPresent.pending && isUserPresent.isFriend;
-    let isFriendRequestPending = isUserPresent && isUserPresent.pending && !isUserPresent.isFriend;
+  const isUserPresent = user.friends.find(
+    (friend: IFriend) => friend.id === sender_id,
+  );
+  let isUserAFriend =
+    isUserPresent && !isUserPresent.pending && isUserPresent.isFriend;
+  let isFriendRequestPending =
+    isUserPresent && isUserPresent.pending && !isUserPresent.isFriend;
 
-    if (id === sender_id) {
-        isUserAFriend = true;
-        isFriendRequestPending = false;
-    }
+  if (id === sender_id) {
+    isUserAFriend = true;
+    isFriendRequestPending = false;
+  }
 
-    if (user.friends.length === 0) {
-        isUserAFriend = false;
-        isFriendRequestPending = false;
-    }
+  if (user.friends.length === 0) {
+    isUserAFriend = false;
+    isFriendRequestPending = false;
+  }
 
-    const response = {
-        id: user._id,
-        email: user.email,
-        img: user.img,
-        name: user.name,
-        friends: user.friends,
-        isFriend: isUserAFriend,
-        coverImg: user.coverImg,
-        isFriendRequestPending
-    }
+  const response = {
+    id: user._id,
+    email: user.email,
+    img: user.img,
+    name: user.name,
+    friends: user.friends,
+    isFriend: isUserAFriend,
+    coverImg: user.coverImg,
+    isFriendRequestPending,
+  };
 
-    return response;
+  return response;
 };
 
 export const fetchAll = async () => {
-    const users = await UserDAO.fetchAll();
+  const users = await UserDAO.fetchAll();
 
-    if (!users) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  if (!users)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    return users;
+  return users;
 };
 
 export const addFriend = async (friend_id: string, senderInfo: IJWT) => {
-    const requested_user = await UserDAO.fetchById(friend_id);
+  const requested_user = await UserDAO.fetchById(friend_id);
 
-    if (!requested_user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  if (!requested_user)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    const requester_friend = requested_user.friends.find(friend => friend.id === senderInfo.id);
+  const requester_friend = requested_user.friends.find(
+    (friend) => friend.id === senderInfo.id,
+  );
 
-    if (requester_friend) {
-        if (!requester_friend.pending) {
-            throw new createError.BadRequest(userExceptionMessage.FRIEND_ALREADY);
-        } else {
-            throw new createError.BadRequest(userExceptionMessage.REQUEST_SENT_ALREADY);
-        }
+  if (requester_friend) {
+    if (!requester_friend.pending) {
+      throw new customHttpError(
+        StatusCodes.BAD_REQUEST,
+        userExceptionMessage.FRIEND_ALREADY,
+      );
+    } else {
+      throw new customHttpError(
+        StatusCodes.BAD_REQUEST,
+        userExceptionMessage.REQUEST_SENT_ALREADY,
+      );
     }
-    const friendInfo: IFriend = { id: requested_user._id.toString(), name: requested_user.name, image: requested_user.img!, pending: true, isFriend: false };
+  }
+  const friendInfo: IFriend = {
+    id: requested_user._id.toString(),
+    name: requested_user.name,
+    image: requested_user.img!,
+    pending: true,
+    isFriend: false,
+  };
 
-    await Promise.all([
-        UserDAO.addFriendInfo(friend_id, { ...senderInfo, pending: true, isFriend: false }),
-        UserDAO.addFriendInfo(senderInfo.id, friendInfo),
-    ]);
+  await Promise.all([
+    UserDAO.addFriendInfo(friend_id, {
+      ...senderInfo,
+      pending: true,
+      isFriend: false,
+    }),
+    UserDAO.addFriendInfo(senderInfo.id, friendInfo),
+  ]);
 
-    return requested_user.name;
+  return requested_user.name;
 };
 
 export const getAllFriends = async (user_id: string): Promise<IFriend[]> => {
-    const user = await UserDAO.fetchById(user_id);
+  const user = await UserDAO.fetchById(user_id);
 
-    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  if (!user)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    return await UserDAO.fetchAllFriends(user_id);
+  return await UserDAO.fetchAllFriends(user_id);
 };
 
 export const getFriendRequests = async (user_id: string) => {
-    const user = await UserDAO.fetchById(user_id);
+  const user = await UserDAO.fetchById(user_id);
 
-    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  if (!user)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    return await UserDAO.fetchPendingRequests(user_id);
+  return await UserDAO.fetchPendingRequests(user_id);
 };
 
-export const acceptFriendRequest = async (sender_id: string, receiver_id: string) => {
-    const request_sender = await UserDAO.fetchById(sender_id);
+export const acceptFriendRequest = async (
+  sender_id: string,
+  receiver_id: string,
+) => {
+  const request_sender = await UserDAO.fetchById(sender_id);
 
-    if (!request_sender) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  if (!request_sender)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    const sender_friend = request_sender.friends.find(friend => friend.id === receiver_id);
+  const sender_friend = request_sender.friends.find(
+    (friend) => friend.id === receiver_id,
+  );
 
-    if (sender_friend && !sender_friend.pending) {
-        throw new createError.BadRequest(userExceptionMessage.ACCEPTED_ALREADY);
-    }
+  if (sender_friend && !sender_friend.pending) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.ACCEPTED_ALREADY,
+    );
+  }
 
-    await Promise.all([
-        UserDAO.acceptFriendRequest(sender_id, receiver_id),
-        UserDAO.acceptFriendRequest(receiver_id, sender_id),
-    ]);
+  await Promise.all([
+    UserDAO.acceptFriendRequest(sender_id, receiver_id),
+    UserDAO.acceptFriendRequest(receiver_id, sender_id),
+  ]);
 
-    return request_sender.name;
+  return request_sender.name;
 };
 
-export const rejectFriendRequest = async (sender_id: string, receiver_id: string) => {
-    const request_sender = await UserDAO.fetchById(sender_id);
+export const rejectFriendRequest = async (
+  sender_id: string,
+  receiver_id: string,
+) => {
+  const request_sender = await UserDAO.fetchById(sender_id);
 
-    if (!request_sender) {
-        await UserDAO.deleteFriend(receiver_id, sender_id);
-        throw new createError.BadRequest(userExceptionMessage.USER_NOT_FOUND);
-    }
+  if (!request_sender) {
+    await UserDAO.deleteFriend(receiver_id, sender_id);
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
+  }
 
-    const sender_friend = request_sender.friends.find(friend => friend.id === receiver_id);
+  const sender_friend = request_sender.friends.find(
+    (friend) => friend.id === receiver_id,
+  );
 
-    if (!sender_friend) {
-        throw new createError.BadRequest(userExceptionMessage.REQUEST_NOT_SENT);
-    }
+  if (!sender_friend) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.REQUEST_NOT_SENT,
+    );
+  }
 
-    await Promise.all([
-        UserDAO.rejectFriendRequest(sender_id, receiver_id),
-        UserDAO.rejectFriendRequest(receiver_id, sender_id),
-    ]);
+  await Promise.all([
+    UserDAO.rejectFriendRequest(sender_id, receiver_id),
+    UserDAO.rejectFriendRequest(receiver_id, sender_id),
+  ]);
 
-    return request_sender.name;
+  return request_sender.name;
 };
 
 export const fetchUserByName = async (searchText: string) => {
-    return await UserDAO.fetchByName(searchText);
+  return await UserDAO.fetchByName(searchText);
 };
 
 export const removeUserById = async (user_id: string) => {
-    const user = await UserDAO.fetchById(user_id);
-    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  const user = await UserDAO.fetchById(user_id);
+  if (!user)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    await PostDAO.removePostsByuserId(user_id);
+  await PostDAO.removePostsByuserId(user_id);
 
-    const isDeleted = await UserDAO.deleteUserById(user_id);
+  const isDeleted = await UserDAO.deleteUserById(user_id);
 
-    if (!isDeleted) throw new createError.InternalServerError(userExceptionMessage.DELETE_FAILED);
+  if (!isDeleted)
+    throw new customHttpError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      userExceptionMessage.DELETE_FAILED,
+    );
 
-    return user.name;
+  return user.name;
 };
 
 export const fetchRecommendedPeople = async (user_id: string) => {
-    const user = await UserDAO.fetchById(user_id);
+  const user = await UserDAO.fetchById(user_id);
 
-    const user_friends_id = user?.friends.map(friend => new mongoose.Types.ObjectId(friend.id));
-    const recommend_user = await UserDAO.fetchRecommendedPeople(user_id, user_friends_id!);
+  const user_friends_id = user?.friends.map(
+    (friend) => new mongoose.Types.ObjectId(friend.id),
+  );
+  const recommend_user = await UserDAO.fetchRecommendedPeople(
+    user_id,
+    user_friends_id!,
+  );
 
-    return _.sampleSize(recommend_user, 4);
+  return _.sampleSize(recommend_user, 4);
 };
 
-export const updateProfilePicture = async (user_id: string, file_path: string) => {
-    const user = await UserDAO.fetchById(user_id);
+export const updateProfilePicture = async (
+  user_id: string,
+  file_path: string,
+) => {
+  const user = await UserDAO.fetchById(user_id);
 
-    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  if (!user)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    const img_url = await uploadToCloudinary(file_path);
+  const img_url = await uploadToCloudinary(file_path);
 
-    return await UserDAO.updateProfilePicture(user_id, img_url);
+  return await UserDAO.updateProfilePicture(user_id, img_url);
 };
 
-export const updateCoverPicture = async (user_id: string, file_path: string) => {
-    const user = await UserDAO.fetchById(user_id);
+export const updateCoverPicture = async (
+  user_id: string,
+  file_path: string,
+) => {
+  const user = await UserDAO.fetchById(user_id);
 
-    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  if (!user)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    const img_url = await uploadToCloudinary(file_path);
+  const img_url = await uploadToCloudinary(file_path);
 
-    return await UserDAO.updateCoverPicture(user_id, img_url);
+  return await UserDAO.updateCoverPicture(user_id, img_url);
 };
 
+export const updateUsername = async (
+  user_id: string,
+  updateUsername: string,
+) => {
+  const user = await UserDAO.fetchById(user_id);
 
-export const updateUsername = async (user_id: string, updateUsername: string) => {
-    const user = await UserDAO.fetchById(user_id);
+  if (!user)
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
 
-    if (!user) throw new createError.NotFound(userExceptionMessage.USER_NOT_FOUND);
+  const result = await UserDAO.updateUsername(user_id, updateUsername);
+  const isUpdated = result.modifiedCount;
 
-    const result = await UserDAO.updateUsername(user_id, updateUsername);
-    const isUpdated = result.modifiedCount
-
-    if (isUpdated) {
-        return userSuccessnMessage.USERNAME_UPDATE_SUCCESS;
-    } else {
-        throw new createError.BadRequest(userExceptionMessage.UPDATE_FAILED);
-    }
+  if (isUpdated) {
+    return userSuccessnMessage.USERNAME_UPDATE_SUCCESS;
+  } else {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.UPDATE_FAILED,
+    );
+  }
 };

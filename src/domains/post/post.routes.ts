@@ -31,5 +31,4 @@ router.delete('/:id', post_controller.deletePost);
 
 router.patch('/comment/:postId', joiValidationMiddleware(commentBodySchema), post_controller.addComment);
 
-
 export default router;

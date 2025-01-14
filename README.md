@@ -183,12 +183,12 @@ To get a local copy of the project up and running, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/projectname-backend.git
+   git clone https://github.com/abhishek98s/SIALO_BACKEND/
    
 2. **Navigate to the project directory:**
 
     ```bash
-    cd sdsd
+    cd SIALO_BACKEND
     
 3. **Install dependencies:**
 
@@ -221,5 +221,6 @@ Create a .env file in the root directory and add your configuration variables.
 Use tools like Postman or cURL to interact with the API endpoints.
 Ensure to include the Authorization header with the JWT token for protected routes.
 
-## Swagger link
+## Swagger link 
+Here is the link to swagger documentation for detail of each api endpoints
 https://sialo-backend-2.vercel.app/api-docs

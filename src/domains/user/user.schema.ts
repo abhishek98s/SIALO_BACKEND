@@ -6,7 +6,7 @@ export const jwtUserSchema = Joi.object().keys({
     image: Joi.string(),
     iat: Joi.number(),
     exp: Joi.number(),
-})
+});
 export const fileSchema: Schema = Joi.object().keys({
     fieldname: Joi.string().required(),
     originalname: Joi.string().required(),

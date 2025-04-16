@@ -1,14 +1,12 @@
-
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import dotenv from 'dotenv';
 import { middlewareExceptionMessage } from './constant/middlewareExceptionMessage';
 import asyncWrapper from '../utils/async';
 import { customHttpError } from '../utils/customHttpError';
 import { StatusCodes } from 'http-status-codes';
+import { config } from '../config/config';
 
-dotenv.config();
 export const verifyToken = asyncWrapper(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -21,7 +19,7 @@ export const verifyToken = asyncWrapper(
 
       jwt.verify(
         token.replace('Bearer ', ''),
-        process.env.ACCESS_TOKEN_SECRET as string,
+        config.jwt.ACCESS_TOKEN_SECRET as string,
         (err, decoded) => {
           if (err) {
             throw new customHttpError(

@@ -1,4 +1,3 @@
-/** @format */
 
 export const convertDateTime = (dtStr: string) => {
   const dt = new Date(dtStr);

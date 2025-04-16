@@ -1,4 +1,3 @@
-/** @format */
 
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { IComment, IPost } from './post.model';

@@ -1,4 +1,3 @@
-/** @format */
 
 import { IJWT } from '../../auth/auth.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';

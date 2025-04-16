@@ -1,4 +1,3 @@
-/** @format */
 
 import { IStory } from './story.model';
 import * as StoryDAO from './story.repository';

@@ -1,8 +1,4 @@
-
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 import { IJWT, IRegister } from './auth.model';
 import { isMatchingPassword, passwordHash } from '../utils/bcrypt';
@@ -14,6 +10,7 @@ import { authSuccessMessage } from './constant/authSuccessMessages';
 import { customHttpError } from '../utils/customHttpError';
 import { StatusCodes } from 'http-status-codes';
 import { uploadToCloudinary } from '../utils/cloudinary';
+import { config } from '../config/config';
 
 export const getTokens = async (email: string, password: string) => {
   const user = await UserDAO.fetchByEmail(email);
@@ -31,19 +28,15 @@ export const getTokens = async (email: string, password: string) => {
     name: user.name,
     image: user.img,
   };
-  const accessToken = jwt.sign(
-    payload,
-    process.env.ACCESS_TOKEN_SECRET as string,
-    {
-      expiresIn: process.env.ACCESS_TOKEN_LIFETIME,
-    },
-  );
+  const accessToken = jwt.sign(payload, config.jwt.ACCESS_TOKEN_SECRET, {
+    expiresIn: config.jwt.ACCESS_TOKEN_LIFETIME,
+  });
 
   const refreshToken = jwt.sign(
     payload,
-    process.env.REFRESH_TOKEN_SECRET as string,
+    config.jwt.REFRESH_TOKEN_SECRET as string,
     {
-      expiresIn: process.env.REFRESH_TOKEN_LIFETIME,
+      expiresIn: config.jwt.REFRESH_TOKEN_LIFETIME,
     },
   );
 
@@ -72,7 +65,7 @@ export const getRefreshToken = async (refreshToken: string) => {
   let accessToken;
   jwt.verify(
     refreshToken,
-    (process.env.REFRESH_TOKEN_SECRET as string)!,
+    (config.jwt.REFRESH_TOKEN_SECRET as string)!,
     (err, decoded) => {
       if (err) {
         throw new customHttpError(
@@ -84,9 +77,9 @@ export const getRefreshToken = async (refreshToken: string) => {
 
       const newAccessToken = jwt.sign(
         { id, name, image },
-        process.env.ACCESS_TOKEN_SECRET as string,
+        config.jwt.ACCESS_TOKEN_SECRET as string,
         {
-          expiresIn: process.env.ACCESS_TOKEN_LIFETIME,
+          expiresIn: config.jwt.ACCESS_TOKEN_LIFETIME,
         },
       );
       accessToken = newAccessToken;

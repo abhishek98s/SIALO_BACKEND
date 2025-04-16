@@ -56,7 +56,7 @@ export const docs = {
                         },
                     },
                 },
-                404: { description: 'User doesn\'t exit' }
+                404: { description: 'User doesn\'t exit' },
             },
         },
         post: {
@@ -117,7 +117,7 @@ export const docs = {
                     },
                 },
                 400: { description: 'Caption and file is required' },
-                404: { description: 'User doesn\'t exit' }
+                404: { description: 'User doesn\'t exit' },
             },
         },
     },

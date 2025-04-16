@@ -9,7 +9,8 @@
     "build": "rimraf ./build && tsc",
     "start:dev": "cross-env kill-port 5000 9000 && npx nodemon",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --verbose",
-    "test:start": "cross-env NODE_ENV=test nodemon src/index.ts"
+    "test:start": "cross-env NODE_ENV=test nodemon src/index.ts",
+    "test:seed":"cross-env NODE_ENV=test ts-node src/seeds/index.ts"
   },
   "keywords": [],
   "author": "",

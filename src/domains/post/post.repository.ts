@@ -1,4 +1,3 @@
-/** @format */
 
 import { toNumber } from 'lodash';
 

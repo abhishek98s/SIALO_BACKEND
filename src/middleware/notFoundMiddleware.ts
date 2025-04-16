@@ -1,4 +1,3 @@
-/** @format */
 
 import { Request, Response } from 'express';
 import { middlewareExceptionMessage } from './constant/middlewareExceptionMessage';

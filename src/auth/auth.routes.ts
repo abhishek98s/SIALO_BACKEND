@@ -1,4 +1,3 @@
-
 import express from 'express';
 
 import * as auth_controller from './auth.controller';

@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 import validator from 'validator';
 
@@ -47,7 +46,7 @@ export const registerHandler = asyncWrapper(
 
     const savedUser = await auth_service.registerUser(userData);
 
-    res.status(201).json({ status: true, data: savedUser });
+    res.status(StatusCodes.CREATED).json({ status: true, data: savedUser });
   },
 );
 

@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
   res.send('Sialo : Social Media App');
 });
 
-cron_story();
+// cron_story();
 app.use('/cron', cron_story);
 
 app.use(errorHandlerMiddleware);

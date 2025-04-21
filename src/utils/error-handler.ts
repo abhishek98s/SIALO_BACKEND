@@ -1,6 +1,7 @@
-
 import { NextFunction, Request, Response } from 'express';
 import { HttpError } from 'http-errors';
+import { StatusCodes } from 'http-status-codes';
+import { authExceptionMessage } from '../auth/constant/authExceptionMessage';
 
 export const errorHandlerMiddleware = (
   err: HttpError,
@@ -9,6 +10,13 @@ export const errorHandlerMiddleware = (
   next: NextFunction,
 ) => {
   const statusCode = err.status || 500;
+
+  if (parseInt(err.code) === 11000) {
+    return res.status(StatusCodes.CONFLICT).json({
+      status: StatusCodes.CONFLICT,
+      message: authExceptionMessage.EMAIL_ALREADY_EXISTS,
+    });
+  }
 
   return res.status(statusCode).json({
     status: false,

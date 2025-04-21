@@ -1,4 +1,3 @@
-
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Schema } from 'joi';
@@ -15,7 +14,7 @@ const joiValidationMiddleware = (schema: Schema) => {
       const { details } = error;
       const message = details.map((i) => i.message).join(',');
       res
-        .status(StatusCodes.UNPROCESSABLE_ENTITY)
+        .status(StatusCodes.BAD_REQUEST)
         .json({ status: false, message });
     }
   };
@@ -37,7 +36,7 @@ export const joiFileValidationMiddleware = (schema: Schema) => {
     } else {
       const { details } = error;
       const message = details.map((i) => i.message).join(',');
-      res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ error: message });
+      res.status(StatusCodes.BAD_REQUEST).json({ error: message });
     }
   };
 };

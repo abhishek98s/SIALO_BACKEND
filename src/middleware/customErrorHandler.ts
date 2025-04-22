@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { customHttpError } from '../utils/customHttpError';
 import { middlewareExceptionMessage } from './constant/middlewareExceptionMessage';
-import mongoose, { MongooseError } from 'mongoose';
 
 const customErrorHandler = (
   err: any,

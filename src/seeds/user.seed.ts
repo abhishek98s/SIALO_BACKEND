@@ -1,11 +1,11 @@
 import { User } from '../domains/user/user.model';
 import bcrypt from 'bcrypt';
 
-const seedUsers = [
+export const seedUsers = [
   {
     name: 'Alice',
     email: 'alice@example.com',
-    password: 'password123',
+    password: 'Password123!',
     img: 'https://example.com/images/alice.jpg',
     coverImg: 'https://example.com/images/alice_cover.jpg',
     friends: [
@@ -28,7 +28,7 @@ const seedUsers = [
   {
     name: 'Bob',
     email: 'bob@example.com',
-    password: 'password123',
+    password: 'pPassword123!',
     img: 'https://example.com/images/bob.jpg',
     coverImg: 'https://example.com/images/bob_cover.jpg',
     friends: [
@@ -51,7 +51,7 @@ const seedUsers = [
   {
     name: 'Charlie',
     email: 'charlie@example.com',
-    password: 'password123',
+    password: 'pPassword123!',
     img: 'https://example.com/images/charlie.jpg',
     coverImg: 'https://example.com/images/charlie_cover.jpg',
     friends: [

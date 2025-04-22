@@ -1,4 +1,3 @@
-
 import mongoose, { Types } from 'mongoose';
 
 import { IFriend, IUser, User } from './user.model';

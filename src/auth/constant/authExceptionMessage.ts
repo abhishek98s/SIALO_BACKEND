@@ -1,5 +1,5 @@
 export const authExceptionMessage = {
-  INVALID_PASS: 'Current password is incorrect.',
+  INVALID_CREDENTIALS: 'Invalid email or password',
   EMAIL_PASSWORD_REQUIRED: 'Email and password is required.',
   INTERNAL_SERVER_ERRROR: 'Internal server error, try again later',
   INVALID_TOKEN: 'Invalid refresh token',

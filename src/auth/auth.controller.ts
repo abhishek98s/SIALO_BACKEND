@@ -6,6 +6,7 @@ import asyncWrapper from '../utils/async';
 import { authExceptionMessage } from './constant/authExceptionMessage';
 import { StatusCodes } from 'http-status-codes';
 import { customHttpError } from '../utils/customHttpError';
+import { authSuccessMessage } from './constant/authSuccessMessages';
 
 export const loginHandler = asyncWrapper(
   async (req: Request, res: Response) => {
@@ -44,9 +45,11 @@ export const registerHandler = asyncWrapper(
 
     const userData = { name, email, password };
 
-    const savedUser = await auth_service.registerUser(userData);
+    await auth_service.registerUser(userData);
 
-    res.status(StatusCodes.CREATED).json({ status: true, data: savedUser });
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: true, message: authSuccessMessage.REGISTER_SUCCESS });
   },
 );
 

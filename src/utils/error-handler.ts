@@ -13,7 +13,7 @@ export const errorHandlerMiddleware = (
 
   if (parseInt(err.code) === 11000) {
     return res.status(StatusCodes.CONFLICT).json({
-      status: StatusCodes.CONFLICT,
+      status: false,
       message: authExceptionMessage.EMAIL_ALREADY_EXISTS,
     });
   }

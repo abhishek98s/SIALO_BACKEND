@@ -1,27 +1,28 @@
 import supertest from 'supertest';
 import app from '../app';
 import { authExceptionMessage } from '../auth/constant/authExceptionMessage';
-import { beforeEach } from 'node:test';
-import { User } from '../domains/user/user.model';
 import { authSuccessMessage } from '../auth/constant/authSuccessMessages';
-import mongoose from 'mongoose';
+import * as db from '../utils/db';
+import { config } from '../config/config';
 
 const api = supertest(app);
 
-jest.useRealTimers();
-
 describe('Authentication', () => {
   describe('POST /api/auth/register', () => {
+    beforeAll(async () => {
+      await db.default();
+    });
+
     beforeEach(async () => {
-      await User.deleteMany({});
+      await db.clearDatabase();
     });
 
     it('should return 400 for missing name', async () => {
+      console.log(config.database.TEST_MONGO_URI);
       const response = await api.post('/api/auth/register').send({
         email: 'test@example.com',
         password: 'Password123!',
       });
-      console.log(response.body);
       expect(response.status).toBe(400);
       expect(response.body).toEqual({
         status: false,
@@ -145,15 +146,12 @@ describe('Authentication', () => {
         email: 'existing@example.com',
         password: 'Password123!',
       });
-      console.log('before');
 
       const response = await api.post('/api/auth/register').send({
         name: 'John Doe',
         email: 'existing@example.com',
         password: 'Password123!',
       });
-
-      console.log(response.body);
 
       expect(response.status).toBe(409);
       expect(response.body).toMatchObject({
@@ -171,16 +169,17 @@ describe('Authentication', () => {
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual({
-        success: true,
+        status: true,
         message: authSuccessMessage.REGISTER_SUCCESS,
       });
     });
-  });
 
-  afterEach(() => {
-    jest.clearAllTimers();
-  });
-  afterAll(async () => {
-    await mongoose.connection.close(); // Close the database connection
+    afterAll(async () => {
+      await db.closeDatabase();
+    });
+
+    afterEach(async () => {
+      await db.clearDatabase();
+    });
   });
 });

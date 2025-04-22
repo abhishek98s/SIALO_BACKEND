@@ -3,22 +3,22 @@ import app from '../app';
 import { authExceptionMessage } from '../auth/constant/authExceptionMessage';
 import { authSuccessMessage } from '../auth/constant/authSuccessMessages';
 import * as db from '../utils/db';
-import { config } from '../config/config';
+import { userExceptionMessage } from '../domains/user/constant/userExceptionMessage';
+import { seedUsers } from '../seeds/user.seed';
+import { seedDatabase } from '../seeds';
 
 const api = supertest(app);
 
 describe('Authentication', () => {
-  describe('POST /api/auth/register', () => {
-    beforeAll(async () => {
-      await db.default();
-    });
+  beforeAll(async () => {
+    await db.default();
+  });
 
-    beforeEach(async () => {
-      await db.clearDatabase();
-    });
+  describe('POST /api/auth/register', () => {
+    const user = seedUsers[0];
+    const { email, password, name } = user;
 
     it('should return 400 for missing name', async () => {
-      console.log(config.database.TEST_MONGO_URI);
       const response = await api.post('/api/auth/register').send({
         email: 'test@example.com',
         password: 'Password123!',
@@ -142,23 +142,21 @@ describe('Authentication', () => {
 
     it('should return 409 for email already exists', async () => {
       await api.post('/api/auth/register').send({
-        name: 'John Doe',
-        email: 'existing@example.com',
-        password: 'Password123!',
+        name,
+        email,
+        password,
       });
-
       const response = await api.post('/api/auth/register').send({
-        name: 'John Doe',
-        email: 'existing@example.com',
-        password: 'Password123!',
+        name,
+        email,
+        password,
       });
-
       expect(response.status).toBe(409);
       expect(response.body).toMatchObject({
         status: false,
         message: authExceptionMessage.EMAIL_ALREADY_EXISTS,
       });
-    }, 100000);
+    });
 
     it('should return 200 for successful register', async () => {
       const response = await api.post('/api/auth/register').send({
@@ -173,13 +171,92 @@ describe('Authentication', () => {
         message: authSuccessMessage.REGISTER_SUCCESS,
       });
     });
+  });
 
-    afterAll(async () => {
-      await db.closeDatabase();
+  describe('POST /api/auth/login', () => {
+    const user = seedUsers[0];
+    const { email, password } = user;
+
+    beforeAll(async () => {
+      await seedDatabase();
     });
 
-    afterEach(async () => {
-      await db.clearDatabase();
+    it('should return 400 for missing email', async () => {
+      const response = await api.post('/api/auth/login').send({
+        password: 'Password123!',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        status: false,
+        message: authExceptionMessage.EMAIL_REQUIRED,
+      });
     });
+
+    it('should return 400 for empty email', async () => {
+      const response = await api.post('/api/auth/login').send({
+        email: '',
+        password: 'Password123!',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        status: false,
+        message: authExceptionMessage.EMAIL_REQUIRED,
+      });
+    });
+
+    it('should return 400 for missing password', async () => {
+      const response = await api.post('/api/auth/login').send({
+        email: 'test@example.com',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        status: false,
+        message: authExceptionMessage.PASSWORD_REQUIRED,
+      });
+    });
+
+    it('should return 401 for invalid credentials', async () => {
+      const response = await api.post('/api/auth/login').send({
+        email,
+        password: 'wrong_password',
+      });
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({
+        status: false,
+        message: authExceptionMessage.INVALID_CREDENTIALS,
+      });
+    });
+
+    it('should return 404 for user not found', async () => {
+      const response = await api.post('/api/auth/login').send({
+        email: 'nonexisting@example.com',
+        password: 'WrongPassword!',
+      });
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        status: false,
+        message: userExceptionMessage.USER_NOT_FOUND,
+      });
+    });
+
+    it('should return 200 for successful login', async () => {
+      const response = await api.post('/api/auth/login').send({
+        email,
+        password,
+      });
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        status: true,
+        message: authSuccessMessage.LOGIN_SUCCESS,
+        data: {
+          accessToken: expect.any(String),
+          refreshToken: expect.any(String),
+        },
+      });
+    });
+  });
+
+  afterAll(async () => {
+    await db.closeDatabase();
   });
 });

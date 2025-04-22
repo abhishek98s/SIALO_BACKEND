@@ -6,6 +6,7 @@ export const config = {
   app: {
     name: process.env.NAME || 'SIALO_BACKEND',
     port: process.env.SERVER_PORT || '5000',
+    env: process.env.NODE_ENV,
   },
   jwt: {
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,

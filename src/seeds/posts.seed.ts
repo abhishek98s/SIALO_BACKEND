@@ -2,7 +2,6 @@ import Post from '../domains/post/post.model';
 import { User } from '../domains/user/user.model';
 
 const postSeed = async () => {
-  await Post.deleteMany({});
 
   const users = await User.find({});
   if (users.length === 0) {

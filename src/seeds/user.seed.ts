@@ -1,4 +1,3 @@
-import { User } from '../domains/user/user.model';
 import bcrypt from 'bcrypt';
 
 export const seedUsers = [
@@ -73,18 +72,10 @@ export const seedUsers = [
   },
 ];
 
-const userSeed = async () => {
-  await User.deleteMany({});
-  const hashedUsers = await Promise.all(
-    seedUsers.map(async (user) => {
-      const hashedPassword = await bcrypt.hash(user.password, 10);
-      return {
-        ...user,
-        password: hashedPassword,
-      };
-    }),
-  );
-  await User.insertMany(hashedUsers);
-};
-
-export default userSeed;
+export const hashedUsers = seedUsers.map(async (user) => {
+  const hashedPassword = bcrypt.hashSync(user.password, 10);
+  return {
+    ...user,
+    password: hashedPassword,
+  };
+});

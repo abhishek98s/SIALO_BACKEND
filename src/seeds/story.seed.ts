@@ -2,7 +2,6 @@ import Story from '../domains/story/story.model';
 import { User } from '../domains/user/user.model'; // Adjust the path as necessary
 
 const storySeed = async () => {
-  await Story.deleteMany({});
 
   const users = await User.find({});
   if (users.length === 0) {

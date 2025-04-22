@@ -23,7 +23,11 @@ export const loginHandler = asyncWrapper(
 
     res
       .status(StatusCodes.OK)
-      .json({ status: true, data: { accessToken, refreshToken } });
+      .json({
+        status: true,
+        message: authSuccessMessage.LOGIN_SUCCESS,
+        data: { accessToken, refreshToken },
+      });
   },
 );
 

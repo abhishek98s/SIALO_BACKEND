@@ -11,8 +11,8 @@ export const isMatchingPassword = async (
   const isMatch = await bcrypt.compare(password, hashed_password);
   if (!isMatch)
     throw new customHttpError(
-      StatusCodes.BAD_REQUEST,
-      authExceptionMessage.INVALID_PASS,
+      StatusCodes.UNAUTHORIZED,
+      authExceptionMessage.INVALID_CREDENTIALS,
     );
 
   return;

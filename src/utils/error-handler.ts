@@ -9,7 +9,7 @@ export const errorHandlerMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  const statusCode = err.status || 500;
+  const statusCode = err.statusCode || 500;
 
   if (parseInt(err.code) === 11000) {
     return res.status(StatusCodes.CONFLICT).json({

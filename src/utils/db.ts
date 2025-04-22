@@ -1,18 +1,23 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import { logger } from '../config/logger';
-
-dotenv.config();
+import { config } from '../config/config';
 
 const connectDB = async () => {
-    try {
-        const uri = process.env.MONGO_URI as string;
-        const conn = await mongoose.connect(uri);
+  try {
+    const test_uri = config.database.TEST_MONGO_URI;
+    const prod_uri = config.database.TEST_MONGO_URI;
 
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
-    } catch (error) {
-        logger.error(error);
-    }
+    const uri: string = (config.app.env === 'test' ? test_uri : prod_uri) || '';
+    await mongoose.connect(uri);
+
+    // console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const closeDatabase = async () => {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
 };
 
 export default connectDB;

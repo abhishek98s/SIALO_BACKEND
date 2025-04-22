@@ -1,37 +1,35 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose from 'mongoose';
 
-export interface IUser extends Document {
-    firstName: string,
-    lastName: string,
+export interface IUser {
+    _id?: string,
     name: string,
-    phoneNo: number,
-    gender: 'Male' | 'Female' | 'Others',
     email: string,
     password: string | null,
+    friends?: Array<IFriend>
     img?: string,
+    coverImg?: string,
 }
+
+export interface IFriend {
+    id: string,
+    name: string,
+    image: string,
+    pending: boolean,
+    isFriend: boolean,
+}
+
+const friendSchema = new mongoose.Schema<IFriend>({
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    image: { type: String, required: true },
+    pending: { type: Boolean, required: true },
+    isFriend: { type: Boolean, required: true },
+});
 
 const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true,
-        },
-        firstName: {
-            type: String,
-            required: true,
-        },
-        lastName: {
-            type: String,
-            required: true,
-        },
-        phoneNo: {
-            type: Number,
-            required: true,
-        },
-        gender: {
-            type: String,
-            enum: ['Male', 'Female', 'others'],
             required: true,
         },
         email: {
@@ -46,12 +44,14 @@ const userSchema = new mongoose.Schema(
         img: {
             type: String,
         },
+        coverImg: {
+            type: String,
+        },
+        friends: [friendSchema],
     },
     {
         timestamps: true,
     },
 );
 
-
 export const User = mongoose.model('User', userSchema);
-

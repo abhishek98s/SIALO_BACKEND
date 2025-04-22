@@ -22,7 +22,7 @@ module.exports = logger;
 // Middleware function to log requests and responses
 export const logMiddleware = (req: express.Request & multer.Options, res: Response, next: NextFunction): void => {
     // Log the request data
-    logger.info({
+    console.info({
         message: 'Request received',
         method: req.method,
         url: req.originalUrl,
@@ -38,7 +38,7 @@ export const logMiddleware = (req: express.Request & multer.Options, res: Respon
     // Override the response.send function to intercept the response body and log it
     res.send = function (body?: unknown): any{
         // Log the response data
-        logger.info({
+        console.info({
             message: 'Response sent',
             status: res.statusCode,
             body: body,

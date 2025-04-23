@@ -1,22 +1,13 @@
 import mongoose, { Types } from 'mongoose';
 
-import { IFriend, IUser, User } from './user.model';
+import { IFetchUser, IFriend, IUser, User } from './user.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';
 import { customHttpError } from '../../utils/customHttpError';
 import { StatusCodes } from 'http-status-codes';
 
-export const fetchById = async (
-  id: string,
-): Promise<{
-  _id: string;
-  name: string;
-  email: string;
-  img: string;
-  coverImg: string;
-  friends: IFriend[];
-  password: string;
-}> => {
-  return await User.findOne({ _id: id }).select([
+export const fetchById = async (id: string): Promise<IFetchUser> => {
+  // Fetch the user by ID
+  const response = await User.findOne({ _id: id }).select([
     '_id',
     'name',
     'email',
@@ -24,7 +15,32 @@ export const fetchById = async (
     'friends',
     'coverImg',
     'password',
-  ]);
+  ]); // Type assertion for Mongoose document
+
+  // Handle case where user is not found
+  if (!response) {
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
+  }
+
+  // Destructure the response
+  const { _id, name, email, img, friends, coverImg, password } =
+    response.toObject(); // Convert to plain object
+
+  // Create the user object to return
+  const user: IFetchUser = {
+    _id: _id.toString(),
+    name,
+    email,
+    img: img!,
+    friends,
+    coverImg: coverImg!,
+    password,
+  };
+
+  return user;
 };
 
 export const fetchByEmail = async (email: string) => {

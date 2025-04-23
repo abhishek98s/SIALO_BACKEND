@@ -1,4 +1,3 @@
-
 import { toNumber } from 'lodash';
 
 import { postExceptionMessage } from './constant/postExceptionMessage';

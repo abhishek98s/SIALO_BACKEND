@@ -4,8 +4,8 @@ import { authExceptionMessage } from '../auth/constant/authExceptionMessage';
 import { authSuccessMessage } from '../auth/constant/authSuccessMessages';
 import * as db from '../utils/db';
 import { userExceptionMessage } from '../domains/user/constant/userExceptionMessage';
-import { seedUsers } from '../seeds/user.seed';
-import { seedDatabase } from '../seeds';
+import { users } from '../seeds/user.seed';
+import { populateDb } from '../utils/populate';
 
 const api = supertest(app);
 
@@ -15,7 +15,7 @@ describe('Authentication', () => {
   });
 
   describe('POST /api/auth/register', () => {
-    const user = seedUsers[0];
+    const user = users[0];
     const { email, password, name } = user;
 
     it('should return 400 for missing name', async () => {
@@ -174,11 +174,11 @@ describe('Authentication', () => {
   });
 
   describe('POST /api/auth/login', () => {
-    const user = seedUsers[0];
+    const user = users[0];
     const { email, password } = user;
 
     beforeAll(async () => {
-      await seedDatabase();
+      await populateDb();
     });
 
     it('should return 400 for missing email', async () => {
@@ -244,6 +244,7 @@ describe('Authentication', () => {
         email,
         password,
       });
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         status: true,

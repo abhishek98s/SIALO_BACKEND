@@ -1,20 +1,28 @@
 import supertest from 'supertest';
 import app from '../app';
 import * as db from '../utils/db';
-import { seedUsers } from '../seeds/user.seed';
-import { seedDatabase } from '../seeds';
+import { users } from '../seeds/user.seed';
 import { middlewareExceptionMessage } from '../middleware/constant/middlewareExceptionMessage';
 import { userExceptionMessage } from '../domains/user/constant/userExceptionMessage';
+import { populateDb } from '../utils/populate';
 
 const api = supertest(app);
 
 describe('User Enitity', () => {
   let token: string;
-  const { email, password } = seedUsers[0];
-  beforeEach(async () => {
+  const { email, password, name } = users[0];
+  beforeAll(async () => {
     await db.default();
 
-    await seedDatabase();
+    await populateDb();
+  });
+
+  beforeEach(async () => {
+    await api.post('/api/auth/register').send({
+      email,
+      password,
+      name,
+    });
     const response = await api.post('/api/auth/login').send({
       email,
       password,
@@ -29,6 +37,7 @@ describe('User Enitity', () => {
       const response = await api
         .get(`/api/user/friends/${userId}`)
         .set('Authorization', 'Bearer invalid_token');
+
       expect(response.status).toBe(401);
       expect(response.body).toEqual({
         status: false,
@@ -38,6 +47,7 @@ describe('User Enitity', () => {
 
     it('should return 403 for missing token', async () => {
       const response = await api.get(`/api/user/friends/${userId}`);
+
       expect(response.status).toBe(403);
       expect(response.body).toEqual({
         status: false,
@@ -47,10 +57,12 @@ describe('User Enitity', () => {
 
     describe('User is authenticated', () => {
       it('should return 404 for friend not found', async () => {
-        const nonExistentUserId = '99999';
+        const nonExistentUserId = 99999;
         const response = await api
           .get(`/api/user/friends/${nonExistentUserId}`)
           .set('Authorization', `Bearer ${token}`);
+        console.log(response.body);
+
         expect(response.status).toBe(404);
         expect(response.body).toEqual({
           status: false,
@@ -62,6 +74,8 @@ describe('User Enitity', () => {
         const response = await api
           .get(`/api/user/friends/${userId}`)
           .set('Authorization', `Bearer ${token}`);
+        console.log(response.body);
+
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
           status: true,
@@ -83,7 +97,7 @@ describe('User Enitity', () => {
   describe('PATCH api/user/friend/accept/:friendId', () => {});
   describe('PATCH api/user/friend/reject/:friendId', () => {});
 
-  afterEach(async () => {
+  afterAll(async () => {
     await db.closeDatabase();
   });
 });

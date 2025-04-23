@@ -1,14 +1,8 @@
-import Story from '../domains/story/story.model';
+import { IStory } from '../domains/story/story.model';
 import { User } from '../domains/user/user.model'; // Adjust the path as necessary
 
-const storySeed = async () => {
-  await Story.deleteMany({});
-
+const storySeed = async (): Promise<IStory[]> => {
   const users = await User.find({});
-  if (users.length === 0) {
-    console.log('No users found. Please seed users first.');
-    return;
-  }
 
   const stories = [];
 
@@ -18,14 +12,20 @@ const storySeed = async () => {
 
     stories.push({
       user_id: user._id,
-      user_name: user.name,
-      user_image: user.img,
+      user_name: user.name || '',
+      user_image: user.img || '',
       caption: `Story caption for ${user.name}`,
       story_image: `https://example.com/images/story${i + 1}.jpg`,
     });
   }
 
-  await Story.insertMany(stories);
+  return stories;
 };
 
-export default storySeed;
+let seedStories: IStory[] = [];
+
+(async () => {
+  seedStories = await storySeed();
+})();
+
+export { seedStories };

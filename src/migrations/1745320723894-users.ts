@@ -6,7 +6,6 @@ import { seedUsers } from '../seeds/user.seed';
 
 export async function up(): Promise<void> {
   await connectDB();
-  await User.deleteMany({});
   await User.create(seedUsers);
 }
 

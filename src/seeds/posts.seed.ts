@@ -48,5 +48,3 @@ let seedPosts: IPost[] = [];
 })();
 
 export { seedPosts };
-
-export default postSeed;

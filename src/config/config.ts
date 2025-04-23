@@ -20,6 +20,7 @@ export const config = {
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   },
   database: {
+    NAME: process.env.MONGO_DB_NAME,
     MONGO_URI: process.env.MONGO_URI,
     TEST_MONGO_URI: process.env.TEST_MONGO_URI,
   },

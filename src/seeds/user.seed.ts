@@ -72,7 +72,7 @@ export const users = [
   },
 ];
 
-export const seedUsers = users.map( (user) => {
+export const seedUsers = users.map((user) => {
   const hashedPassword = bcrypt.hashSync(user.password, 10);
   return {
     ...user,

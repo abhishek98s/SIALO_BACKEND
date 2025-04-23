@@ -6,7 +6,6 @@ import { seedStories } from '../seeds/story.seed';
 
 export async function up(): Promise<void> {
   await connectDB();
-  await Story.deleteMany({});
   await Story.create(seedStories);
 }
 

@@ -6,7 +6,6 @@ import { seedPosts } from '../seeds/posts.seed';
 
 export async function up(): Promise<void> {
   await connectDB();
-  await Post.deleteMany({});
   await Post.create(seedPosts);
 }
 

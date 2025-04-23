@@ -10,12 +10,14 @@
     "start:dev": "cross-env kill-port 5000 9000 && npx nodemon",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --verbose",
     "test:start": "cross-env NODE_ENV=test nodemon src/index.ts",
-    "test:seed":"cross-env NODE_ENV=test ts-node src/seeds/index.ts"
+    "test:seed": "cross-env NODE_ENV=test ts-node src/seeds/index.ts",
+    "test:latest":"cross-env NODE_ENV=test migrate up"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/mongoose": "^5.11.96",
     "@types/node": "^20.14.12",
     "@types/swagger-ui-express": "^4.1.6",
     "bcrypt": "^5.1.1",
@@ -31,13 +33,14 @@
     "jsonwebtoken": "^9.0.2",
     "kill-port": "^2.0.1",
     "lodash": "^4.17.21",
-    "mongoose": "^8.3.1",
+    "mongoose": "^8.13.2",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
     "sharp": "^0.33.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.17.14",
     "swagger-ui-express": "^5.0.0",
+    "ts-migrate-mongoose": "^4.0.8",
     "validator": "^13.11.0",
     "vercel": "^35.1.0",
     "winston": "^3.13.0",
@@ -73,7 +76,7 @@
     "nodemon": "^3.1.0",
     "supertest": "^7.1.0",
     "ts-jest": "^29.3.2",
-    "typescript": "^5.5.4",
+    "typescript": "^5.8.3",
     "typescript-eslint": "^7.6.0"
   }
 }

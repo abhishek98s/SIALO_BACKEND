@@ -1,14 +1,8 @@
-import Post from '../domains/post/post.model';
+import { IPost } from '../domains/post/post.model';
 import { User } from '../domains/user/user.model';
 
-const postSeed = async () => {
-  await Post.deleteMany({});
-
+const postSeed = async (): Promise<IPost[]> => {
   const users = await User.find({});
-  if (users.length === 0) {
-    console.log('No users found. Please seed users first.');
-    return;
-  }
 
   const posts = [];
 
@@ -17,35 +11,42 @@ const postSeed = async () => {
     const user = users[randomUserIndex];
 
     const com = {
-      user_id: user._id,
+      user_id: user._id.toString(),
       comment: `Comment by ${user.name}`,
-      comment_user_name: user.name,
-      comment_user_picture: user.img,
+      comment_user_name: user.name || '',
+      comment_user_picture: user.img || '',
     };
 
     const likesCount = Math.floor(Math.random() * Math.min(3, users.length));
-    const likes = [];
-    const likedUserIds = new Set();
+    const likes: string[] = [];
+    const likedUserIds = new Set<string>();
 
     while (likedUserIds.size < likesCount) {
       const randomLikeIndex = Math.floor(Math.random() * users.length);
-      likedUserIds.add(users[randomLikeIndex]._id);
+      likedUserIds.add(users[randomLikeIndex]._id.toString());
     }
 
     likes.push(...likedUserIds);
 
     posts.push({
-      user_image: user.img,
-      name: user.name,
-      userId: user._id,
+      user_image: user.img as string,
+      name: user.name as string,
+      userId: user._id.toString(),
       caption: `This is a sample post caption for ${user.name}.`,
       post_image: `https://example.com/images/post${i + 1}.jpg`,
       likes: likes,
       comments: [com],
     });
   }
-
-  await Post.insertMany(posts);
+  return posts;
 };
+
+let seedPosts: IPost[] = [];
+
+(async () => {
+  seedPosts = await postSeed();
+})();
+
+export { seedPosts };
 
 export default postSeed;

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-export const seedUsers = [
+export const users = [
   {
     name: 'Alice',
     email: 'alice@example.com',
@@ -72,7 +72,7 @@ export const seedUsers = [
   },
 ];
 
-export const hashedUsers = seedUsers.map(async (user) => {
+export const seedUsers = users.map( (user) => {
   const hashedPassword = bcrypt.hashSync(user.password, 10);
   return {
     ...user,

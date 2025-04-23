@@ -1,4 +1,3 @@
-
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { IComment, IPost } from './post.model';
 
@@ -57,7 +56,7 @@ export const createPost = async (postDetails: IPost, image_path: string) => {
   const new_post: IPost = {
     ...postDetails,
     post_image: img_url,
-    user_image: user.img,
+    user_image: user.img?.toString(),
   };
 
   return await PostDAO.create(new_post);

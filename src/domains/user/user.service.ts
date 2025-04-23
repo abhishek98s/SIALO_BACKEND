@@ -1,4 +1,3 @@
-
 import { IJWT } from '../../auth/auth.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';
 import * as PostDAO from '../post/post.repository';

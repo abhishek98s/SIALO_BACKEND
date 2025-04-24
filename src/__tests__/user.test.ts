@@ -5,6 +5,8 @@ import { users } from '../seeds/user.seed';
 import { middlewareExceptionMessage } from '../middleware/constant/middlewareExceptionMessage';
 import { userExceptionMessage } from '../domains/user/constant/userExceptionMessage';
 import { populateDb } from '../utils/populate';
+import { User } from '../domains/user/user.model';
+import mongoose from 'mongoose';
 
 const api = supertest(app);
 
@@ -56,30 +58,47 @@ describe('User Enitity', () => {
     });
 
     describe('User is authenticated', () => {
-      it('should return 404 for friend not found', async () => {
+      it('should return 400 for invalid id', async () => {
         const nonExistentUserId = 99999;
         const response = await api
           .get(`/api/user/friends/${nonExistentUserId}`)
           .set('Authorization', `Bearer ${token}`);
-        console.log(response.body);
 
-        expect(response.status).toBe(404);
+        expect(response.status).toBe(400);
         expect(response.body).toEqual({
           status: false,
-          message: userExceptionMessage.USER_NOT_FOUND,
+          message: userExceptionMessage.INVALID_ID,
         });
       });
+      describe('Valid id', () => {
+        let userId: string;
+        beforeAll(async () => {
+          const res = await User.findOne({ email });
+          userId = res!._id.toString();
+        });
+        it('should return 404 for friend not found', async () => {
+          const validUserId = new mongoose.Types.ObjectId();
+          const response = await api
+            .get(`/api/user/friends/${validUserId}`)
+            .set('Authorization', `Bearer ${token}`);
 
-      it('should return 200 for successful operation', async () => {
-        const response = await api
-          .get(`/api/user/friends/${userId}`)
-          .set('Authorization', `Bearer ${token}`);
-        console.log(response.body);
+          expect(response.status).toBe(404);
+          expect(response.body).toEqual({
+            status: false,
+            message: userExceptionMessage.USER_NOT_FOUND,
+          });
+        });
 
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual({
-          status: true,
-          data: expect.any(Array),
+        it('should return 200 for successful operation', async () => {
+          const response = await api
+            .get(`/api/user/friends/${userId}`)
+            .set('Authorization', `Bearer ${token}`);
+
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual({
+            status: true,
+            data: expect.any(Array),
+          });
         });
       });
     });

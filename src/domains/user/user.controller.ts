@@ -6,12 +6,13 @@ import { userExceptionMessage } from './constant/userExceptionMessage';
 import { IFriend } from './user.model';
 import { StatusCodes } from 'http-status-codes';
 import { customHttpError } from '../../utils/customHttpError';
+import { isValidObjectId } from 'mongoose';
 
 export const getUser = asyncWrapper(async (req: Request, res: Response) => {
   const user_id = req.params.id;
   const { id: sender_id } = req.body.user;
 
-  if (!user_id) {
+  if (!user_id || !isValidObjectId(user_id)) {
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
       userExceptionMessage.INVALID_ID,
@@ -32,6 +33,12 @@ export const fetchAll = asyncWrapper(async (req: Request, res: Response) => {
 export const getFriends = asyncWrapper(async (req: Request, res: Response) => {
   const { userId } = req.params;
 
+  if (!userId || !isValidObjectId(userId)) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.INVALID_ID,
+    );
+  }
   const friends: IFriend[] = await user_service.getAllFriends(userId);
 
   res.status(StatusCodes.OK).json({ status: true, data: friends });

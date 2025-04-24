@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose, { isValidObjectId, Types } from 'mongoose';
 
 import { IFetchUser, IFriend, IUser, User } from './user.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';
@@ -6,8 +6,13 @@ import { customHttpError } from '../../utils/customHttpError';
 import { StatusCodes } from 'http-status-codes';
 
 export const fetchById = async (id: string): Promise<IFetchUser> => {
-  // Fetch the user by ID
-  const response = await User.findOne({ _id: id }).select([
+  if (!isValidObjectId(id)) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
+  }
+  const response = await User.findOne({ _id: new Types.ObjectId(id) }).select([
     '_id',
     'name',
     'email',
@@ -15,7 +20,7 @@ export const fetchById = async (id: string): Promise<IFetchUser> => {
     'friends',
     'coverImg',
     'password',
-  ]); // Type assertion for Mongoose document
+  ]);
 
   // Handle case where user is not found
   if (!response) {

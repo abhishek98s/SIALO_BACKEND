@@ -7,6 +7,7 @@ import { IFriend } from './user.model';
 import { StatusCodes } from 'http-status-codes';
 import { customHttpError } from '../../utils/customHttpError';
 import { isValidObjectId } from 'mongoose';
+import { userSuccessMessages } from './constant/userSuccessMessage';
 
 export const getUser = asyncWrapper(async (req: Request, res: Response) => {
   const user_id = req.params.id;
@@ -48,7 +49,7 @@ export const addFriend = asyncWrapper(async (req: Request, res: Response) => {
   const { id: sender_id, name, image } = req.body.user;
   const friend_id = req.params.friendId;
 
-  if (!friend_id)
+  if (!friend_id || !isValidObjectId(friend_id))
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
       userExceptionMessage.INVALID_ID,
@@ -62,11 +63,11 @@ export const addFriend = asyncWrapper(async (req: Request, res: Response) => {
 
   const senderInfo = { id: sender_id, name, image };
 
-  const friend = await user_service.addFriend(friend_id, senderInfo);
+  await user_service.addFriend(friend_id, senderInfo);
 
   res
     .status(StatusCodes.OK)
-    .json({ status: true, message: `Request sent to ${friend}` });
+    .json({ status: true, message: userSuccessMessages.FRIEND_REQUEST_SENT });
 });
 
 export const getFriendRequests = asyncWrapper(
@@ -84,7 +85,7 @@ export const acceptRequest = asyncWrapper(
     const { id: receiver_id } = req.body.user;
     const sender_id = req.params.friendId;
 
-    if (!sender_id)
+    if (!sender_id || isValidObjectId(sender_id))
       throw new customHttpError(
         StatusCodes.BAD_REQUEST,
         userExceptionMessage.INVALID_ID,
@@ -95,14 +96,12 @@ export const acceptRequest = asyncWrapper(
         userExceptionMessage.ID_SAME,
       );
 
-    const friend = await user_service.acceptFriendRequest(
-      sender_id,
-      receiver_id,
-    );
+    await user_service.acceptFriendRequest(sender_id, receiver_id);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ status: true, message: `Request accepted of ${friend}` });
+    res.status(StatusCodes.OK).json({
+      status: true,
+      message: userSuccessMessages.FRIEND_REQUEST_ACCEPTED,
+    });
   },
 );
 

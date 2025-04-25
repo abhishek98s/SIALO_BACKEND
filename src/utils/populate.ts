@@ -11,10 +11,11 @@ export const populateDb = async () => {
     });
 
     const migrations = await migrator.list();
+    await migrator.run('up');
+
     migrations.forEach(async (mi) => {
       await migrator.run('up', mi.name);
     });
-    // console.log(migrations);
     await migrator.sync();
   } catch (e) {
     console.log((e as Error).message);

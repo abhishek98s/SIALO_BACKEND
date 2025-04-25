@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import _ from 'lodash';
 import { IFriend } from './user.model';
 import { uploadToCloudinary } from '../../utils/cloudinary';
-import { userSuccessnMessage } from './constant/userSuccessMessage';
+import { userSuccessMessages } from './constant/userSuccessMessage';
 import { customHttpError } from '../../utils/customHttpError';
 import { StatusCodes } from 'http-status-codes';
 
@@ -84,7 +84,7 @@ export const addFriend = async (friend_id: string, senderInfo: IJWT) => {
       );
     } else {
       throw new customHttpError(
-        StatusCodes.BAD_REQUEST,
+        StatusCodes.CONFLICT,
         userExceptionMessage.REQUEST_SENT_ALREADY,
       );
     }
@@ -151,7 +151,7 @@ export const acceptFriendRequest = async (
 
   if (sender_friend && !sender_friend.pending) {
     throw new customHttpError(
-      StatusCodes.BAD_REQUEST,
+      StatusCodes.CONFLICT,
       userExceptionMessage.ACCEPTED_ALREADY,
     );
   }
@@ -286,7 +286,7 @@ export const updateUsername = async (
   const isUpdated = result.modifiedCount;
 
   if (isUpdated) {
-    return userSuccessnMessage.USERNAME_UPDATE_SUCCESS;
+    return userSuccessMessages.USERNAME_UPDATE_SUCCESS;
   } else {
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,

@@ -16,8 +16,11 @@ const connectDB = async () => {
 };
 
 export const closeDatabase = async () => {
-  await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
+};
+
+export const clearDatabase = async () => {
+  await mongoose.connection.dropDatabase();
 };
 
 export default connectDB;

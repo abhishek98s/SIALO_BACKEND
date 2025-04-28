@@ -57,13 +57,6 @@ export const fetchByEmail = async (email: string) => {
     'friends',
     'password',
   ]);
-
-  if (!user)
-    throw new customHttpError(
-      StatusCodes.NOT_FOUND,
-      userExceptionMessage.USER_NOT_FOUND,
-    );
-
   return user;
 };
 
@@ -194,7 +187,10 @@ export const updateProfilePicture = async (
   user_id: string,
   img_url: string,
 ) => {
-  return await User.updateOne({ _id: user_id }, { $set: { img: img_url } });
+  return await User.updateOne(
+    { _id: new mongoose.Types.ObjectId(user_id) },
+    { $set: { img: img_url } },
+  );
 };
 
 export const updateCoverPicture = async (user_id: string, img_url: string) => {

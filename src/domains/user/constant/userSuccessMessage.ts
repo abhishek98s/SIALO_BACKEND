@@ -9,4 +9,6 @@ export const userSuccessMessages = {
   FRIEND_REQUEST_ACCEPTED: 'Friend request accepted',
   FRIEND_REQUEST_REJECTED: 'Friend request rejected',
   FRIEND_REQUEST_CANCELLED: 'Friend request cancelled',
+  COVER_PICTURE_UPDATED: 'Cover picture updated',
+  PROFILE_PICTURE_UPDATED: 'Profile picture updated',
 };

@@ -1,9 +1,7 @@
 import { IPost } from '../domains/post/post.model';
-import { User } from '../domains/user/user.model';
+import { IFetchUser } from '../utils/populate';
 
-const postSeed = async (): Promise<IPost[]> => {
-  const users = await User.find({});
-
+export const postSeed = async (users: IFetchUser[]): Promise<IPost[]> => {
   const posts = [];
 
   for (let i = 0; i < 5; i++) {
@@ -41,10 +39,10 @@ const postSeed = async (): Promise<IPost[]> => {
   return posts;
 };
 
-let seedPosts: IPost[] = [];
+// let seedPosts: IPost[] = [];
 
-(async () => {
-  seedPosts = await postSeed();
-})();
+// (async () => {
+//   seedPosts = await postSeed();
+// })();
 
-export { seedPosts };
+// export { seedPosts };

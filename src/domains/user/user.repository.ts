@@ -195,7 +195,7 @@ export const updateProfilePicture = async (
 
 export const updateCoverPicture = async (user_id: string, img_url: string) => {
   return await User.updateOne(
-    { _id: user_id },
+    { _id: new mongoose.Types.ObjectId(user_id) },
     { $set: { coverImg: img_url } },
   );
 };

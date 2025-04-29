@@ -92,5 +92,7 @@ export const seedUsers = async () => {
     };
   });
 
+  await User.deleteMany({});
+  // console.log(finalUser);
   return finalUser;
 };

@@ -13,13 +13,13 @@ const customErrorHandler = (
   if (err instanceof customHttpError) {
     return res
       .status(err.statusCode)
-      .json({ success: false, message: err.message });
+      .json({ status: false, message: err.message });
   }
 
   // Handle SyntaxError for invalid JSON
   if (err instanceof SyntaxError && 'body' in err) {
     return res.status(StatusCodes.BAD_REQUEST).json({
-      success: false,
+      status: false,
       message: middlewareExceptionMessage.INVALID_JSON,
     });
   }
@@ -27,7 +27,7 @@ const customErrorHandler = (
   console.log((err as Error).message);
 
   return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-    success: false,
+    status: false,
     message: middlewareExceptionMessage.INTERNAL_SERVER_ERROR,
   });
 };

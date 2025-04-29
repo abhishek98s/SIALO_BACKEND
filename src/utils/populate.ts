@@ -15,7 +15,7 @@ export interface IFetchUser {
 export const populateDb = async () => {
   try {
     await connectDB();
-    await User.create(seedUsers);
+    await User.create(await seedUsers());
     const users = await User.find({});
 
     const userArr = await Promise.all(

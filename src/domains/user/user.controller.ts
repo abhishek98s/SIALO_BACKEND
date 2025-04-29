@@ -86,7 +86,7 @@ export const acceptRequest = asyncWrapper(
     const { id: receiver_id } = req.body.user;
     const sender_id = req.params.friendId;
 
-    if (!sender_id || isValidObjectId(sender_id))
+    if (!sender_id || !isValidObjectId(sender_id))
       throw new customHttpError(
         StatusCodes.BAD_REQUEST,
         userExceptionMessage.INVALID_ID,

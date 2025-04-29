@@ -143,6 +143,13 @@ export const acceptFriendRequest = async (
     (friend) => friend.id === receiver_id,
   );
 
+  if (!sender_friend) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.REQUEST_NOT_SENT,
+    );
+  }
+
   if (sender_friend && !sender_friend.pending) {
     throw new customHttpError(
       StatusCodes.CONFLICT,

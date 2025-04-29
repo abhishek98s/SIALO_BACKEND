@@ -26,7 +26,6 @@ export const errorHandlerMiddleware = (
       message: middlewareExceptionMessage.FIELD_NAME_INCORRECT,
     });
   }
-  console.log(err);
   return res.status(statusCode).json({
     status: false,
     message: err.message,

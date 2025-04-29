@@ -24,6 +24,7 @@ router.patch(
   verifyToken,
   user_controller.updateProfilePicture,
 );
+
 router.patch(
   '/coverPicture',
   upload.single('sialo_cover_image'),

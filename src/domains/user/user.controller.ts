@@ -211,6 +211,8 @@ export const updateCoverPicture = asyncWrapper(
         userExceptionMessage.FILE_REQUIRED,
       );
 
+    isFIleGreaterThan(req.file.size, 5);
+
     await user_service.updateCoverPicture(user_id, req.file!.path);
 
     res.status(StatusCodes.OK).json({

@@ -22,11 +22,10 @@ describe('User Enitity', () => {
     token = await getTokenOf(1);
     tokenOwnerId = await getUserIdByEmailOf(1);
   });
-
   describe('GET api/user/friends/:userId', () => {
     const userId = '12345';
 
-    test('should return 401 for invalid token', async () => {
+    it('should return 401 for invalid token', async () => {
       const response = await api
         .get(`/api/user/friends/${userId}`)
         .set('Authorization', 'Bearer invalid_token');
@@ -38,7 +37,7 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
+    it('should return 403 for missing token', async () => {
       const response = await api.get(`/api/user/friends/${userId}`);
 
       expect(response.status).toBe(403);
@@ -49,7 +48,7 @@ describe('User Enitity', () => {
     });
 
     describe('User is authenticated', () => {
-      test('should return 400 for invalid if', async () => {
+      it('should return 400 for invalid if', async () => {
         const nonExistentUserId = 99999;
         const response = await api
           .get(`/api/user/friends/${nonExistentUserId}`)
@@ -62,7 +61,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 404 for friend not found', async () => {
+      it('should return 404 for friend not found', async () => {
         const nonExistentUserId = new mongoose.Types.ObjectId();
         const response = await api
           .get(`/api/user/friends/${nonExistentUserId}`)
@@ -75,10 +74,10 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 200 for successful operation', async () => {
+      it('should return 200 for successful operation', async () => {
         const userId = await getUserIdByEmailOf(2);
         const response = await api
-          .get(`/api/user/friends/${userId}`) // Updated to use userId instead of validUserId[0]
+          .get(`/api/user/friends/${userId}`)
           .set('Authorization', `Bearer ${token}`);
 
         expect(response.status).toBe(200);
@@ -89,10 +88,9 @@ describe('User Enitity', () => {
       });
     });
   });
-
   describe('PATCH api/user/friend/add/:friendId', () => {
     let friendId;
-    test('should return 401 for invalid token', async () => {
+    it('should return 401 for invalid token', async () => {
       friendId = '12345';
       const response = await api
         .patch(`/api/user/friend/add/${friendId}`)
@@ -105,7 +103,7 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
+    it('should return 403 for missing token', async () => {
       friendId = '12345';
 
       const response = await api.patch(`/api/user/friend/add/${friendId}`);
@@ -117,7 +115,7 @@ describe('User Enitity', () => {
       });
     });
     describe('User is authenticated', () => {
-      test('should return 400 for invalid id', async () => {
+      it('should return 400 for invalid id', async () => {
         friendId = '123456';
         const response = await api
           .patch(`/api/user/friend/add/${friendId}`)
@@ -129,7 +127,7 @@ describe('User Enitity', () => {
           message: userExceptionMessage.INVALID_ID,
         });
       });
-      test('should return 404 for user not found', async () => {
+      it('should return 404 for user not found', async () => {
         friendId = new mongoose.Types.ObjectId();
         const response = await api
           .patch(`/api/user/friend/add/${friendId}`)
@@ -141,7 +139,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 200 for successful operation', async () => {
+      it('should return 200 for successful operation', async () => {
         const userId = await getUserIdByEmailOf(2);
         const response = await api
           .patch(`/api/user/friend/add/${userId}`)
@@ -152,7 +150,7 @@ describe('User Enitity', () => {
           message: userSuccessMessages.FRIEND_REQUEST_SENT,
         });
       });
-      test('should return 403 for request send to request to user itself', async () => {
+      it('should return 403 for request send to request to user itself', async () => {
         const response = await api
           .patch(`/api/user/friend/add/${tokenOwnerId}`)
           .set('Authorization', `Bearer ${token}`);
@@ -163,7 +161,7 @@ describe('User Enitity', () => {
           message: userExceptionMessage.ID_SAME,
         });
       });
-      test('should return 409 for request alreay sent', async () => {
+      it('should return 409 for request alreay sent', async () => {
         const userId = await getUserIdByEmailOf(2);
         await api
           .patch(`/api/user/friend/add/${userId}`)
@@ -180,10 +178,9 @@ describe('User Enitity', () => {
       });
     });
   });
-
   describe('PATCH api/user/friend/accept/:friendId', () => {
     let senderId: string = '';
-    test('should return 401 for invalid token', async () => {
+    it('should return 401 for invalid token', async () => {
       senderId = '12345';
       const response = await api
         .patch(`/api/user/friend/accept/${senderId}`)
@@ -196,7 +193,7 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
+    it('should return 403 for missing token', async () => {
       senderId = '12345';
       const response = await api.patch(`/api/user/friend/accept/${senderId}`);
       expect(response.status).toBe(403);
@@ -207,7 +204,7 @@ describe('User Enitity', () => {
     });
 
     describe('User is authenticated', () => {
-      test('should return 400 for invalid id', async () => {
+      it('should return 400 for invalid id', async () => {
         const invalidSenderId = '123545';
         const response = await api
           .patch(`/api/user/friend/accept/${invalidSenderId}`)
@@ -219,7 +216,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 400 for when user has not sent request', async () => {
+      it('should return 400 for when user has not sent request', async () => {
         const requestNotSentSenderId = await getUserIdByEmailOf(3);
         const response = await api
           .patch(`/api/user/friend/accept/${requestNotSentSenderId}`)
@@ -231,7 +228,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 403 for accepting same user id', async () => {
+      it('should return 403 for accepting same user id', async () => {
         const response = await api
           .patch(`/api/user/friend/accept/${tokenOwnerId}`)
           .set('Authorization', `Bearer ${token}`);
@@ -242,7 +239,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 404 for user not found', async () => {
+      it('should return 404 for user not found', async () => {
         const invalidSenderId = new mongoose.Types.ObjectId();
         const response = await api
           .patch(`/api/user/friend/accept/${invalidSenderId}`)
@@ -265,7 +262,7 @@ describe('User Enitity', () => {
             .patch(`/api/user/friend/add/${tokenOwnerId}`)
             .set('Authorization', `Bearer ${senderToken}`);
         });
-        test('should return 200 for successful operation', async () => {
+        it('should return 200 for successful operation', async () => {
           const response = await api
             .patch(`/api/user/friend/accept/${senderId}`)
             .set('Authorization', `Bearer ${token}`);
@@ -279,10 +276,9 @@ describe('User Enitity', () => {
       });
     });
   });
-
   describe('PATCH api/user/friend/reject/:friendId', () => {
     let senderId: string = '';
-    test('should return 401 for invalid token', async () => {
+    it('should return 401 for invalid token', async () => {
       senderId = '12345';
       const response = await api
         .patch(`/api/user/friend/reject/${senderId}`)
@@ -295,7 +291,7 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
+    it('should return 403 for missing token', async () => {
       senderId = '12345';
       const response = await api.patch(`/api/user/friend/reject/${senderId}`);
       expect(response.status).toBe(403);
@@ -305,7 +301,7 @@ describe('User Enitity', () => {
       });
     });
     describe('User is authenticated', () => {
-      test('should return 400 for invalid id', async () => {
+      it('should return 400 for invalid id', async () => {
         const invalidSenderId = '123545';
 
         const response = await api
@@ -318,7 +314,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 400 for when user has not sent request', async () => {
+      it('should return 400 for when user has not sent request', async () => {
         const requestNotSentSenderId = await getUserIdByEmailOf(3);
         const response = await api
           .patch(`/api/user/friend/reject/${requestNotSentSenderId}`)
@@ -330,7 +326,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 403 for rejecting same user id', async () => {
+      it('should return 403 for rejecting same user id', async () => {
         const response = await api
           .patch(`/api/user/friend/reject/${tokenOwnerId}`)
           .set('Authorization', `Bearer ${token}`);
@@ -341,7 +337,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 404 for user not found', async () => {
+      it('should return 404 for user not found', async () => {
         const invalidSenderId = new mongoose.Types.ObjectId();
         const response = await api
           .patch(`/api/user/friend/reject/${invalidSenderId}`)
@@ -364,7 +360,7 @@ describe('User Enitity', () => {
             .patch(`/api/user/friend/add/${tokenOwnerId}`)
             .set('Authorization', `Bearer ${senderToken}`);
         });
-        test('should return 200 for successful operation', async () => {
+        it('should return 200 for successful operation', async () => {
           const response = await api
             .patch(`/api/user/friend/reject/${senderId}`)
             .set('Authorization', `Bearer ${token}`);
@@ -378,9 +374,8 @@ describe('User Enitity', () => {
       });
     });
   });
-
   describe('GET api/user/friendRequests', () => {
-    test('should return 401 for invalid token', async () => {
+    it('should return 401 for invalid token', async () => {
       const response = await api
         .get('/api/user/friendRequests')
         .set('Authorization', 'Bearer invalid_token');
@@ -392,7 +387,7 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
+    it('should return 403 for missing token', async () => {
       const response = await api.get('/api/user/friendRequests');
       expect(response.status).toBe(403);
       expect(response.body).toEqual({
@@ -402,7 +397,7 @@ describe('User Enitity', () => {
     });
 
     describe('User is authenticated', () => {
-      test('should return 200 for successful operation', async () => {
+      it('should return 200 for successful operation', async () => {
         const response = await api
           .get('/api/user/friendRequests')
           .set('Authorization', `Bearer ${token}`);
@@ -415,7 +410,7 @@ describe('User Enitity', () => {
     });
   });
   describe('GET api/user/search', () => {
-    test('should return 401 for invalid token', async () => {
+    it('should return 401 for invalid token', async () => {
       const response = await api
         .get('/api/user/search')
         .set('Authorization', 'Bearer invalid_token');
@@ -427,7 +422,7 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
+    it('should return 403 for missing token', async () => {
       const response = await api.get('/api/user/search');
       expect(response.status).toBe(403);
       expect(response.body).toEqual({
@@ -436,7 +431,7 @@ describe('User Enitity', () => {
       });
     });
     describe('User is authenticated', () => {
-      test('should return 400 for empty query', async () => {
+      it('should return 400 for empty query', async () => {
         const invalidQuery = '';
         const response = await api
           .get(`/api/user/search?name=${invalidQuery}`)
@@ -448,7 +443,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 400 for missing name query', async () => {
+      it('should return 400 for missing name query', async () => {
         const invalidQuery = '';
         const response = await api
           .get(`/api/user/search?invalidquery=${invalidQuery}`)
@@ -460,7 +455,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 200 for successful operation', async () => {
+      it('should return 200 for successful operation', async () => {
         const validQuery = 'John';
         const response = await api
           .get(`/api/user/search?name=${validQuery}`)
@@ -474,7 +469,7 @@ describe('User Enitity', () => {
     });
   });
   describe('GET api/user/recommendation', () => {
-    test('should return 401 for invalid token', async () => {
+    it('should return 401 for invalid token', async () => {
       const response = await api
         .get('/api/user/search')
         .set('Authorization', 'Bearer invalid_token');
@@ -486,7 +481,7 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
+    it('should return 403 for missing token', async () => {
       const response = await api.get('/api/user/search');
       expect(response.status).toBe(403);
       expect(response.body).toEqual({
@@ -496,7 +491,7 @@ describe('User Enitity', () => {
     });
 
     describe('User is authenticated', () => {
-      test('should return 200 for successful operation', async () => {
+      it('should return 200 for successful operation', async () => {
         const response = await api
           .get('/api/user/recommendation')
           .set('Authorization', `Bearer ${token}`);
@@ -510,9 +505,9 @@ describe('User Enitity', () => {
     });
   });
   describe('PATCH api/user/profilePicture', () => {
-    test('should return 401 for invalid token', async () => {
+    it('should return 401 for invalid token', async () => {
       const response = await api
-        .get('/api/user/profilePicture')
+        .patch('/api/user/profilePicture')
         .set('Authorization', 'Bearer invalid_token');
 
       expect(response.status).toBe(401);
@@ -522,8 +517,8 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
-      const response = await api.get('/api/user/profilePicture');
+    it('should return 403 for missing token', async () => {
+      const response = await api.patch('/api/user/profilePicture');
       expect(response.status).toBe(403);
       expect(response.body).toEqual({
         status: false,
@@ -532,7 +527,7 @@ describe('User Enitity', () => {
     });
 
     describe('User is authenticated', () => {
-      test('should return 400 for missing file', async () => {
+      it('should return 400 for missing file', async () => {
         const response = await api
           .patch('/api/user/profilePicture')
           .set('Authorization', `Bearer ${token}`);
@@ -544,7 +539,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 400 for missing image', async () => {
+      it('should return 400 for missing image', async () => {
         const response = await api
           .patch('/api/user/profilePicture')
           .set('Authorization', `Bearer ${token}`);
@@ -557,7 +552,7 @@ describe('User Enitity', () => {
       });
 
       describe('User is authenticated and file is provided', () => {
-        test('should return 400 for missing file', async () => {
+        it('should return 400 for missing file', async () => {
           const response = await api
             .patch('/api/user/profilePicture')
             .set('Authorization', `Bearer ${token}`)
@@ -569,7 +564,7 @@ describe('User Enitity', () => {
             message: middlewareExceptionMessage.FILE_REQUIRED,
           });
         });
-        test('should return 400 for file size greater than 5MB', async () => {
+        it('should return 400 for file size greater than 5MB', async () => {
           const response = await api
             .patch('/api/user/profilePicture')
             .set('Authorization', `Bearer ${token}`)
@@ -583,7 +578,7 @@ describe('User Enitity', () => {
             message: utilsExceptionMessages.FILE_TOO_LARGE,
           });
         });
-        test('should return 415 for invalid file type', async () => {
+        it('should return 415 for invalid file type', async () => {
           const response = await api
             .patch('/api/user/profilePicture')
             .set('Authorization', `Bearer ${token}`)
@@ -597,7 +592,7 @@ describe('User Enitity', () => {
         });
 
         jest.setTimeout(30000);
-        test('should return 200 for successful operation', async () => {
+        it('should return 200 for successful operation', async () => {
           const response = await api
             .patch('/api/user/profilePicture')
             .set('Authorization', `Bearer ${token}`)
@@ -613,10 +608,10 @@ describe('User Enitity', () => {
       });
     });
   });
-  describe('POST api/user/coverPicture', () => {
-    test('should return 401 for invalid token', async () => {
+  describe('PATCH api/user/coverPicture', () => {
+    it('should return 401 for invalid token', async () => {
       const response = await api
-        .get('/api/user/coverPicture')
+        .patch('/api/user/coverPicture')
         .set('Authorization', 'Bearer invalid_token');
 
       expect(response.status).toBe(401);
@@ -626,8 +621,8 @@ describe('User Enitity', () => {
       });
     });
 
-    test('should return 403 for missing token', async () => {
-      const response = await api.get('/api/user/coverPicture');
+    it('should return 403 for missing token', async () => {
+      const response = await api.patch('/api/user/coverPicture');
       expect(response.status).toBe(403);
       expect(response.body).toEqual({
         status: false,
@@ -636,7 +631,7 @@ describe('User Enitity', () => {
     });
 
     describe('User is authenticated', () => {
-      test('should return 400 for missing file', async () => {
+      it('should return 400 for missing file', async () => {
         const response = await api
           .patch('/api/user/coverPicture')
           .set('Authorization', `Bearer ${token}`);
@@ -648,7 +643,7 @@ describe('User Enitity', () => {
         });
       });
 
-      test('should return 400 for missing image', async () => {
+      it('should return 400 for missing image', async () => {
         const response = await api
           .patch('/api/user/coverPicture')
           .set('Authorization', `Bearer ${token}`);
@@ -661,7 +656,7 @@ describe('User Enitity', () => {
       });
 
       describe('User is authenticated and file is provided', () => {
-        test('should return 400 for missing file', async () => {
+        it('should return 400 for missing file', async () => {
           const response = await api
             .patch('/api/user/coverPicture')
             .set('Authorization', `Bearer ${token}`)
@@ -673,7 +668,7 @@ describe('User Enitity', () => {
             message: middlewareExceptionMessage.FILE_REQUIRED,
           });
         });
-        test('should return 400 for file size greater than 5MB', async () => {
+        it('should return 400 for file size greater than 5MB', async () => {
           const response = await api
             .patch('/api/user/coverPicture')
             .set('Authorization', `Bearer ${token}`)
@@ -684,19 +679,18 @@ describe('User Enitity', () => {
             message: utilsExceptionMessages.FILE_TOO_LARGE,
           });
         });
-        test('should return 400 for invalid image field name', async () => {
+        it('should return 400 for invalid image field name', async () => {
           const response = await api
             .patch('/api/user/coverPicture')
             .set('Authorization', `Bearer ${token}`)
             .attach('invalid_field_name', 'src/__tests__/assets/test.jpg');
-          console.log(response.body);
           expect(response.status).toBe(400);
           expect(response.body).toEqual({
             status: false,
             message: middlewareExceptionMessage.FIELD_NAME_INCORRECT,
           });
         });
-        test('should return 415 for invalid file type', async () => {
+        it('should return 415 for invalid file type', async () => {
           const response = await api
             .patch('/api/user/coverPicture')
             .set('Authorization', `Bearer ${token}`)
@@ -710,7 +704,7 @@ describe('User Enitity', () => {
         });
 
         jest.setTimeout(30000);
-        test('should return 200 for successful operation', async () => {
+        it('should return 200 for successful operation', async () => {
           const response = await api
             .patch('/api/user/coverPicture')
             .set('Authorization', `Bearer ${token}`)
@@ -726,11 +720,285 @@ describe('User Enitity', () => {
       });
     });
   });
-  describe('POST api/user/:id', () => {});
-  describe('DELETE api/user/:id', () => {});
-  describe('PATCH api/user/:id', () => {});
-  describe('GET api/user/', () => {});
+  describe('GET api/user/:id', () => {
+    let userId: string | mongoose.Types.ObjectId;
+    it('should return 401 for invalid token', async () => {
+      userId = '123';
+      const response = await api
+        .get(`/api/user/${userId}`)
+        .set('Authorization', 'Bearer invalid_token');
 
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.UNAUTHORIZE,
+      });
+    });
+
+    it('should return 403 for missing token', async () => {
+      userId = '123';
+      const response = await api.get(`/api/user/${userId}`);
+      expect(response.status).toBe(403);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.TOKEN_REQUIRED,
+      });
+    });
+
+    describe('User is authenticated', () => {
+      it('should return 400 for invalid id', async () => {
+        userId = 'invalid_id';
+        const response = await api
+          .get(`/api/user/${userId}`)
+          .set('Authorization', token);
+        expect(response.status).toBe(400);
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.INVALID_ID,
+        });
+      });
+      it('should return 404 for user not found', async () => {
+        userId = new mongoose.Types.ObjectId();
+        const response = await api
+          .get(`/api/user/${userId}`)
+          .set('Authorization', token);
+        expect(response.status).toBe(404);
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.USER_NOT_FOUND,
+        });
+      });
+      it('should return 200 for successful operation', async () => {
+        userId = tokenOwnerId;
+        const response = await api
+          .get(`/api/user/${userId}`)
+          .set('Authorization', token);
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject({
+          status: true,
+          data: {
+            id: expect.any(String),
+            email: expect.any(String),
+            img: expect.any(String),
+            name: expect.any(String),
+            friends: expect.any(Array),
+            isFriend: expect.any(Boolean),
+            coverImg: expect.any(String),
+            isFriendRequestPending: expect.any(Boolean),
+          },
+        });
+      });
+    });
+  });
+  describe('DELETE api/user/:id', () => {
+    let userId: string | mongoose.Types.ObjectId;
+    it('should return 401 for invalid token', async () => {
+      userId = '123';
+      const response = await api
+        .delete(`/api/user/${userId}`)
+        .set('Authorization', 'Bearer invalid_token');
+
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.UNAUTHORIZE,
+      });
+    });
+
+    it('should return 403 for missing token', async () => {
+      userId = '123';
+      const response = await api.delete(`/api/user/${userId}`);
+      expect(response.status).toBe(403);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.TOKEN_REQUIRED,
+      });
+    });
+
+    describe('User is authenticated', () => {
+      it('should return 400 for invalid id', async () => {
+        userId = 'invalid_id';
+        const response = await api
+          .delete(`/api/user/${userId}`)
+          .set('Authorization', token);
+        expect(response.status).toBe(400);
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.INVALID_ID,
+        });
+      });
+      it('should return 404 for user not found', async () => {
+        userId = new mongoose.Types.ObjectId();
+        const response = await api
+          .delete(`/api/user/${userId}`)
+          .set('Authorization', token);
+        expect(response.status).toBe(404);
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.USER_NOT_FOUND,
+        });
+      });
+      it('should return 200 after for successful deletion operation', async () => {
+        userId = tokenOwnerId;
+        const response = await api
+          .delete(`/api/user/${userId}`)
+          .set('Authorization', token);
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject({
+          status: true,
+          message: userSuccessMessages.ACCOUNT_DELETED,
+        });
+
+        const deleteResponse = await api
+          .delete(`/api/user/${userId}`)
+          .set('Authorization', token);
+        expect(deleteResponse.status).toBe(404);
+      });
+    });
+  });
+  describe('PATCH api/user/:id', () => {
+    let userId: string | mongoose.Types.ObjectId;
+    it('should return 401 for invalid token', async () => {
+      userId = '123';
+      const response = await api
+        .patch(`/api/user/${userId}`)
+        .set('Authorization', 'Bearer invalid_token');
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.UNAUTHORIZE,
+      });
+    });
+    it('should return 403 for missing token', async () => {
+      userId = '123';
+      const response = await api.patch(`/api/user/${userId}`);
+      expect(response.status).toBe(403);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.TOKEN_REQUIRED,
+      });
+    });
+    describe('User is authenticated', () => {
+      it('should return 400 for missing username', async () => {
+        userId = new mongoose.Types.ObjectId();
+        const response = await api
+          .patch(`/api/user/${userId}`)
+          .set('Authorization', token);
+        expect(response.status).toBe(400);
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.USERNAME_REQUIRED,
+        });
+      });
+
+      it('should return 400 for username lenght less than 3', async () => {
+        userId = new mongoose.Types.ObjectId();
+        const response = await api
+          .patch(`/api/user/${userId}`)
+          .set('Authorization', token)
+          .send({
+            username: 'jo',
+          });
+        expect(response.status).toBe(400);
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.USERNAME_LENGTH,
+        });
+      });
+
+      it('should return 400 for invalid id', async () => {
+        userId = 'invalid_id';
+        const response = await api
+          .patch(`/api/user/${userId}`)
+          .set('Authorization', token)
+          .send({
+            username: 'jooh',
+          });
+        expect(response.status).toBe(400);
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.INVALID_ID,
+        });
+      });
+      it('should return 403 for updating by another user', async () => {
+        userId = new mongoose.Types.ObjectId();
+        const response = await api
+          .patch(`/api/user/${userId}`)
+          .set('Authorization', token)
+          .send({
+            username: 'jooh',
+          });
+
+        expect(response.status).toBe(403);
+
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.PERMISSION_DENIED,
+        });
+      });
+      it('should return 400 for passing current username ', async () => {
+        userId = tokenOwnerId;
+        const response = await api
+          .patch(`/api/user/${userId}`)
+          .set('Authorization', token)
+          .send({
+            username: 'Alice',
+          });
+        expect(response.status).toBe(400);
+        expect(response.body).toMatchObject({
+          status: false,
+          message: userExceptionMessage.USERNAME_REPEATED,
+        });
+      });
+      it('should return 200 for successful operation', async () => {
+        userId = tokenOwnerId;
+        const response = await api
+          .patch(`/api/user/${userId}`)
+          .set('Authorization', token)
+          .send({
+            username: 'jooh',
+          });
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject({
+          status: true,
+          message: userSuccessMessages.USERNAME_UPDATE_SUCCESS,
+        });
+      });
+    });
+  });
+  describe('GET api/user/', () => {
+    it('should return 401 for invalid token', async () => {
+      const response = await api
+        .get('/api/user/')
+        .set('Authorization', 'Bearer invalid_token');
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.UNAUTHORIZE,
+      });
+    });
+    it('should return 403 for missing token', async () => {
+      const response = await api.get('/api/user/');
+      expect(response.status).toBe(403);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.TOKEN_REQUIRED,
+      });
+    });
+    describe('User is authenticated', () => {
+      it('should return 200 for sucessful operation', async () => {
+        const response = await api
+          .get('/api/user/')
+          .set('Authorization', token);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+          status: true,
+          data: expect.any(Array),
+        });
+      });
+    });
+  });
   afterEach(async () => {
     await db.clearDatabase();
   });

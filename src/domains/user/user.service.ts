@@ -54,12 +54,6 @@ export const getUser = async (id: string, sender_id: string) => {
 export const fetchAll = async () => {
   const users = await UserDAO.fetchAll();
 
-  if (!users)
-    throw new customHttpError(
-      StatusCodes.NOT_FOUND,
-      userExceptionMessage.USER_NOT_FOUND,
-    );
-
   return users;
 };
 
@@ -283,6 +277,13 @@ export const updateUsername = async (
       userExceptionMessage.USER_NOT_FOUND,
     );
 
+  if (user.name === updateUsername) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.USERNAME_REPEATED,
+    );
+  }
+
   const result = await UserDAO.updateUsername(user_id, updateUsername);
   const isUpdated = result.modifiedCount;
 
@@ -291,7 +292,7 @@ export const updateUsername = async (
   } else {
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
-      userExceptionMessage.UPDATE_FAILED,
+      userExceptionMessage.USERNAME_REPEATED,
     );
   }
 };

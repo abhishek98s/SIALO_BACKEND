@@ -46,6 +46,14 @@ export const getTokens = async (email: string, password: string) => {
 export const registerUser = async (userData: IRegister, imgPath?: string) => {
   const { name, email, password } = userData;
 
+  const existingUser = await UserDAO.fetchByEmail(email);
+  if (existingUser) {
+    throw new customHttpError(
+      StatusCodes.CONFLICT,
+      authExceptionMessage.EMAIL_ALREADY_EXISTS,
+    );
+  }
+
   const hashedPassword = await passwordHash(password);
   const img_url = imgPath
     ? await uploadToCloudinary(imgPath)

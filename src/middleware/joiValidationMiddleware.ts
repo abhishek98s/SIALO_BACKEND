@@ -13,30 +13,37 @@ const joiValidationMiddleware = (schema: Schema) => {
     } else {
       const { details } = error;
       const message = details.map((i) => i.message).join(',');
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ status: false, message });
+      res.status(StatusCodes.BAD_REQUEST).json({ status: false, message });
     }
   };
 };
 
 export const joiFileValidationMiddleware = (schema: Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.file) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: middlewareExceptionMessage.FILE_REQUIRED });
+    if (
+      !req.headers['content-type'] ||
+      !req.headers['content-type']!.includes('multipart/')
+    ) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        status: false,
+        message: middlewareExceptionMessage.FILE_REQUIRED,
+      });
     }
 
+    if (!req.file) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        status: false,
+        message: middlewareExceptionMessage.FILE_REQUIRED,
+      });
+    }
     const { error } = schema.validate(req.file);
     const valid = error == null;
-
     if (valid) {
       next();
     } else {
       const { details } = error;
       const message = details.map((i) => i.message).join(',');
-      res.status(StatusCodes.BAD_REQUEST).json({ error: message });
+      res.status(StatusCodes.BAD_REQUEST).json({ status: false, message });
     }
   };
 };

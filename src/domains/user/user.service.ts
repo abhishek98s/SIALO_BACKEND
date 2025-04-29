@@ -232,13 +232,17 @@ export const removeUserById = async (user_id: string) => {
 export const fetchRecommendedPeople = async (user_id: string) => {
   const user = await UserDAO.fetchById(user_id);
 
+  console.log('user', user);
   const user_friends_id = user?.friends.map(
     (friend) => new mongoose.Types.ObjectId(friend.id),
   );
+
+  console.log('user_friends_id', user_friends_id);
   const recommend_user = await UserDAO.fetchRecommendedPeople(
     user_id,
     user_friends_id!,
   );
+  console.log('recommend_user', recommend_user);
 
   return _.sampleSize(recommend_user, 4);
 };

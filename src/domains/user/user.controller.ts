@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import { customHttpError } from '../../utils/customHttpError';
 import { isValidObjectId } from 'mongoose';
 import { userSuccessMessages } from './constant/userSuccessMessage';
+import { isFIleGreaterThan } from '../../utils/multer';
 
 export const getUser = asyncWrapper(async (req: Request, res: Response) => {
   const user_id = req.params.id;
@@ -110,7 +111,7 @@ export const rejectRequest = asyncWrapper(
     const { id: receiver_id } = req.body.user;
     const sender_id = req.params.friendId;
 
-    if (!sender_id)
+    if (!sender_id || !isValidObjectId(sender_id))
       throw new customHttpError(
         StatusCodes.BAD_REQUEST,
         userExceptionMessage.INVALID_ID,
@@ -121,14 +122,12 @@ export const rejectRequest = asyncWrapper(
         userExceptionMessage.ID_SAME,
       );
 
-    const friend = await user_service.rejectFriendRequest(
-      sender_id,
-      receiver_id,
-    );
+    await user_service.rejectFriendRequest(sender_id, receiver_id);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ status: true, message: `Request rejected of ${friend}` });
+    res.status(StatusCodes.OK).json({
+      status: true,
+      message: userSuccessMessages.FRIEND_REQUEST_REJECTED,
+    });
   },
 );
 
@@ -138,10 +137,12 @@ export const searchUser = asyncWrapper(async (req: Request, res: Response) => {
   if (!searchText)
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
-      userExceptionMessage.EMPTY_STRING,
+      userExceptionMessage.INVALID_QUERY,
     );
 
-  const searchResult = await user_service.fetchUserByName(searchText);
+  const searchResult = await user_service.fetchUserByName(
+    searchText.toString(),
+  );
 
   res.status(StatusCodes.OK).json({ status: true, data: searchResult });
 });
@@ -181,17 +182,22 @@ export const updateProfilePicture = asyncWrapper(
   async (req: Request, res: Response) => {
     const { id: user_id } = req.body.user;
 
-    if (!req.file)
+    if (!req.file) {
       throw new customHttpError(
         StatusCodes.BAD_REQUEST,
         userExceptionMessage.FILE_REQUIRED,
       );
+    }
+
+    isFIleGreaterThan(req.file.size, 5);
 
     await user_service.updateProfilePicture(user_id, req.file!.path);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ status: true, data: [], message: 'Profile picture updated' });
+    res.status(StatusCodes.OK).json({
+      status: true,
+      data: [],
+      message: userSuccessMessages.PROFILE_PIC_UPDATED,
+    });
   },
 );
 
@@ -207,9 +213,11 @@ export const updateCoverPicture = asyncWrapper(
 
     await user_service.updateCoverPicture(user_id, req.file!.path);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ status: true, data: [], message: 'Cover picture updated' });
+    res.status(StatusCodes.OK).json({
+      status: true,
+      data: [],
+      message: userSuccessMessages.COVER_PIC_UPDATED,
+    });
   },
 );
 

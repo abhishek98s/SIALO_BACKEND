@@ -28,7 +28,7 @@ export const getUser = asyncWrapper(async (req: Request, res: Response) => {
 export const fetchAll = asyncWrapper(async (req: Request, res: Response) => {
   const users = await user_service.fetchAll();
 
-  res.status(StatusCodes.OK).json({ data: users });
+  res.status(StatusCodes.OK).json({ status: true, data: users });
 });
 
 export const getFriends = asyncWrapper(async (req: Request, res: Response) => {
@@ -148,17 +148,17 @@ export const searchUser = asyncWrapper(async (req: Request, res: Response) => {
 
 export const deleteUser = asyncWrapper(async (req: Request, res: Response) => {
   const user_id = req.params.id as unknown as string;
-  if (!user_id)
+  if (!user_id || !isValidObjectId(user_id))
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
       userExceptionMessage.INVALID_ID,
     );
 
-  const deleted_user = await user_service.removeUserById(user_id);
+  await user_service.removeUserById(user_id);
 
   res
     .status(StatusCodes.OK)
-    .json({ status: true, message: `Deleted user ${deleted_user}` });
+    .json({ status: true, message: userSuccessMessages.ACCOUNT_DELETED });
 });
 
 export const fetchUnknownPeople = asyncWrapper(
@@ -218,6 +218,11 @@ export const updateUsername = asyncWrapper(
     const { id: user_id } = req.body.user;
     const { id: user_params_id } = req.params;
     const { username: updatedUserName } = req.body;
+    if (!user_params_id || !isValidObjectId(user_params_id))
+      throw new customHttpError(
+        StatusCodes.BAD_REQUEST,
+        userExceptionMessage.INVALID_ID,
+      );
 
     if (updatedUserName.length < 3)
       throw new customHttpError(
@@ -236,6 +241,6 @@ export const updateUsername = asyncWrapper(
       updatedUserName,
     );
 
-    res.status(StatusCodes.OK).json({ status: true, data: [], message });
+    res.status(StatusCodes.OK).json({ status: true, message });
   },
 );

@@ -12,4 +12,6 @@ export const userExceptionMessage = {
   UPDATE_FAILED: 'Update failed',
   PERMISSION_DENIED: 'Permission denied',
   USERNAME_LENGTH: 'Username should be 3 character long',
+  USERNAME_REQUIRED: 'Username is required',
+  USERNAME_REPEATED: 'username should be different than current.',
 };

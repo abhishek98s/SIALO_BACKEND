@@ -500,7 +500,6 @@ describe('User Enitity', () => {
         const response = await api
           .get('/api/user/recommendation')
           .set('Authorization', `Bearer ${token}`);
-        console.log('200', response.body);
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
@@ -614,7 +613,119 @@ describe('User Enitity', () => {
       });
     });
   });
-  describe('POST api/user/coverPicture', () => {});
+  describe('POST api/user/coverPicture', () => {
+    test('should return 401 for invalid token', async () => {
+      const response = await api
+        .get('/api/user/coverPicture')
+        .set('Authorization', 'Bearer invalid_token');
+
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.UNAUTHORIZE,
+      });
+    });
+
+    test('should return 403 for missing token', async () => {
+      const response = await api.get('/api/user/coverPicture');
+      expect(response.status).toBe(403);
+      expect(response.body).toEqual({
+        status: false,
+        message: middlewareExceptionMessage.TOKEN_REQUIRED,
+      });
+    });
+
+    describe('User is authenticated', () => {
+      test('should return 400 for missing file', async () => {
+        const response = await api
+          .patch('/api/user/coverPicture')
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({
+          status: false,
+          message: middlewareExceptionMessage.FILE_REQUIRED,
+        });
+      });
+
+      test('should return 400 for missing image', async () => {
+        const response = await api
+          .patch('/api/user/coverPicture')
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({
+          status: false,
+          message: middlewareExceptionMessage.FILE_REQUIRED,
+        });
+      });
+
+      describe('User is authenticated and file is provided', () => {
+        test('should return 400 for missing file', async () => {
+          const response = await api
+            .patch('/api/user/coverPicture')
+            .set('Authorization', `Bearer ${token}`)
+            .attach('sialo_cover_image', '');
+
+          expect(response.status).toBe(400);
+          expect(response.body).toEqual({
+            status: false,
+            message: middlewareExceptionMessage.FILE_REQUIRED,
+          });
+        });
+        test('should return 400 for file size greater than 5MB', async () => {
+          const response = await api
+            .patch('/api/user/coverPicture')
+            .set('Authorization', `Bearer ${token}`)
+            .attach('sialo_cover_image', 'src/__tests__/assets/large_test.png');
+          expect(response.status).toBe(400);
+          expect(response.body).toEqual({
+            status: false,
+            message: utilsExceptionMessages.FILE_TOO_LARGE,
+          });
+        });
+        test('should return 400 for invalid image field name', async () => {
+          const response = await api
+            .patch('/api/user/coverPicture')
+            .set('Authorization', `Bearer ${token}`)
+            .attach('invalid_field_name', 'src/__tests__/assets/test.jpg');
+          console.log(response.body);
+          expect(response.status).toBe(400);
+          expect(response.body).toEqual({
+            status: false,
+            message: middlewareExceptionMessage.FIELD_NAME_INCORRECT,
+          });
+        });
+        test('should return 415 for invalid file type', async () => {
+          const response = await api
+            .patch('/api/user/coverPicture')
+            .set('Authorization', `Bearer ${token}`)
+            .attach('sialo_cover_image', 'src/__tests__/assets/test.txt');
+
+          expect(response.status).toBe(415);
+          expect(response.body).toEqual({
+            status: false,
+            message: utilsExceptionMessages.UNSUPPORTED_FILE_FORMAT,
+          });
+        });
+
+        jest.setTimeout(30000);
+        test('should return 200 for successful operation', async () => {
+          const response = await api
+            .patch('/api/user/coverPicture')
+            .set('Authorization', `Bearer ${token}`)
+            .attach('sialo_cover_image', 'src/__tests__/assets/test.jpg');
+
+          expect(response.status).toBe(200);
+          expect(response.body).toEqual({
+            status: true,
+            data: expect.any(Array),
+            message: userSuccessMessages.COVER_PICTURE_UPDATED,
+          });
+        });
+      });
+    });
+  });
   describe('POST api/user/:id', () => {});
   describe('DELETE api/user/:id', () => {});
   describe('PATCH api/user/:id', () => {});

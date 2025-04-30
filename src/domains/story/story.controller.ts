@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 
 import asyncWrapper from '../../utils/async';
@@ -6,6 +5,8 @@ import * as story_service from './story.service';
 import { storyExceptionMessage } from './constant/storyExceptionMessage';
 import { StatusCodes } from 'http-status-codes';
 import { customHttpError } from '../../utils/customHttpError';
+import { storySuccessMessage } from './constant/storySuccessMessage';
+import { isValidObjectId } from 'mongoose';
 
 export const getAllStories = asyncWrapper(
   async (req: Request, res: Response) => {
@@ -43,13 +44,23 @@ export const postStory = asyncWrapper(async (req: Request, res: Response) => {
 
   const posted_story = await story_service.createStory(story_data);
 
-  res.status(StatusCodes.OK).json({ status: true, data: posted_story });
+  res.status(StatusCodes.OK).json({
+    status: true,
+    data: posted_story,
+    message: storySuccessMessage.POST_SUCCESS,
+  });
 });
 
 export const getStoryById = asyncWrapper(
   async (req: Request, res: Response) => {
     const { id: user_id } = req.params;
 
+    if (!user_id || !isValidObjectId(user_id)) {
+      throw new customHttpError(
+        StatusCodes.BAD_REQUEST,
+        storyExceptionMessage.INVALID_ID,
+      );
+    }
     const result = await story_service.getStoryById(user_id);
 
     res.status(StatusCodes.OK).json({ status: true, data: result });
@@ -61,7 +72,7 @@ export const patchStory = asyncWrapper(async (req: Request, res: Response) => {
   const { id: user_id } = req.body.user;
   const { caption } = req.body;
 
-  if (!story_id)
+  if (!story_id || !isValidObjectId(story_id))
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
       storyExceptionMessage.INVALID_ID,
@@ -89,7 +100,7 @@ export const deleteStory = asyncWrapper(async (req: Request, res: Response) => {
   const { id: story_id } = req.params;
   const { id: user_id } = req.body.user;
 
-  if (!story_id)
+  if (!story_id || !isValidObjectId(story_id))
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
       storyExceptionMessage.INVALID_ID,
@@ -99,5 +110,5 @@ export const deleteStory = asyncWrapper(async (req: Request, res: Response) => {
 
   res
     .status(StatusCodes.OK)
-    .json({ status: true, message: storyExceptionMessage.DELETE_SUCESS });
+    .json({ status: true, message: storySuccessMessage.DELETE_SUCCESS });
 });

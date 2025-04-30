@@ -67,10 +67,11 @@ export const addPostComments = async (
   comment_data: IComment,
 ) => {
   const post = await PostDAO.fetchById(post_id);
-  if (!post)
+
+  if (post.length === 0)
     throw new customHttpError(
       StatusCodes.NOT_FOUND,
-      postExceptionMessage.POST_UNAVAIABLE,
+      postExceptionMessage.NOT_FOUND,
     );
 
   return await PostDAO.addCommentById(post_id, comment_data);
@@ -135,7 +136,7 @@ export const toggleLikeIn = async (post_id: string, user_id: string) => {
   if (isPostAvailable.length === 0)
     throw new customHttpError(
       StatusCodes.NOT_FOUND,
-      postExceptionMessage.NOT_AVAILABLE,
+      postExceptionMessage.NOT_FOUND,
     );
 
   const isLiked = await PostDAO.isPostLiked(post_id, user_id);
@@ -157,7 +158,7 @@ export const deletePost = async (post_id: string) => {
   if (isPostAvailable.length === 0)
     throw new customHttpError(
       StatusCodes.NOT_FOUND,
-      postExceptionMessage.NOT_AVAILABLE,
+      postExceptionMessage.NOT_FOUND,
     );
 
   const deleted_post = await PostDAO.removePostById(post_id);
@@ -181,7 +182,7 @@ export const updateCaption = async (
   if (isPostAvailable.length === 0)
     throw new customHttpError(
       StatusCodes.NOT_FOUND,
-      postExceptionMessage.NOT_AVAILABLE,
+      postExceptionMessage.NOT_FOUND,
     );
 
   if (isPostAvailable[0].userId !== user_id)

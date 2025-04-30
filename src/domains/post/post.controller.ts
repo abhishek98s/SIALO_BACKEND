@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 
 import asyncWrapper from '../../utils/async';
@@ -6,6 +5,9 @@ import * as post_service from './post.service';
 import { postExceptionMessage } from './constant/postExceptionMessage';
 import { StatusCodes } from 'http-status-codes';
 import { customHttpError } from '../../utils/customHttpError';
+import { isValidObjectId } from 'mongoose';
+import { postSuccessMessage } from './constant/postSuccessMessages';
+import { isFIleGreaterThan } from '../../utils/multer';
 
 export const getAllPost = asyncWrapper(async (req: Request, res: Response) => {
   const posts = await post_service.getAllPost();
@@ -16,6 +18,12 @@ export const getAllPost = asyncWrapper(async (req: Request, res: Response) => {
 export const getUserPosts = asyncWrapper(
   async (req: Request, res: Response) => {
     const userId = req.params.userId;
+    if (!userId || !isValidObjectId(userId)) {
+      throw new customHttpError(
+        StatusCodes.BAD_REQUEST,
+        postExceptionMessage.INVALID_ID,
+      );
+    }
 
     const userPosts = await post_service.getUserPosts(userId);
 
@@ -40,6 +48,8 @@ export const createPost = asyncWrapper(async (req: Request, res: Response) => {
       postExceptionMessage.FILE_REQUIRED,
     );
 
+  isFIleGreaterThan(req.file.size, 5);
+
   const post_image = req.file!.path;
 
   const userPost = await post_service.createPost(
@@ -47,7 +57,11 @@ export const createPost = asyncWrapper(async (req: Request, res: Response) => {
     post_image,
   );
 
-  res.status(201).json({ status: true, data: userPost });
+  res.status(201).json({
+    status: true,
+    data: userPost,
+    message: postSuccessMessage.POST_SUCCESS,
+  });
 });
 
 export const addComment = asyncWrapper(async (req: Request, res: Response) => {
@@ -55,6 +69,13 @@ export const addComment = asyncWrapper(async (req: Request, res: Response) => {
   const { name, image, id } = req.body.user;
 
   const { postId } = req.params;
+
+  if (!postId || !isValidObjectId(postId)) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      postExceptionMessage.INVALID_ID,
+    );
+  }
 
   if (!comment)
     throw new customHttpError(
@@ -73,12 +94,12 @@ export const addComment = asyncWrapper(async (req: Request, res: Response) => {
 
   res
     .status(StatusCodes.OK)
-    .json({ status: true, message: postExceptionMessage.COMMENT_SUCESS });
+    .json({ status: true, message: postSuccessMessage.COMMENT_SUCESS });
 });
 
 export const getRequestedPosts = asyncWrapper(
   async (req: Request, res: Response) => {
-    const page = req.query.page as unknown as number;
+    const page = parseInt(req.query.page as unknown as string) || 5;
 
     const posts = await post_service.getRequestedPosts(page);
 
@@ -88,8 +109,20 @@ export const getRequestedPosts = asyncWrapper(
 
 export const getRandomPost = asyncWrapper(
   async (req: Request, res: Response) => {
-    const noOfPosts = (req.query.noOfPosts as unknown as number) || 5;
+    const noOfPosts = parseInt(req.query.noOfPosts as unknown as string) || 5;
 
+    if (!noOfPosts) {
+      throw new customHttpError(
+        StatusCodes.BAD_REQUEST,
+        postExceptionMessage.NO_OF_POST_NUMBER,
+      );
+    }
+    if (isNaN(noOfPosts)) {
+      throw new customHttpError(
+        StatusCodes.BAD_REQUEST,
+        postExceptionMessage.NO_OF_POST_REQUIRED,
+      );
+    }
     const { id: user_id } = req.body.user;
 
     const posts = await post_service.getRandomPost(noOfPosts, user_id);
@@ -103,6 +136,13 @@ export const getRandomPostOFUser = asyncWrapper(
     const noOfPosts = (req.query.noOfPosts as unknown as number) || 4;
     const { userId } = req.params;
 
+    if (!userId || !isValidObjectId(userId)) {
+      throw new customHttpError(
+        StatusCodes.BAD_REQUEST,
+        postExceptionMessage.INVALID_ID,
+      );
+    }
+
     const posts = await post_service.getRandomPostOfUser(noOfPosts, userId);
 
     res.status(StatusCodes.OK).json({ status: true, data: posts });
@@ -113,7 +153,7 @@ export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
   const { id: user_id } = req.body.user;
   const post_id = req.query.postId as unknown as string;
 
-  if (!user_id || !post_id)
+  if (!post_id || !isValidObjectId(post_id))
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
       postExceptionMessage.INVALID_ID,
@@ -126,22 +166,20 @@ export const likeAPost = asyncWrapper(async (req: Request, res: Response) => {
   let message = '';
   let liked;
   if (isLiked) {
-    message = postExceptionMessage.LIKE_SUCCESS;
+    message = postSuccessMessage.LIKE_SUCCESS;
     liked = true;
   } else {
-    message = postExceptionMessage.UNLIKE_SUCCESS;
+    message = postSuccessMessage.UNLIKE_SUCCESS;
     liked = false;
   }
 
-  res
-    .status(StatusCodes.OK)
-    .json({ status: true, liked, totalLike, message: message });
+  res.status(StatusCodes.OK).json({ status: true, liked, totalLike, message });
 });
 
 export const deletePost = asyncWrapper(async (req: Request, res: Response) => {
   const post_id = req.params.id as unknown as string;
 
-  if (!post_id)
+  if (!post_id || !isValidObjectId(post_id))
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
       postExceptionMessage.INVALID_ID,
@@ -151,7 +189,7 @@ export const deletePost = asyncWrapper(async (req: Request, res: Response) => {
 
   res
     .status(StatusCodes.OK)
-    .json({ status: true, message: 'Post deleted sucessfully.' });
+    .json({ status: true, message: postSuccessMessage.DELETE_SUCCESS });
 });
 
 export const updateCaption = asyncWrapper(
@@ -160,7 +198,7 @@ export const updateCaption = asyncWrapper(
     const post_id = req.params.id as unknown as string;
     const { caption } = req.body;
 
-    if (!post_id)
+    if (!post_id || !isValidObjectId(post_id))
       throw new customHttpError(
         StatusCodes.BAD_REQUEST,
         postExceptionMessage.INVALID_ID,
@@ -177,6 +215,10 @@ export const updateCaption = asyncWrapper(
       caption,
     );
 
-    res.status(StatusCodes.OK).json({ status: true, data: updatedPost });
+    res.status(StatusCodes.OK).json({
+      status: true,
+      data: updatedPost,
+      message: postSuccessMessage.CAPTION_UPDATED,
+    });
   },
 );

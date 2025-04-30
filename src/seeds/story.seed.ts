@@ -5,9 +5,8 @@ import { IFetchUser } from '../utils/populate';
 export const storySeed = async (users: IFetchUser[]): Promise<IStory[]> => {
   const stories = [];
 
-  for (let i = 0; i < 5; i++) {
-    const randomIndex = Math.floor(Math.random() * (users.length - 1));
-    const user = users[randomIndex];
+  for (let i = 0; i < 3; i++) {
+    const user = users[i];
 
     stories.push({
       user_id: new mongoose.Types.ObjectId(user._id),

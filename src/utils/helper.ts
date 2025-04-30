@@ -3,6 +3,7 @@ import app from '../app';
 import { users } from '../seeds/user.seed';
 import { User } from '../domains/user/user.model';
 import Post from '../domains/post/post.model';
+import Story from '../domains/story/story.model';
 
 const api = supertest(app);
 
@@ -48,6 +49,13 @@ export const getPostIdOf = async (id: 1 | 2 | 3) => {
 export const getPostIdByUserId = async (userId: string) => {
   const posts = await Post.find({ userId: userId });
   const { _id } = posts[0];
+
+  return _id.toString();
+};
+
+export const getStoryIdByUserId = async (userId: string) => {
+  const story = await Story.find({ user_id: userId });
+  const { _id } = story[0];
 
   return _id.toString();
 };

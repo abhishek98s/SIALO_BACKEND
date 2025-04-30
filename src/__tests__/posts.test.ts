@@ -32,7 +32,6 @@ describe('Post Enitity', () => {
     tokenOwnerId = await getUserIdByEmailOf(1);
     token2 = await getTokenOf(3);
   });
-
   describe('PATCH /api/post/like', () => {
     it('should return 401 for invalid token', async () => {
       const response = await api
@@ -370,7 +369,6 @@ describe('Post Enitity', () => {
       });
     });
   });
-
   describe('GET /api/post/random/', () => {
     it('should return 401 for invalid token', async () => {
       const response = await api
@@ -464,7 +462,6 @@ describe('Post Enitity', () => {
       });
     });
   });
-
   describe('GET /api/post/reqPost', () => {
     let noOfPages: number | string;
     it('should return 401 for invalid token', async () => {
@@ -563,7 +560,6 @@ describe('Post Enitity', () => {
       });
     });
   });
-
   describe('DELETE /api/post/:post_id', () => {
     it('should return 401 for invalid token', async () => {
       postId = '1212';
@@ -622,7 +618,6 @@ describe('Post Enitity', () => {
       });
     });
   });
-
   describe('PATCH /api/post/comment/:postId', () => {
     it('should return 401 for invalid token', async () => {
       postId = '1212';
@@ -708,7 +703,6 @@ describe('Post Enitity', () => {
       });
     });
   });
-
   afterEach(async () => {
     await db.clearDatabase();
   });

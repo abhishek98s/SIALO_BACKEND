@@ -3,6 +3,8 @@ import cors from 'cors';
 import 'express-async-errors';
 import bodyParser from 'body-parser';
 import pathToSwaggerUi from 'swagger-ui-dist';
+import compression from 'compression';
+import helmet from 'helmet';
 
 import { swagger } from './swagger/swagger';
 import notFound from './utils/not-found';
@@ -27,6 +29,8 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(pathToSwaggerUi.absolutePath()));
+app.use(compression());
+app.use(helmet());
 
 swagger(app);
 

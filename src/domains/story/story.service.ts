@@ -1,4 +1,3 @@
-
 import { IStory } from './story.model';
 import * as StoryDAO from './story.repository';
 import * as UserDAO from './../user/user.repository';

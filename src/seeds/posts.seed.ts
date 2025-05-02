@@ -1,14 +1,11 @@
 import { IPost } from '../domains/post/post.model';
-import { User } from '../domains/user/user.model';
+import { IFetchUser } from '../utils/populate';
 
-const postSeed = async (): Promise<IPost[]> => {
-  const users = await User.find({});
-
+export const postSeed = async (users: IFetchUser[]): Promise<IPost[]> => {
   const posts = [];
 
-  for (let i = 0; i < 5; i++) {
-    const randomUserIndex = Math.floor(Math.random() * users.length);
-    const user = users[randomUserIndex];
+  for (let i = 0; i < 3; i++) {
+    const user = users[i];
 
     const com = {
       user_id: user._id.toString(),
@@ -34,19 +31,17 @@ const postSeed = async (): Promise<IPost[]> => {
       userId: user._id.toString(),
       caption: `This is a sample post caption for ${user.name}.`,
       post_image: `https://example.com/images/post${i + 1}.jpg`,
-      likes: likes,
+      likes: [],
       comments: [com],
     });
   }
   return posts;
 };
 
-let seedPosts: IPost[] = [];
+// let seedPosts: IPost[] = [];
 
-(async () => {
-  seedPosts = await postSeed();
-})();
+// (async () => {
+//   seedPosts = await postSeed();
+// })();
 
-export { seedPosts };
-
-export default postSeed;
+// export { seedPosts };

@@ -1,4 +1,3 @@
-
 import { IJWT } from '../../auth/auth.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';
 import * as PostDAO from '../post/post.repository';
@@ -7,7 +6,7 @@ import mongoose from 'mongoose';
 import _ from 'lodash';
 import { IFriend } from './user.model';
 import { uploadToCloudinary } from '../../utils/cloudinary';
-import { userSuccessnMessage } from './constant/userSuccessMessage';
+import { userSuccessMessages } from './constant/userSuccessMessage';
 import { customHttpError } from '../../utils/customHttpError';
 import { StatusCodes } from 'http-status-codes';
 
@@ -55,12 +54,6 @@ export const getUser = async (id: string, sender_id: string) => {
 export const fetchAll = async () => {
   const users = await UserDAO.fetchAll();
 
-  if (!users)
-    throw new customHttpError(
-      StatusCodes.NOT_FOUND,
-      userExceptionMessage.USER_NOT_FOUND,
-    );
-
   return users;
 };
 
@@ -85,7 +78,7 @@ export const addFriend = async (friend_id: string, senderInfo: IJWT) => {
       );
     } else {
       throw new customHttpError(
-        StatusCodes.BAD_REQUEST,
+        StatusCodes.CONFLICT,
         userExceptionMessage.REQUEST_SENT_ALREADY,
       );
     }
@@ -150,9 +143,16 @@ export const acceptFriendRequest = async (
     (friend) => friend.id === receiver_id,
   );
 
-  if (sender_friend && !sender_friend.pending) {
+  if (!sender_friend) {
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
+      userExceptionMessage.REQUEST_NOT_SENT,
+    );
+  }
+
+  if (sender_friend && !sender_friend.pending) {
+    throw new customHttpError(
+      StatusCodes.CONFLICT,
       userExceptionMessage.ACCEPTED_ALREADY,
     );
   }
@@ -229,6 +229,7 @@ export const fetchRecommendedPeople = async (user_id: string) => {
   const user_friends_id = user?.friends.map(
     (friend) => new mongoose.Types.ObjectId(friend.id),
   );
+
   const recommend_user = await UserDAO.fetchRecommendedPeople(
     user_id,
     user_friends_id!,
@@ -283,15 +284,22 @@ export const updateUsername = async (
       userExceptionMessage.USER_NOT_FOUND,
     );
 
+  if (user.name === updateUsername) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.USERNAME_REPEATED,
+    );
+  }
+
   const result = await UserDAO.updateUsername(user_id, updateUsername);
   const isUpdated = result.modifiedCount;
 
   if (isUpdated) {
-    return userSuccessnMessage.USERNAME_UPDATE_SUCCESS;
+    return userSuccessMessages.USERNAME_UPDATE_SUCCESS;
   } else {
     throw new customHttpError(
       StatusCodes.BAD_REQUEST,
-      userExceptionMessage.UPDATE_FAILED,
+      userExceptionMessage.USERNAME_REPEATED,
     );
   }
 };

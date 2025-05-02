@@ -1,4 +1,3 @@
-
 import { toNumber } from 'lodash';
 
 import { postExceptionMessage } from './constant/postExceptionMessage';
@@ -61,7 +60,6 @@ export const fetchPostsUpTo = async (no_of_posts: number) => {
 };
 
 export const create = async (post_details: IPost) => {
-  console.log(post_details);
   const post = new Post({ ...post_details });
 
   if (!post)

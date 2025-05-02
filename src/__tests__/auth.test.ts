@@ -4,19 +4,17 @@ import { authExceptionMessage } from '../auth/constant/authExceptionMessage';
 import { authSuccessMessage } from '../auth/constant/authSuccessMessages';
 import * as db from '../utils/db';
 import { userExceptionMessage } from '../domains/user/constant/userExceptionMessage';
-import { seedUsers } from '../seeds/user.seed';
-import { seedDatabase } from '../seeds';
+import { users } from '../seeds/user.seed';
 
 const api = supertest(app);
 
 describe('Authentication', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await db.default();
   });
 
   describe('POST /api/auth/register', () => {
-    const user = seedUsers[0];
-    const { email, password, name } = user;
+    const { email, password, name } = users[0];
 
     it('should return 400 for missing name', async () => {
       const response = await api.post('/api/auth/register').send({
@@ -143,14 +141,15 @@ describe('Authentication', () => {
     it('should return 409 for email already exists', async () => {
       await api.post('/api/auth/register').send({
         name,
-        email,
+        email: 'jhon1@gmail.com',
         password,
       });
       const response = await api.post('/api/auth/register').send({
         name,
-        email,
+        email: 'jhon1@gmail.com',
         password,
       });
+
       expect(response.status).toBe(409);
       expect(response.body).toMatchObject({
         status: false,
@@ -160,9 +159,9 @@ describe('Authentication', () => {
 
     it('should return 200 for successful register', async () => {
       const response = await api.post('/api/auth/register').send({
-        name: 'John Doe',
-        email: 'newuser@example.com',
-        password: 'Password123!',
+        name,
+        email,
+        password,
       });
 
       expect(response.status).toBe(201);
@@ -174,11 +173,10 @@ describe('Authentication', () => {
   });
 
   describe('POST /api/auth/login', () => {
-    const user = seedUsers[0];
-    const { email, password } = user;
+    const { email, password, name } = users[0];
 
-    beforeAll(async () => {
-      await seedDatabase();
+    beforeEach(async () => {
+      await api.post('/api/auth/register').send({ email, password, name });
     });
 
     it('should return 400 for missing email', async () => {
@@ -244,6 +242,7 @@ describe('Authentication', () => {
         email,
         password,
       });
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         status: true,
@@ -256,6 +255,9 @@ describe('Authentication', () => {
     });
   });
 
+  afterEach(async () => {
+    await db.clearDatabase();
+  });
   afterAll(async () => {
     await db.closeDatabase();
   });

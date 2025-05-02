@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { User } from '../domains/user/user.model';
 
 export const users = [
   {
@@ -72,10 +73,26 @@ export const users = [
   },
 ];
 
-export const seedUsers = users.map( (user) => {
-  const hashedPassword = bcrypt.hashSync(user.password, 10);
-  return {
-    ...user,
-    password: hashedPassword,
-  };
-});
+export const seedUsers = async () => {
+  const userIdMap: Record<string, string> = {};
+  const insertedUsers = await User.insertMany(users);
+
+  insertedUsers.forEach((user) => {
+    userIdMap[user.name] = user._id.toString();
+  });
+  const finalUser = users.map((user) => {
+    const hashedPassword = bcrypt.hashSync(user.password, 10);
+    return {
+      ...user,
+      friends: user.friends.map((friend) => ({
+        ...friend,
+        id: userIdMap[friend.name],
+      })),
+      password: hashedPassword,
+    };
+  });
+
+  await User.deleteMany({});
+  // console.log(finalUser);
+  return finalUser;
+};

@@ -1,17 +1,15 @@
+import mongoose from 'mongoose';
 import { IStory } from '../domains/story/story.model';
-import { User } from '../domains/user/user.model'; // Adjust the path as necessary
+import { IFetchUser } from '../utils/populate';
 
-const storySeed = async (): Promise<IStory[]> => {
-  const users = await User.find({});
-
+export const storySeed = async (users: IFetchUser[]): Promise<IStory[]> => {
   const stories = [];
 
-  for (let i = 0; i < 5; i++) {
-    const randomIndex = Math.floor(Math.random() * (users.length - 1));
-    const user = users[randomIndex];
+  for (let i = 0; i < 3; i++) {
+    const user = users[i];
 
     stories.push({
-      user_id: user._id,
+      user_id: new mongoose.Types.ObjectId(user._id),
       user_name: user.name || '',
       user_image: user.img || '',
       caption: `Story caption for ${user.name}`,
@@ -22,10 +20,10 @@ const storySeed = async (): Promise<IStory[]> => {
   return stories;
 };
 
-let seedStories: IStory[] = [];
+// let seedStories: IStory[] = [];
 
-(async () => {
-  seedStories = await storySeed();
-})();
+// (async () => {
+//   seedStories = await storySeed();
+// })();
 
-export { seedStories };
+// export { seedStories };

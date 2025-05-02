@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { HttpError } from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { authExceptionMessage } from '../auth/constant/authExceptionMessage';
+import { MulterError } from 'multer';
+import { middlewareExceptionMessage } from '../middleware/constant/middlewareExceptionMessage';
 
 export const errorHandlerMiddleware = (
   err: HttpError,
@@ -18,6 +20,12 @@ export const errorHandlerMiddleware = (
     });
   }
 
+  if (err instanceof MulterError && err.code === 'LIMIT_UNEXPECTED_FILE') {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      status: false,
+      message: middlewareExceptionMessage.FIELD_NAME_INCORRECT,
+    });
+  }
   return res.status(statusCode).json({
     status: false,
     message: err.message,

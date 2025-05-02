@@ -1,22 +1,18 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose, { isValidObjectId, Types } from 'mongoose';
 
-import { IFriend, IUser, User } from './user.model';
+import { IFetchUser, IFriend, IUser, User } from './user.model';
 import { userExceptionMessage } from './constant/userExceptionMessage';
 import { customHttpError } from '../../utils/customHttpError';
 import { StatusCodes } from 'http-status-codes';
 
-export const fetchById = async (
-  id: string,
-): Promise<{
-  _id: string;
-  name: string;
-  email: string;
-  img: string;
-  coverImg: string;
-  friends: IFriend[];
-  password: string;
-}> => {
-  return await User.findOne({ _id: id }).select([
+export const fetchById = async (id: string): Promise<IFetchUser> => {
+  if (!isValidObjectId(id)) {
+    throw new customHttpError(
+      StatusCodes.BAD_REQUEST,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
+  }
+  const response = await User.findOne({ _id: new Types.ObjectId(id) }).select([
     '_id',
     'name',
     'email',
@@ -25,6 +21,31 @@ export const fetchById = async (
     'coverImg',
     'password',
   ]);
+
+  // Handle case where user is not found
+  if (!response) {
+    throw new customHttpError(
+      StatusCodes.NOT_FOUND,
+      userExceptionMessage.USER_NOT_FOUND,
+    );
+  }
+
+  // Destructure the response
+  const { _id, name, email, img, friends, coverImg, password } =
+    response.toObject(); // Convert to plain object
+
+  // Create the user object to return
+  const user: IFetchUser = {
+    _id: _id.toString(),
+    name,
+    email,
+    img: img!,
+    friends,
+    coverImg: coverImg!,
+    password,
+  };
+
+  return user;
 };
 
 export const fetchByEmail = async (email: string) => {
@@ -36,13 +57,6 @@ export const fetchByEmail = async (email: string) => {
     'friends',
     'password',
   ]);
-
-  if (!user)
-    throw new customHttpError(
-      StatusCodes.NOT_FOUND,
-      userExceptionMessage.USER_NOT_FOUND,
-    );
-
   return user;
 };
 
@@ -173,12 +187,15 @@ export const updateProfilePicture = async (
   user_id: string,
   img_url: string,
 ) => {
-  return await User.updateOne({ _id: user_id }, { $set: { img: img_url } });
+  return await User.updateOne(
+    { _id: new mongoose.Types.ObjectId(user_id) },
+    { $set: { img: img_url } },
+  );
 };
 
 export const updateCoverPicture = async (user_id: string, img_url: string) => {
   return await User.updateOne(
-    { _id: user_id },
+    { _id: new mongoose.Types.ObjectId(user_id) },
     { $set: { coverImg: img_url } },
   );
 };

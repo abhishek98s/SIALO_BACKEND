@@ -12,21 +12,26 @@ export interface IFetchUser {
   img: string | null | undefined;
 }
 
+export const userData = async () => {
+  const userArr = await Promise.all(
+    users.map(async (user) => {
+      const response = await User.findOne({ email: user.email });
+      return {
+        _id: response!._id.toString(),
+        name: response!.name,
+        img: response!.img,
+      };
+    }),
+  );
+  return userArr;
+};
+
 export const populateDb = async () => {
   try {
     await connectDB();
     await User.create(await seedUsers());
 
-    const userArr = await Promise.all(
-      users.map(async (user) => {
-        const response = await User.findOne({ email: user.email });
-        return {
-          _id: response!._id.toString(),
-          name: response!.name,
-          img: response!.img,
-        };
-      }),
-    );
+    const userArr = await userData();
 
     const posts = postSeed(userArr);
     await Post.create(await posts);

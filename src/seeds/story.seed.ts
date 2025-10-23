@@ -1,29 +1,28 @@
 import mongoose from 'mongoose';
 import { IStory } from '../domains/story/story.model';
 import { IFetchUser } from '../utils/populate';
+import { User } from '../domains/user/user.model';
 
 export const storySeed = async (users: IFetchUser[]): Promise<IStory[]> => {
-  const stories = [];
-
-  for (let i = 0; i < 3; i++) {
-    const user = users[i];
-
-    stories.push({
+  const stories = users.map((user, index) => {
+    return {
       user_id: new mongoose.Types.ObjectId(user._id),
       user_name: user.name || '',
       user_image: user.img || '',
       caption: `Story caption for ${user.name}`,
-      story_image: `https://example.com/images/story${i + 1}.jpg`,
-    });
-  }
+      story_image: `https://example.com/images/story${index + 1}.jpg`,
+    };
+  });
 
   return stories;
 };
 
-// let seedStories: IStory[] = [];
+export let seedStories: IStory[] = [];
 
-// (async () => {
-//   seedStories = await storySeed();
-// })();
-
-// export { seedStories };
+(async () => {
+  const user = await User.find({});
+  const out = user.map((user) => {
+    return { name: user.name, img: user.img, _id: user._id?.toString() };
+  });
+  seedStories = await storySeed(out);
+})();

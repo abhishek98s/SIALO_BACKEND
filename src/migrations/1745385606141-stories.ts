@@ -2,11 +2,16 @@
 import type { Connection } from 'mongoose';
 import connectDB from '../utils/db';
 import Story from '../domains/story/story.model';
-import { seedStories } from '../seeds/story.seed';
+import { storySeed } from '../seeds/story.seed';
+import { userData } from '../utils/populate';
 
 export async function up(): Promise<void> {
   await connectDB();
-  await Story.create(seedStories);
+  const userArr = await userData();
+
+  const seedData = storySeed(userArr);
+
+  await Story.create(seedData);
 }
 
 export async function down(connection: Connection): Promise<void> {

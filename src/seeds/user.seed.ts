@@ -6,20 +6,23 @@ export const users = [
     name: 'Alice',
     email: 'alice@example.com',
     password: 'Password123!',
-    img: 'https://example.com/images/alice.jpg',
-    coverImg: 'https://example.com/images/alice_cover.jpg',
+    img: 'https://i.pinimg.com/564x/13/54/37/1354375338591012892f2a287d0e30da.jpg',
+    coverImg:
+      'https://i.pinimg.com/564x/13/54/37/1354375338591012892f2a287d0e30da.jpg',
     friends: [
       {
         id: '2',
         name: 'Bob',
-        image: 'https://example.com/images/bob.jpg',
+        image:
+          'https://i.pinimg.com/736x/92/14/68/9214689537707ea74e85a64c203452ef.jpg',
         pending: false,
         isFriend: true,
       },
       {
         id: '3',
         name: 'Charlie',
-        image: 'https://example.com/images/charlie.jpg',
+        image:
+          'https://i.pinimg.com/736x/12/5c/e8/125ce87fd97b35c3aecd18b67f5a15d3.jpg',
         pending: true,
         isFriend: false,
       },
@@ -29,20 +32,23 @@ export const users = [
     name: 'Bob',
     email: 'bob@example.com',
     password: 'pPassword123!',
-    img: 'https://example.com/images/bob.jpg',
-    coverImg: 'https://example.com/images/bob_cover.jpg',
+    img: 'https://i.pinimg.com/736x/92/14/68/9214689537707ea74e85a64c203452ef.jpg',
+    coverImg:
+      'https://i.pinimg.com/736x/92/14/68/9214689537707ea74e85a64c203452ef.jpg',
     friends: [
       {
         id: '1',
         name: 'Alice',
-        image: 'https://example.com/images/alice.jpg',
+        image:
+          'https://i.pinimg.com/564x/13/54/37/1354375338591012892f2a287d0e30da.jpg',
         pending: false,
         isFriend: true,
       },
       {
         id: '3',
         name: 'Charlie',
-        image: 'https://example.com/images/charlie.jpg',
+        image:
+          'https://i.pinimg.com/736x/12/5c/e8/125ce87fd97b35c3aecd18b67f5a15d3.jpg',
         pending: false,
         isFriend: true,
       },
@@ -52,20 +58,23 @@ export const users = [
     name: 'Charlie',
     email: 'charlie@example.com',
     password: 'pPassword123!',
-    img: 'https://example.com/images/charlie.jpg',
-    coverImg: 'https://example.com/images/charlie_cover.jpg',
+    img: 'https://i.pinimg.com/736x/12/5c/e8/125ce87fd97b35c3aecd18b67f5a15d3.jpg',
+    coverImg:
+      'https://i.pinimg.com/736x/12/5c/e8/125ce87fd97b35c3aecd18b67f5a15d3.jpg',
     friends: [
       {
         id: '1',
         name: 'Alice',
-        image: 'https://example.com/images/alice.jpg',
+        image:
+          'https://i.pinimg.com/564x/13/54/37/1354375338591012892f2a287d0e30da.jpg',
         pending: true,
         isFriend: false,
       },
       {
         id: '2',
         name: 'Bob',
-        image: 'https://example.com/images/bob.jpg',
+        image:
+          'https://i.pinimg.com/736x/92/14/68/9214689537707ea74e85a64c203452ef.jpg',
         pending: false,
         isFriend: true,
       },
@@ -74,6 +83,8 @@ export const users = [
 ];
 
 export const seedUsers = async () => {
+  await User.deleteMany({});
+
   const userIdMap: Record<string, string> = {};
   const insertedUsers = await User.insertMany(users);
 

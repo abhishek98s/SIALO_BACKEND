@@ -1,16 +1,19 @@
 import mongoose from 'mongoose';
-import { IStory } from '../domains/story/story.model';
+import Story, { IStory } from '../domains/story/story.model';
 import { IFetchUser } from '../utils/populate';
 import { User } from '../domains/user/user.model';
+import { imageSeed } from './image.seed';
 
 export const storySeed = async (users: IFetchUser[]): Promise<IStory[]> => {
+  await Story.deleteMany({});
+
   const stories = users.map((user, index) => {
     return {
       user_id: new mongoose.Types.ObjectId(user._id),
       user_name: user.name || '',
       user_image: user.img || '',
       caption: `Story caption for ${user.name}`,
-      story_image: `https://example.com/images/story${index + 1}.jpg`,
+      story_image: imageSeed[index],
     };
   });
 

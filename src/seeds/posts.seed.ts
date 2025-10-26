@@ -1,9 +1,10 @@
-import { IPost } from '../domains/post/post.model';
+import Post, { IPost } from '../domains/post/post.model';
 import { IFetchUser } from '../utils/populate';
+import { imageSeed } from './image.seed';
 
 export const postSeed = async (users: IFetchUser[]): Promise<IPost[]> => {
   const posts = [];
-
+  await Post.deleteMany({});
   for (let i = 0; i < 3; i++) {
     const user = users[i];
 
@@ -30,7 +31,7 @@ export const postSeed = async (users: IFetchUser[]): Promise<IPost[]> => {
       name: user.name as string,
       userId: user._id.toString(),
       caption: `This is a sample post caption for ${user.name}.`,
-      post_image: `https://example.com/images/post${i + 1}.jpg`,
+      post_image: imageSeed[i],
       likes: [],
       comments: [com],
     });
